@@ -45,6 +45,8 @@ if (args[0] === "--upgrade") {
   fs.writeFileSync(args[2], page(fmt(data)));
   console.log("wrote", args[2]);
 } else {
+  // the installed skill and its zip carry the licence and the third-party notices
+  for (const f of ["LICENSE", "THIRD_PARTY_NOTICES.md"]) fs.copyFileSync(path.join(root, f), path.join(root, "skill/blueprint-deck", f));
   const out = path.join(root, "skill/blueprint-deck/blueprint-deck.html");
   fs.writeFileSync(out, page('{ "blueprintDeck": "empty" }'));
   console.log(`engine ${VERSION} → ${path.relative(root, out)} (${Math.round(fs.statSync(out).size / 1024)} KB)`);

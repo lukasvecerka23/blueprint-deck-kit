@@ -60,7 +60,7 @@ Install with `curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh
 default command, which finds Claude Code by itself). The skill lands in `~/.claude/skills/blueprint-deck`; use
 `--project` to put it into the repository's `.claude/skills/` so the whole team gets it.
 
-Start a new session in your repository, then either paste the prompt from the [configurator](/configurator/) or use
+Start a new session in the folder with your docs, then either paste the prompt from the [configurator](/configurator/) or use
 the slash command:
 
 ```text
@@ -74,7 +74,7 @@ the platform for the board meeting".
 ## Codex
 
 Install with `curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex`; the skill
-lands in `~/.codex/skills/blueprint-deck`. Start a new Codex session in your repository and paste the prompt from the
+lands in `~/.codex/skills/blueprint-deck`. Start a new Codex session in the folder with your docs and paste the prompt from the
 configurator, or ask:
 
 ```text

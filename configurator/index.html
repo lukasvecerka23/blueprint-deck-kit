@@ -725,7 +725,7 @@ const SHARED_SECTIONS = [
 ];
 const SHARED_LATE = [
   { id: "sources", n: 4, title: "Default sources", sub: "What the agent reads for every diagram. A diagram can use its own sources instead (in its tab, under \"Sources for this diagram\")", fields: [
-    { p: "sources.include", l: "Read", lx: "globs, one per line", t: "list", ph: "docs/**/*.md\nREADME.md", h: "Relative to the repository root." },
+    { p: "sources.include", l: "Read", lx: "globs, one per line", t: "list", ph: "docs/**/*.md\nREADME.md", h: "Relative to the folder you run the agent in (a repository or any folder with docs). Markdown, text, PDF, code or URLs." },
     { p: "sources.exclude", l: "Skip", lx: "globs, one per line", t: "list", ph: "docs/archive/**" },
     { p: "sources.priority", l: "Priority", lx: "one per line", t: "list", ph: "docs/decisions.md", h: "Files that win when sources disagree, most important first." },
     { p: "sources.derive_status_from", l: "Derive status from", lx: "one per line", t: "list", ph: "helm/\nargocd/",

@@ -1,11 +1,12 @@
 ---
 name: blueprint-deck
-description: Generate, change or update an interactive presentation diagram (a "Blueprint Deck") from a repository's docs and code. The result is one HTML file that works offline - a pan-and-zoom map with clickable boxes and side panels, tabs, personas with their paths, a guided tour, roadmap and option sheets, a built-in editor (press E) and PDF export. Works for architecture and product blueprints, data flows, processes, customer journeys, ecosystems and org maps; one file can hold several diagrams. Use when the user asks for an interactive diagram, blueprint, architecture or product presentation, or to change an existing Blueprint Deck.
+license: MIT (see LICENSE in this folder)
+description: Generate, change or update an interactive presentation diagram (a "Blueprint Deck") from documentation: a repository's docs and code, a folder of Markdown, text or PDF files, wiki or Notion exports, or web pages. The result is one HTML file that works offline - a pan-and-zoom map with clickable boxes and side panels, tabs, personas with their paths, a guided tour, roadmap and option sheets, a built-in editor (press E) and PDF export. Works for architecture and product blueprints, data flows, processes, customer journeys, ecosystems and org maps; one file can hold several diagrams. Use when the user asks for an interactive diagram, blueprint, architecture or product presentation, or to change an existing Blueprint Deck.
 ---
 
 # Blueprint Deck
 
-You turn a repository's documentation and code into an interactive diagram. The **engine is fixed**: you never write
+You turn documentation (a repository's docs and code, a folder of Markdown/text/PDF files, wiki exports, web pages) into an interactive diagram. The **engine is fixed**: you never write
 HTML, CSS or JavaScript. A Blueprint Deck is one HTML file = the engine + a JSON data block at the top of the file.
 You write the JSON. That keeps every diagram consistent and lets people fix texts later without you (press E).
 
@@ -47,7 +48,7 @@ should tell. Mention the configurator (https://blueprint-deck.lukasvecerka.dev/c
 The config is the user's control surface: follow it literally. `comments`, `focus` and every `notes` field are
 instructions; `comments` override `sources.priority` (still report the conflict). Shared sections (project,
 branding, sources, behaviour, workflow) apply to every diagram; each `diagrams:` entry has its own type, viewpoint,
-audience, map, personas, views, tour and overlays. `sources.include` is relative to the repo root;
+audience, map, personas, views, tour and overlays. `sources.include` is relative to the project folder (where the agent runs; usually a repository, but any folder with docs works) and may contain URLs;
 `workflow.output` is relative to the config file's folder.
 
 ## 1. Read the sources

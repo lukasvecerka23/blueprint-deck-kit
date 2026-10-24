@@ -21,7 +21,7 @@ branding:
   name_rules: []                       # e.g. ["Say Acme Group, never Acme Ltd"]
 
 sources:                               # defaults; a diagram can override them
-  include: ["docs/**/*.md", "README.md"]  # globs or URLs, relative to the repository root (not to this file)
+  include: ["docs/**/*.md", "README.md"]  # globs or URLs, relative to the project folder (not to this file); Markdown, text, PDF, code, exports
   exclude: []
   priority: []                         # files that win when sources disagree, most important first
   derive_status_from: []               # e.g. ["helm/", "argocd/"]: manifests that show what really runs

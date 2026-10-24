@@ -60,12 +60,12 @@ Open the **[configurator](https://blueprint-deck.lukasvecerka.dev/configurator/)
 from a clone, offline). Pick the type, viewpoint, audience, sources, tabs, tour, look and brand colours, one tab per
 diagram if you want several. Click **Copy prompt**: it contains the whole configuration.
 
-No form? Just ask your agent: *"Use the blueprint-deck skill to make a diagram of this repository."* It asks the few
+No form? Just ask your agent: *"Use the blueprint-deck skill to make a diagram of these docs."* It asks the few
 things it needs.
 
 ### 3. Generate
 
-Paste the prompt into your agent, in your repository. The agent:
+Paste the prompt into your agent, in the folder with your docs (a repository, or any folder of Markdown, text or PDF files). The agent:
 1. reads the sources from the config,
 2. proposes the structure (areas, personas, tabs, tour) and waits for your OK,
 3. writes `diagrams/index.html` and an `extraction-report.md` (sources read, conflicts between your docs, gaps,

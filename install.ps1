@@ -76,7 +76,7 @@ try {
 }
 
 Write-Host ""
-Write-Host "Done. Start a new agent session in your repository, then:"
+Write-Host "Done. Start a new agent session in the folder with your docs, then:"
 Write-Host "  1. Describe your diagram: https://blueprint-deck.lukasvecerka.dev/configurator/"
-Write-Host "  2. Paste the prompt it gives you (or ask: 'Use the blueprint-deck skill to make a diagram of this repo')."
+Write-Host "  2. Paste the prompt it gives you (or ask: 'Use the blueprint-deck skill to make a diagram of these docs')."
 Write-Host "  In Claude Code you can also type /$Name."

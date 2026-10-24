@@ -175,7 +175,9 @@ const BD = (() => {
     const item = (label, key, fn) => `<button data-a="${fn}" style="display:flex;justify-content:space-between;gap:16px;border:0;background:transparent;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;text-align:left;font-size:13.5px"><span>${label}</span><kbd style="color:var(--muted);font:inherit;font-size:12px">${key}</kbd></button>`;
     const S = current && current.spec.settings;
     const canEdit = hasEditor() && !(S && S.editor === false);
-    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a copy to share…", "", "share") : "") + item("Export a PDF deck", "P", "pdf") + item("Copy a link to this view", "", "link");
+    // a link to a view only works for others when the file is hosted (a file opened from disk has a file:// address)
+    const hosted = /^https?:$/.test(location.protocol);
+    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a read-only copy…", "", "share") : "") + item("Export a PDF deck", "P", "pdf") + (hosted ? item("Copy a link to this view", "", "link") : "");
     m.querySelectorAll("button").forEach(b => {
       b.onmouseenter = () => (b.style.background = "rgba(var(--fg-rgb),.06)");
       b.onmouseleave = () => (b.style.background = "transparent");

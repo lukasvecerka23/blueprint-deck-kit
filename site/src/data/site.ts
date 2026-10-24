@@ -9,7 +9,7 @@ export const SITE = {
   coAuthor: "Pavel Sládek",
   coAuthorUrl: "https://www.linkedin.com/in/sladek/",
   description:
-    "An agent skill that turns your repository's docs into an interactive presentation diagram: one offline HTML file with a pan-and-zoom map, guided tour, personas, tabs, a built-in editor and PDF export.",
+    "An agent skill that turns your docs into an interactive presentation diagram: one offline HTML file with a pan-and-zoom map, guided tour, personas, tabs, a built-in editor and PDF export.",
 };
 
 export const INSTALL = {

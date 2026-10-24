@@ -7,7 +7,7 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
   },
   {
     q: "Where does my content go?",
-    a: "Nowhere. Your agent runs locally in your repository with your own subscription, and it reads only the sources your config lists. The generated file makes no network requests: no CDN, no fonts, no analytics. It works offline and from <code>file://</code>.",
+    a: "Nowhere. Your agent runs locally in your project folder with your own subscription, and it reads only the sources your config lists. The generated file makes no network requests: no CDN, no fonts, no analytics. It works offline and from <code>file://</code>.",
     home: true,
   },
   {
@@ -44,6 +44,24 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
   {
     q: "Can I lock a file so nobody edits it?",
     a: "Set <code>behaviour.editor: false</code> in the config (or <code>settings.editor: false</code> in the data). The ⋯ menu then only offers the PDF export and copying a link.",
+  },
+  {
+    q: "Does it only work with a code repository?",
+    a: "No. Point it at any folder with documentation: a repository, a folder of Markdown, text or PDF files, an export from Confluence or Notion, even web pages by URL. Run your agent in that folder and list the files (or URLs) as sources in the config.",
+    home: true,
+  },
+  {
+    q: "Can I send a diagram that people can't change?",
+    a: "Yes. Open it and choose <b>⋯ → Download a read-only copy</b>. You name the file, and the copy has the same diagram, tour and PDF export but no editor. Your own file stays editable; after changes, download a new copy.",
+    home: true,
+  },
+  {
+    q: "Who owns the diagrams I make?",
+    a: "You do. The content of your diagrams is yours, and you can share, sell or keep them private. Only the engine inside each file is open source (MIT); its short licence notice stays in the file.",
+  },
+  {
+    q: "Can I use it at work or for clients?",
+    a: "Yes. The MIT licence allows commercial use: generate decks for your company or your clients, keep them private, or build on the kit. Just keep the licence notice in the files.",
   },
   {
     q: "What does it cost?",

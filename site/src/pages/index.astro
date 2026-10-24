@@ -22,7 +22,7 @@ const steps = [
   },
   {
     title: "Paste it into your agent",
-    text: "In your repository. The agent reads the docs, proposes the structure, and writes diagrams/index.html plus an extraction report.",
+    text: "In the folder with your docs. The agent reads them, proposes the structure, and writes diagrams/index.html plus an extraction report.",
     code: "/blueprint-deck diagrams/diagram.config.yaml",
   },
   {
@@ -62,7 +62,7 @@ const homeFaq = FAQ.filter(f => f.home);
           Turn your docs into a <span class="text-gradient">deck people will love</span>
         </h1>
         <p class="mx-auto mt-6 max-w-2xl text-lg text-pretty text-muted-foreground">
-          Your coding agent reads the repository's docs and writes one interactive HTML file: a pan-and-zoom map with
+          Your coding agent reads your docs (a repository, a folder of Markdown or PDFs, web pages) and writes one interactive HTML file: a pan-and-zoom map with
           clickable boxes, tabs, personas and a guided tour. Present it, press E to edit it, send it to anyone.
         </p>
         <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
