@@ -1,0 +1,106 @@
+# diagram.config.yaml for a fictional customer journey (public example).
+version: 2
+
+# ---------------------------------------------------------------- shared by every diagram in the file
+project:
+  name: "Northwind Insights"
+  subtitle: "Customer journey · fictional example"
+  maturity: running
+  one_liner: "Seven stages from first visit to expansion; the trial is won or lost when the customer's own data arrives."
+
+branding:
+  website: ""                          # fictional company: no website
+  theme: light
+  primary: "#2563eb"
+  secondary: "#f97316"
+  shape: square
+  logo: "icon:chart-column-big"
+  name_rules: ["Say Northwind Insights or Northwind, never NWI"]
+
+sources:
+  include: ["examples/saas-onboarding/source/brief.md"]
+  exclude: []
+  priority: []
+  derive_status_from: []
+  on_conflict: report
+  cite_sources: true
+  invent: never
+
+behaviour:
+  hero: true
+  tour_position: auto
+  zoom_to_focus: true
+  edges_filter_by_view: true
+  edge_labels: focus
+  particles: main-flow
+  overview_edges: main
+  legend: collapsed
+  editor: true
+  keyboard: true
+
+workflow:
+  confirm_structure: false             # generated unattended; the proposed structure is in extraction-report.md
+  pause_after_extract: false
+  output: "index.html"
+
+# ---------------------------------------------------------------- one diagram
+diagrams:
+  - id: onboarding
+    name: "Onboarding journey"
+    type: journey
+    viewpoint: product
+    focus: "The customer's way from the first website visit to a paying, expanding account, with the touchpoints, pains and numbers at each stage."
+
+    audience:
+      who: [business, executives]
+      goal: "The onboarding team and leadership agree where trials stall and what to fix first"
+      tone: executive
+      language: en
+
+    sources: {}
+
+    map:
+      detail: medium
+      external: true
+      customer_owned: true             # the customer's POS and ERP
+      frame_label: ""
+      technology: off
+      must_show: ["website", "signup", "onboarding emails", "in-app checklist", "data connectors", "success manager call", "billing"]
+      leave_out: []
+      status:
+        enabled: true
+        meaning: custom
+        values: ["Self-serve", "Human-led"]
+      notes: "Stages left to right, numbered. External parties (email provider, the customer's POS/ERP, payment provider) as a bottom row under the stage they serve. Pains and illustrative metrics in each touchpoint's panel."
+
+    personas:
+      enabled: true
+      names: ["Head of Operations", "Analyst", "IT admin"]
+
+    views:
+      presets: []
+      custom:
+        - "Typical path: the self-serve path through all seven stages"
+        - "Time to first insight: signup to first dashboard"
+        - "Pain points: a list, each pain highlighting its touchpoints"
+        - "Outside parties: what the journey depends on"
+
+    tour:
+      enabled: true
+      steps: "10-12"
+      story: use-case
+      use_case: "A regional retail chain from first visit to adding stores"
+      opening: context
+      closing: why-this
+      include: [options]
+      notes: "Mark every number as illustrative."
+
+    overlays:
+      roadmap: { enabled: false, source: "" }
+      options: { enabled: false, title: "", source: "" }
+      custom: ["Numbers to watch: one illustrative metric per stage"]
+
+    comments: "Fictional company. Every metric is illustrative and must say so where it is shown."
+
+comments: |
+  The onboarding team's priority is the time from IT invite to first connected store; give it its own tour step.

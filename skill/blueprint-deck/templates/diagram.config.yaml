@@ -1,0 +1,113 @@
+# diagram.config.yaml: how your Blueprint Deck should be generated.
+# Make it with the configurator (https://blueprint-deck.lukasvecerka.dev/configurator or configurator/index.html),
+# or edit this file. Put it in <your repo>/diagrams/ and ask your agent: "/blueprint-deck diagrams/diagram.config.yaml".
+# The agent reads this file and the sources it lists; it needs no other instructions.
+version: 2
+
+# ---------------------------------------------------------------- shared by every diagram in the file
+project:
+  name: "My Platform"                  # title of the file (and of the switcher when there are several diagrams)
+  subtitle: "Product blueprint"
+  maturity: planned                    # planned | partly-built | running   (how status and wording are phrased)
+  one_liner: ""                        # optional: the sentence the audience should remember
+
+branding:
+  website: ""                          # optional: the agent takes logo, colours and name from this site
+  theme: midnight                      # dark: midnight | blueprint | graphite | forest | ember   light: light | paper
+  primary: ""                          # main brand colour, hex (empty = the theme's)
+  secondary: ""                        # second colour, hex
+  shape: rounded                       # rounded | square | pill
+  logo: ""                             # icon:<lucide name>, or a path to an svg/png (stored inside the file)
+  name_rules: []                       # e.g. ["Say Acme Group, never Acme Ltd"]
+
+sources:                               # defaults; a diagram can override them
+  include: ["docs/**/*.md", "README.md"]  # globs or URLs, relative to the repository root (not to this file)
+  exclude: []
+  priority: []                         # files that win when sources disagree, most important first
+  derive_status_from: []               # e.g. ["helm/", "argocd/"]: manifests that show what really runs
+  on_conflict: report                  # report | ask | priority
+  cite_sources: true                   # show "Sources" in each box's panel
+  invent: never                        # never: no numbers, names or claims that aren't in the sources
+
+behaviour:
+  hero: true                           # start screen with title, pillars and "Start the guided tour"
+  tour_position: auto                  # auto | right | bottom
+  zoom_to_focus: true
+  edges_filter_by_view: true
+  edge_labels: focus                   # focus | never
+  particles: main-flow                 # main-flow | focus-only | "off" (quote off: YAML reads a bare off as false)
+  overview_edges: all                  # all | main | none
+  legend: collapsed                    # collapsed | open | "off"
+  editor: true                         # E edits the file in the browser; false locks it
+  keyboard: true
+
+workflow:
+  confirm_structure: true              # the agent proposes the areas (and personas) and waits for your OK
+  pause_after_extract: false           # stop after writing the content + report, before checking the result
+  output: "index.html"                 # relative to this file's folder
+
+# ---------------------------------------------------------------- one entry per diagram (one entry = one diagram, no switcher)
+diagrams:
+  - id: platform
+    name: "Platform"                   # shown in the switcher
+    type: architecture                 # architecture | data-flow | process | journey | ecosystem | org | custom
+    viewpoint: product                 # product (what it does for whom) | mixed | technical (components, technology)
+    focus: ""                          # what this diagram shows, in one or two sentences
+
+    audience:
+      who: [executives]                # executives | architects | engineers | business | customers | investors
+      goal: "Understand what the platform does, for whom, and what comes next"
+      tone: executive                  # executive | technical | sales
+      language: en
+
+    sources: {}                        # optional overrides of the shared sources, e.g. { include: ["docs/product/**"] }
+
+    map:
+      detail: medium                   # overview (~12-20 boxes) | medium (~25-40) | detailed (~40-60)
+      external: true                   # users, client apps and third-party services, marked as External
+      customer_owned: true             # mark what the customer owns and runs (their data centre, VPC, IdP)
+      frame_label: ""                  # optional caption on the frame around what is ours
+      technology: from-viewpoint       # from-viewpoint (product: pick, mixed: pick, technical: full) | full | pick | "off"
+      must_show: []
+      leave_out: []
+      status:
+        enabled: true
+        meaning: scope                 # scope (MVP / Next / Later) | build (Running / Planned) | custom
+        values: []                     # custom only: labels, e.g. ["Pilot", "Phase 2", "Later"]
+      notes: ""                        # layout wishes, groupings, naming
+
+    personas:
+      enabled: true                    # from the sources' users/roles/actors; each gets a path through the map
+      names: []                        # optional: exactly these, e.g. ["Platform owner", "Application builder"]
+
+    views:                             # tabs along the top; the overview is always first
+      presets: [main-flow, governance, operations, deployment]   # any of: main-flow, governance, operations, deployment, data, security, cost, roadmap (or write your own in custom)
+      custom: []                       # e.g. ["Usage patterns: a list U1/U2/U3, each highlighting its path"]
+
+    tour:
+      enabled: true
+      steps: "12-18"                   # wins over the style guide's default range
+      story: problem-solution          # problem-solution | component-walk | use-case | value-first
+      use_case: ""
+      opening: problem                 # problem | vision | context
+      closing: why-this                # why-this | next-steps | call-to-action
+      include: [roadmap, options, open-questions]   # any of these three
+      notes: ""
+
+    overlays:
+      roadmap: { enabled: true, source: "" }
+      options: { enabled: false, title: "", source: "" }
+      custom: []
+
+    comments: ""                       # anything else for this diagram
+
+#  - id: technical                     # a second diagram, e.g. the same product for engineers
+#    name: "Technical view"
+#    type: architecture
+#    viewpoint: technical
+#    audience: { who: [engineers], tone: technical }
+#    tour: { steps: "8-12", story: component-walk }
+
+comments: |
+  Anything else the agent should know: what the audience cares about, what to emphasise,
+  what is sensitive, what the last version got wrong.

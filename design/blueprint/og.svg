@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#05112a"/><stop offset="1" stop-color="#0c1f45"/></linearGradient>
+    <radialGradient id="glow" cx="78%" cy="20%" r="60%"><stop offset="0" stop-color="#1f6feb" stop-opacity=".45"/><stop offset="1" stop-color="#1f6feb" stop-opacity="0"/></radialGradient>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1f6feb"/><stop offset="1" stop-color="#22b8e6"/></linearGradient>
+    <linearGradient id="txt" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#93c5fd"/><stop offset="1" stop-color="#67e8f9"/></linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity=".05"/></pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- mini map on the right -->
+  <g transform="translate(700 150)" font-family="Helvetica, Arial, sans-serif">
+    <rect x="0" y="0" width="140" height="300" rx="16" fill="#ffffff" fill-opacity=".04" stroke="#ffffff" stroke-opacity=".12"/>
+    <rect x="160" y="0" width="290" height="300" rx="16" fill="#ffffff" fill-opacity=".04" stroke="#ffffff" stroke-opacity=".12"/>
+    <path d="M118 80 C 150 80, 150 70, 182 70" stroke="#60a5fa" stroke-width="3" fill="none"/>
+    <path d="M118 210 C 150 210, 150 200, 182 200" stroke="#60a5fa" stroke-opacity=".6" stroke-width="3" fill="none"/>
+    <path d="M300 70 L 328 70" stroke="#22d3ee" stroke-width="3" fill="none"/>
+    <path d="M250 96 C 250 140, 250 160, 250 174" stroke="#60a5fa" stroke-width="3" fill="none"/>
+    <path d="M370 96 C 370 140, 320 150, 318 174" stroke="#22d3ee" stroke-opacity=".6" stroke-width="3" fill="none"/>
+    <g fill="#16203f" stroke="#ffffff" stroke-opacity=".16" stroke-width="1.5">
+      <rect x="20" y="56" width="98" height="48" rx="10"/>
+      <rect x="20" y="186" width="98" height="48" rx="10"/>
+      <rect x="182" y="46" width="118" height="50" rx="10" stroke="#60a5fa" stroke-opacity="1" stroke-width="2.5"/>
+      <rect x="328" y="46" width="104" height="50" rx="10"/>
+      <rect x="182" y="174" width="118" height="50" rx="10"/>
+      <rect x="318" y="174" width="114" height="50" rx="10"/>
+    </g>
+    <g fill="#ffffff" fill-opacity=".55">
+      <rect x="54" y="72" width="50" height="7" rx="3.5"/><rect x="54" y="85" width="32" height="5" rx="2.5" fill-opacity=".3"/>
+      <rect x="54" y="202" width="50" height="7" rx="3.5"/><rect x="54" y="215" width="32" height="5" rx="2.5" fill-opacity=".3"/>
+      <rect x="216" y="62" width="64" height="7" rx="3.5"/><rect x="216" y="75" width="40" height="5" rx="2.5" fill-opacity=".3"/>
+      <rect x="362" y="62" width="54" height="7" rx="3.5"/><rect x="362" y="75" width="34" height="5" rx="2.5" fill-opacity=".3"/>
+      <rect x="216" y="190" width="64" height="7" rx="3.5"/><rect x="216" y="203" width="40" height="5" rx="2.5" fill-opacity=".3"/>
+      <rect x="352" y="190" width="60" height="7" rx="3.5"/><rect x="352" y="203" width="36" height="5" rx="2.5" fill-opacity=".3"/>
+    </g>
+    <g><rect x="32" y="68" width="14" height="14" rx="4" fill="#60a5fa"/><rect x="32" y="198" width="14" height="14" rx="4" fill="#22d3ee"/>
+      <rect x="194" y="59" width="14" height="14" rx="4" fill="#60a5fa"/><rect x="340" y="59" width="14" height="14" rx="4" fill="#22d3ee"/>
+      <rect x="194" y="187" width="14" height="14" rx="4" fill="#60a5fa"/><rect x="330" y="187" width="14" height="14" rx="4" fill="#60a5fa"/></g>
+    <!-- tour card -->
+    <rect x="240" y="250" width="250" height="96" rx="14" fill="#0b1226" stroke="#ffffff" stroke-opacity=".18"/>
+    <text x="260" y="280" fill="#93c5fd" font-size="13" font-weight="700" letter-spacing="2">STEP 3 OF 12</text>
+    <rect x="260" y="294" width="190" height="9" rx="4.5" fill="#ffffff" fill-opacity=".6"/>
+    <rect x="260" y="312" width="150" height="7" rx="3.5" fill="#ffffff" fill-opacity=".3"/>
+    <text x="440" y="331" fill="#ffffff" fill-opacity=".5" font-size="16">← →</text>
+  </g>
+
+  <!-- text -->
+  <g font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+    <g transform="translate(80 92)">
+      <rect width="56" height="56" rx="14" fill="url(#mark)"/>
+      <rect x="17.5" y="10.5" width="28" height="22" rx="4.5" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2.6"/>
+      <rect x="10.5" y="18.4" width="31.5" height="26.2" rx="5.2" fill="#fff"/>
+      <path d="M18.5 28.3h15M18.5 28.3l7.5 9.1M33.5 28.3l-7.5 9.1" stroke="#1f6feb" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      <circle cx="18.5" cy="28.3" r="3.5" fill="#1f6feb"/><circle cx="33.5" cy="28.3" r="3.5" fill="#1f6feb"/><circle cx="26" cy="37.4" r="3.5" fill="#0e9fd0"/>
+      <text x="76" y="38" fill="#ffffff" font-size="30" font-weight="700">Blueprint Deck Kit</text>
+    </g>
+    <text x="80" y="262" fill="#ffffff" font-size="62" font-weight="700" letter-spacing="-1.5">Turn your docs</text>
+    <text x="80" y="336" fill="#ffffff" font-size="62" font-weight="700" letter-spacing="-1.5">into a deck people</text>
+    <text x="80" y="410" fill="url(#txt)" font-size="62" font-weight="700" letter-spacing="-1.5">can explore</text>
+    <text x="80" y="476" fill="#aab4d4" font-size="24">An agent skill: one offline HTML file with a map,</text>
+    <text x="80" y="508" fill="#aab4d4" font-size="24">guided tour, personas, editor and PDF export.</text>
+    <text x="80" y="566" fill="#7c89b0" font-size="20">blueprint-deck.lukasvecerka.dev · MIT · Claude Code, Codex and more</text>
+  </g>
+</svg>

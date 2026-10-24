@@ -1,0 +1,108 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE } from "../data/site";
+
+interface Props { title?: string; description?: string; image?: string; wide?: boolean }
+const { title, description = SITE.description, image = "/og.png" } = Astro.props;
+const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name}: interactive presentation diagrams from your docs`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="author" content={SITE.author} />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <script is:inline>
+      // theme before first paint: the saved choice, else the system setting
+      (() => {
+        const root = document.documentElement;
+        const saved = (() => { try { return localStorage.getItem("themeMode"); } catch { return null; } })();
+        const mq = matchMedia("(prefers-color-scheme: dark)");
+        root.classList.toggle("dark", saved ? saved === "dark" : mq.matches);
+        mq.addEventListener("change", e => {
+          try { if (localStorage.getItem("themeMode")) return; } catch {}
+          root.classList.toggle("dark", e.matches);
+        });
+      })();
+    </script>
+  </head>
+  <body class="min-h-dvh flex flex-col">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] btn" data-variant="outline">Skip to content</a>
+    <Header />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import "basecoat-css/basecoat";
+      import "basecoat-css/tabs";
+
+      // theme toggle
+      document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]").forEach(btn =>
+        btn.addEventListener("click", () => {
+          const dark = !document.documentElement.classList.contains("dark");
+          document.documentElement.classList.toggle("dark", dark);
+          try { localStorage.setItem("themeMode", dark ? "dark" : "light"); } catch {}
+        }),
+      );
+
+      // copy buttons: <button data-copy="text"> or data-copy-target="#id"
+      const copy = async (btn: HTMLElement, text: string) => {
+        try { await navigator.clipboard.writeText(text); } catch {
+          const ta = Object.assign(document.createElement("textarea"), { value: text });
+          document.body.append(ta); ta.select(); document.execCommand("copy"); ta.remove();
+        }
+        btn.dataset.copied = "true";
+        const label = btn.querySelector("[data-copy-label]");
+        const old = label?.textContent;
+        if (label) label.textContent = "Copied";
+        setTimeout(() => { delete btn.dataset.copied; if (label && old) label.textContent = old; }, 1600);
+      };
+      document.addEventListener("click", e => {
+        const btn = (e.target as HTMLElement).closest<HTMLElement>("[data-copy], [data-copy-target]");
+        if (!btn) return;
+        const text = btn.dataset.copy ?? document.querySelector(btn.dataset.copyTarget!)?.textContent ?? "";
+        copy(btn, text.trim());
+      });
+
+      // copy buttons on rendered code blocks
+      document.querySelectorAll<HTMLPreElement>(".prose pre.astro-code").forEach(pre => {
+        const wrap = document.createElement("div");
+        wrap.className = "code-wrap";
+        pre.replaceWith(wrap);
+        wrap.append(pre);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn copy-btn";
+        btn.dataset.variant = "outline";
+        btn.dataset.size = "xs";
+        btn.innerHTML = '<span data-copy-label>Copy</span>';
+        btn.addEventListener("click", () => copy(btn, pre.textContent ?? ""));
+        wrap.append(btn);
+      });
+    </script>
+  </body>
+</html>

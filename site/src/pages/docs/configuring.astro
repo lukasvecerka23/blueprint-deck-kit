@@ -1,0 +1,90 @@
+---
+// Renders the annotated template config from the skill, section by section, with short explanations.
+import { Code } from "astro:components";
+import Docs from "../../layouts/Docs.astro";
+import template from "../../../../skill/blueprint-deck/templates/diagram.config.yaml?raw";
+import { SITE } from "../../data/site";
+
+const NOTES: Record<string, { title: string; html: string }> = {
+  version: {
+    title: "Header",
+    html: "Where the file lives and how to run it. <code>version: 2</code> is the current format; a version 1 config (no <code>diagrams:</code> list, a top-level <code>type</code>) still works and means one diagram.",
+  },
+  project: {
+    title: "project",
+    html: "The name and subtitle become the file's title (and the switcher's title when there are several diagrams); the one-liner becomes the lead on the start screen. <code>maturity</code> decides how statuses are worded: a <code>planned</code> product is never presented as built.",
+  },
+  branding: {
+    title: "branding",
+    html: "Theme, colours, shape and logo. Set <code>website</code> and the agent takes the logo, brand colours and product name from your site; explicit values here win. <code>name_rules</code> are wording rules the agent always follows.",
+  },
+  sources: {
+    title: "sources",
+    html: "What the agent reads (paths relative to the repository root), which files win when sources disagree, and what to do about conflicts (<code>report</code>, <code>ask</code> before writing, or follow <code>priority</code>). <code>derive_status_from</code> points at manifests (Helm, Argo CD, Terraform…) so a box only counts as running if something actually deploys it. <code>invent: never</code> means no numbers, names or claims that aren't in the sources.",
+  },
+  behaviour: {
+    title: "behaviour",
+    html: "How the file behaves when it opens: the start screen, where the tour card sits, zooming to the focused part, which connections and labels show, the moving dots on the main flow, the legend, whether the editor is enabled (<code>false</code> locks the file) and keyboard shortcuts.",
+  },
+  workflow: {
+    title: "workflow",
+    html: "How the agent works with you. With <code>confirm_structure</code> it proposes the areas, personas, tabs and tour first and waits for your OK. <code>pause_after_extract</code> stops after writing the content and the report. <code>output</code> is relative to the config file's folder.",
+  },
+  diagrams: {
+    title: "diagrams",
+    html: "One entry per diagram; with two or more the file gets a switcher (keys 1–9). Each has its own <code>type</code> (architecture, data-flow, process, journey, ecosystem, org, custom), <code>viewpoint</code> (product, mixed, technical), audience, map, personas, tabs (<code>views</code>), tour and sheets (<code>overlays</code>). <code>map.detail</code> sets the size: overview ~12–20 boxes, medium ~25–40, detailed ~40–60. <code>focus</code>, every <code>notes</code> field and <code>comments</code> are instructions to the agent.",
+  },
+  comments: {
+    title: "comments",
+    html: "Free text for the agent: what the audience cares about, what to emphasise, what is sensitive, what the last version got wrong. Comments override <code>sources.priority</code> (the agent still reports the conflict).",
+  },
+};
+
+// split the template at top-level keys; drop the "# ---- …" separator lines
+const lines = (template as string).replace(/\r\n/g, "\n").split("\n").filter(l => !/^#\s*-{8,}/.test(l));
+const chunks: { key: string; text: string }[] = [];
+let cur: { key: string; lines: string[] } = { key: "version", lines: [] };
+for (const line of lines) {
+  const m = /^([a-z_]+):/.exec(line);
+  if (m && m[1] !== "version" && cur.lines.some(l => l.trim())) {
+    chunks.push({ key: cur.key, text: cur.lines.join("\n").trim() });
+    cur = { key: m[1], lines: [] };
+  } else if (m) cur.key = m[1] === "version" ? "version" : m[1];
+  cur.lines.push(line);
+}
+chunks.push({ key: cur.key, text: cur.lines.join("\n").trim() });
+
+const headings = chunks.map(c => ({ depth: 2, slug: `cfg-${c.key}`, text: NOTES[c.key]?.title ?? c.key }));
+const SOURCE = "skill/blueprint-deck/templates/diagram.config.yaml";
+---
+<Docs title="Configuring" description="The config is your control surface: the agent follows it literally. Make it in the configurator, or edit the YAML." headings={headings} source={SOURCE}>
+  <p>
+    The <a href="/configurator/">configurator</a> writes this file for you and puts it into the prompt you paste into
+    your agent. You can also keep it in the repository as <code>diagrams/diagram.config.yaml</code> and edit it by hand;
+    then ask your agent <code>/blueprint-deck diagrams/diagram.config.yaml</code> (or "update the blueprint deck").
+  </p>
+  <p>
+    The sections <code>project</code>, <code>branding</code>, <code>sources</code>, <code>behaviour</code> and
+    <code>workflow</code> are shared by every diagram in the file. Each entry under <code>diagrams</code> is one diagram
+    with its own type, viewpoint, audience, map, personas, tabs, tour and sheets. Below is the full annotated template,
+    section by section.
+  </p>
+  <div class="callout">
+    No config yet? Ask your agent to <strong>init</strong> one: it copies this template, fills in what it can infer
+    from the repository and asks you about the audience, the viewpoint and the story of the tour.
+  </div>
+
+  {chunks.map(c => (
+    <section>
+      <h2 id={`cfg-${c.key}`}>{NOTES[c.key]?.title ?? c.key}</h2>
+      {NOTES[c.key] && <p set:html={NOTES[c.key].html} />}
+      <Code code={c.text} lang="yaml" themes={{ light: "github-light", dark: "github-dark-dimmed" }} defaultColor={false} />
+    </section>
+  ))}
+
+  <h2 id="cfg-download">The whole file</h2>
+  <p>
+    The template ships with the skill as <code>templates/diagram.config.yaml</code>. You can also
+    <a href={`${SITE.repo}/blob/main/${SOURCE}`}>view it on GitHub</a> or copy every section above in order.
+  </p>
+</Docs>

@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>Blueprint Deck configurator</title>
+<!-- Basecoat UI (MIT, https://basecoatui.com), vendored so the page works offline from file:// -->
+<link rel="stylesheet" href="vendor/basecoat/basecoat.cdn.min.css">
+<script>
+  // Set light/dark before the first paint: the saved choice, else the system setting.
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem("blueprint-deck-configurator-scheme"); } catch (e) {}
+    var dark = saved ? saved === "dark" : !!(window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.classList.toggle("dark", dark);
+  })();
+</script>
+<script src="vendor/basecoat/basecoat.min.js" defer></script>
+<script src="vendor/basecoat/tabs.min.js" defer></script>
+<script src="vendor/basecoat/toast.min.js" defer></script>
+<style>
+  /* Layout and a few app-specific pieces. Colours come from Basecoat's tokens (--background, --muted-foreground …). */
+  :root { --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  code, pre, kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  /* top bar */
+  .topbar { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(10px); background: color-mix(in oklab, var(--background) 85%, transparent); border-bottom: 1px solid var(--border); }
+  .topbar-in { max-width: 1560px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; gap: 8px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; margin-right: auto; }
+  .brand-mark { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: var(--primary); color: var(--primary-foreground); }
+  .brand small { font-weight: 400; color: var(--muted-foreground); }
+  .topbar .btn { white-space: nowrap; }
+  @media (max-width: 640px) { .brand small, .hide-sm { display: none; } .topbar-in { padding: 10px 14px; } }
+
+  /* two columns: form | sticky preview + output */
+  .app { max-width: 1560px; margin: 0 auto; padding: 24px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(380px, 560px); gap: 28px; align-items: start; }
+  .intro { grid-column: 1 / -1; }
+  .intro h1 { margin: 0 0 6px; font-size: 26px; letter-spacing: -.02em; line-height: 1.2; }
+  .intro p { margin: 0; max-width: 860px; color: var(--muted-foreground); }
+  .side { position: sticky; top: 72px; display: grid; gap: 16px; max-height: calc(100vh - 88px); overflow: auto; padding-bottom: 4px; scrollbar-width: thin; }
+  @media (max-width: 1100px) { .app { grid-template-columns: minmax(0, 1fr); } .side { position: static; max-height: none; overflow: visible; } }
+  @media (max-width: 640px) { .app { padding: 14px; gap: 18px; } .intro h1 { font-size: 22px; } }
+
+  /* form sections (collapsible cards) */
+  .form { display: grid; gap: 14px; min-width: 0; }
+  details.sec { border: 1px solid var(--border); border-radius: 14px; background: var(--card); }
+  details.sec > summary { display: flex; width: 100%; align-items: center; gap: 12px; padding: 14px 18px; cursor: pointer; list-style: none; border-radius: 14px; }
+  details.sec > summary:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  details.sec > summary .num { width: 24px; height: 24px; flex: none; border-radius: 99px; display: grid; place-items: center; font-size: 12px; font-weight: 600; background: var(--muted); color: var(--muted-foreground); }
+  details.sec > summary h2 { margin: 0; font-size: 15px; font-weight: 600; }
+  details.sec > summary p { margin: 0; font-size: 12.5px; color: var(--muted-foreground); }
+  details.sec > summary .chev { margin-left: auto; transition: transform .2s; color: var(--muted-foreground); flex: none; }
+  details.sec[open] > summary .chev { transform: rotate(90deg); }
+  details.sec > .body { padding: 2px 18px 18px; }
+  /* nested sections inside a diagram tab */
+  details.sub { border-top: 1px solid var(--border); }
+  details.sub > summary { display: flex; width: 100%; align-items: center; gap: 8px; padding: 12px 2px; cursor: pointer; font-weight: 600; font-size: 13.5px; }
+  details.sub > summary small { font-weight: 400; color: var(--muted-foreground); }
+  details.sub > summary .chev { margin-left: auto; transition: transform .2s; color: var(--muted-foreground); flex: none; }
+  details.sub[open] > summary .chev { transform: rotate(90deg); }
+  details.sub > .body { padding: 0 2px 16px; }
+  details.sub > summary:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; border-radius: 6px; }
+
+  /* fields */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px 18px; }
+  /* native selects size themselves to their longest option; keep them inside their column */
+  .grid > *, .field, .app > * { min-width: 0; }
+  select, .select { width: 100%; max-width: 100%; min-width: 0; text-overflow: ellipsis; }
+  .f { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .f.wide { grid-column: 1 / -1; }
+  .f > .label { display: flex; align-items: baseline; gap: 6px; }
+  .f .label small { font-weight: 400; color: var(--muted-foreground); }
+  .hint { font-size: 12px; color: var(--muted-foreground); line-height: 1.45; margin: 0; }
+  .hint code { font-size: 11.5px; background: var(--muted); padding: 1px 4px; border-radius: 4px; }
+  .textarea { min-height: 72px; resize: vertical; }
+  .textarea.list { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+  .f.switch { flex-direction: row; align-items: flex-start; gap: 10px; }
+  .f.switch .input[role=switch] { margin-top: 1px; }
+  .f.switch .label { line-height: 1.3; }
+  .f.switch > div { display: flex; flex-direction: column; gap: 3px; }
+  .is-hidden { display: none !important; }
+  .group-title { grid-column: 1 / -1; margin: 6px 0 -4px; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted-foreground); }
+
+  /* chips (multi-select checkboxes) */
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 9px; border: 1px solid var(--border); border-radius: 99px; cursor: pointer; font-size: 13px; user-select: none; }
+  .chip:has(input:checked) { border-color: var(--primary); background: color-mix(in oklab, var(--primary) 10%, transparent); }
+  .chip:has(input:focus-visible) { outline: 2px solid var(--ring); outline-offset: 1px; }
+
+  /* segmented control (radio group) */
+  .seg { display: inline-flex; flex-wrap: wrap; padding: 3px; gap: 2px; border-radius: 10px; background: var(--muted); width: fit-content; max-width: 100%; }
+  .seg label { position: relative; padding: 5px 12px; border-radius: 7px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--muted-foreground); }
+  .seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .seg label:has(input:checked) { background: var(--background); color: var(--foreground); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+  .seg label:has(input:focus-visible) { outline: 2px solid var(--ring); outline-offset: 1px; }
+
+  /* option cards (type, viewpoint) */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+  .ocard { position: relative; display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; }
+  .ocard b { font-size: 13px; font-weight: 600; }
+  .ocard span { font-size: 12px; color: var(--muted-foreground); line-height: 1.4; }
+  .ocard input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .ocard:has(input:checked) { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); background: color-mix(in oklab, var(--primary) 6%, transparent); }
+  .ocard:has(input:focus-visible) { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+  /* theme swatches */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; }
+  .swatch { position: relative; border: 1px solid var(--border); border-radius: 10px; padding: 6px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; }
+  .swatch input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .swatch .pv { height: 46px; border-radius: 7px; position: relative; overflow: hidden; border: 1px solid rgba(127,127,127,.18); }
+  .swatch .pv i { position: absolute; border-radius: 4px; }
+  .swatch .pv i.a { left: 8px; top: 9px; width: 34px; height: 12px; }
+  .swatch .pv i.b { left: 8px; top: 25px; width: 22px; height: 12px; }
+  .swatch .pv i.c { right: 8px; top: 9px; width: 38px; height: 28px; border-radius: 5px; }
+  .swatch .nm { font-size: 12.5px; font-weight: 500; display: flex; justify-content: space-between; padding: 0 2px; }
+  .swatch .nm small { color: var(--muted-foreground); font-weight: 400; }
+  .swatch:has(input:checked) { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+  .swatch:has(input:focus-visible) { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+  /* colour picker row: native picker + hex text + clear */
+  .color-row { display: flex; gap: 6px; align-items: center; }
+  .color-row input[type=color] { width: 40px; height: 36px; padding: 2px; border: 1px solid var(--input); border-radius: 8px; background: transparent; cursor: pointer; flex: none; }
+  .color-row .input { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  /* diagram tabs */
+  .dtabs-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .dtabs-bar .tabs { min-width: 0; max-width: 100%; }
+  .dtabs-bar .tabs > [role=tablist] { overflow-x: auto; max-width: 100%; scrollbar-width: thin; }
+  .dtabs-bar .tabs > [role=tablist] > [role=tab] { white-space: nowrap; }
+  .dtools { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-left: auto; }
+  .dtools select.select { width: auto; max-width: 220px; }
+  .vp-note { font-size: 12.5px; padding: 8px 10px; margin-bottom: 8px; border-radius: 8px; background: color-mix(in oklab, var(--primary) 8%, transparent); border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent); }
+  .vp-note code { font-size: 11.5px; }
+
+  /* right column */
+  .card > header h2 { margin: 0; }
+  .preview-box { position: relative; width: 100%; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: #050914; }
+  .preview-box iframe { position: absolute; left: 0; top: 0; width: 1280px; height: 800px; border: 0; transform-origin: 0 0; }
+  .preview-off { margin: 0; padding: 14px; border-radius: 10px; border: 1px dashed var(--border); color: var(--muted-foreground); font-size: 13px; }
+  .codebox { border: 1px solid var(--border); border-radius: 10px; background: var(--muted); }
+  .codebox pre { margin: 0; padding: 12px 14px; overflow: auto; font-size: 12px; line-height: 1.55; white-space: pre; max-height: 46vh; tab-size: 2; }
+  .codebox pre.wrap { white-space: pre-wrap; word-break: break-word; max-height: 34vh; }
+  .codebox pre:focus-visible { outline: 2px solid var(--ring); outline-offset: -2px; border-radius: 10px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .stack { display: grid; gap: 10px; padding-top: 4px; }
+  .cta { width: 100%; justify-content: center; }
+  .cmd { display: flex; align-items: center; gap: 6px; border: 1px solid var(--border); border-radius: 8px; padding: 4px 4px 4px 10px; background: var(--muted); }
+  .cmd code { flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; font-size: 12px; scrollbar-width: none; }
+  .cmd-label { font-size: 12px; font-weight: 600; margin: 8px 0 4px; }
+  .cmd-label:first-child { margin-top: 0; }
+  .steps { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+  .note { margin: 0; font-size: 12.5px; color: var(--muted-foreground); }
+  .note code, .card header code { font-size: 12px; background: var(--muted); padding: 1px 5px; border-radius: 4px; }
+  .dialog textarea { width: 100%; min-height: 260px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+  .err { margin: 0; color: var(--destructive); font-size: 12.5px; white-space: pre-wrap; }
+  .err:empty { display: none; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="8.5" y="14" width="7" height="7" rx="1.5"/><path d="M6.5 10v2h11v-2M12 12v2"/></svg></span>
+      <span>Blueprint Deck <small>configurator</small></span>
+    </div>
+    <button type="button" class="btn" data-variant="ghost" data-size="sm" id="btnImport" title="Paste a diagram.config.yaml to continue editing it">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg><span class="hide-sm">Import</span><span class="sr-only"> a configuration</span></button>
+    <button type="button" class="btn" data-variant="ghost" data-size="sm" id="btnReset" title="Clear all answers and start again">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="hide-sm">Reset</span><span class="sr-only"> all answers</span></button>
+    <button type="button" class="btn" data-variant="outline" data-size="icon-sm" id="btnScheme" aria-label="Switch between light and dark mode" title="Light / dark">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="app">
+  <div class="intro">
+    <h1>Configure your Blueprint Deck</h1>
+    <p>Describe the interactive diagram you want: one offline HTML file with a pan-and-zoom map, clickable boxes, tabs, personas, a guided tour and a built-in editor. This form writes the <code>diagram.config.yaml</code> and the prompt for your coding agent (Claude Code, Codex or any other agent with the skill installed). The defaults are sensible; change what matters to you. Your answers stay in this browser.</p>
+  </div>
+
+  <main class="form" id="form" aria-label="Configuration form"></main>
+
+  <aside class="side" aria-label="Preview and output">
+    <section class="card" data-size="sm" id="previewCard">
+      <header>
+        <h2>Theme preview</h2>
+        <p>A real Blueprint Deck (the Acme example) in your theme. It is live: click around.</p>
+      </header>
+      <section>
+        <div class="preview-box" id="previewBox">
+          <iframe id="previewFrame" title="Live preview of the theme on an example diagram" src="../examples/acme/index.html?preview#d=platform&amp;lens=overview"></iframe>
+        </div>
+        <p class="preview-off is-hidden" id="previewOff">The live preview isn't available here (it needs the kit's <code>examples/</code> folder next to <code>configurator/</code>). Everything else works.</p>
+      </section>
+    </section>
+
+    <section class="card" data-size="sm">
+      <header>
+        <h2>Your configuration</h2>
+        <p>Paste the prompt into your agent, in the repository you want a diagram for.</p>
+      </header>
+      <section>
+        <div class="tabs" id="outTabs">
+          <nav role="tablist" aria-orientation="horizontal" aria-label="Output">
+            <button type="button" role="tab" id="outTab-prompt" aria-controls="outPanel-prompt" aria-selected="true" tabindex="0">Prompt</button>
+            <button type="button" role="tab" id="outTab-yaml" aria-controls="outPanel-yaml" aria-selected="false" tabindex="-1">diagram.config.yaml</button>
+          </nav>
+          <div role="tabpanel" id="outPanel-prompt" aria-labelledby="outTab-prompt" tabindex="-1">
+            <div class="stack">
+              <button type="button" class="btn cta" data-size="lg" id="btnCopyPrompt">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy prompt</button>
+              <div class="codebox"><pre class="wrap" id="promptOut" tabindex="0" aria-label="Prompt for your agent"></pre></div>
+              <p class="note">The prompt contains the whole configuration, so it works in any agent. In Claude Code you can also save the file as <code>diagrams/diagram.config.yaml</code> and type <code>/blueprint-deck diagrams/diagram.config.yaml</code>.</p>
+            </div>
+          </div>
+          <div role="tabpanel" id="outPanel-yaml" aria-labelledby="outTab-yaml" tabindex="-1" hidden>
+            <div class="stack">
+              <div class="row">
+                <button type="button" class="btn" data-size="sm" id="btnDownload">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+                  Download diagram.config.yaml</button>
+                <button type="button" class="btn" data-variant="outline" data-size="sm" id="btnCopyYaml">Copy</button>
+              </div>
+              <div class="codebox"><pre id="yamlOut" tabindex="0" aria-label="Generated diagram.config.yaml"></pre></div>
+              <p class="note">Put it in <code>&lt;your repo&gt;/diagrams/</code>. Every key is explained in the kit's annotated template.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="card" data-size="sm">
+      <header>
+        <h2>Install the skill</h2>
+        <p>Once per machine: installs the <code>blueprint-deck</code> skill for your agents.</p>
+      </header>
+      <section>
+        <div class="cmd-label">macOS / Linux</div>
+        <div class="cmd"><code id="cmdSh">curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh</code>
+          <button type="button" class="btn" data-variant="ghost" data-size="sm" data-copy="#cmdSh" aria-label="Copy the macOS and Linux install command">Copy</button></div>
+        <div class="cmd-label">Windows (PowerShell)</div>
+        <div class="cmd"><code id="cmdPs">irm https://blueprint-deck.lukasvecerka.dev/install.ps1 | iex</code>
+          <button type="button" class="btn" data-variant="ghost" data-size="sm" data-copy="#cmdPs" aria-label="Copy the Windows install command">Copy</button></div>
+        <p class="note" style="margin-top:10px">Source, docs and examples: <a href="https://github.com/lukasvecerka23/blueprint-deck-kit" target="_blank" rel="noopener">github.com/lukasvecerka23/blueprint-deck-kit</a></p>
+      </section>
+    </section>
+
+    <section class="card" data-size="sm">
+      <header><h2>After generating</h2></header>
+      <section>
+        <ol class="steps note">
+          <li>Open the HTML file (double-click; it works offline).</li>
+          <li>Press <kbd class="kbd">E</kbd> to edit texts, colours and the logo in the browser.</li>
+          <li>Press <kbd class="kbd">P</kbd> for a PDF deck.</li>
+          <li>Or ask your agent for changes ("move X", "add a persona", "lighter theme").</li>
+        </ol>
+      </section>
+    </section>
+  </aside>
+</div>
+
+<!-- Import dialog -->
+<dialog id="importDialog" class="dialog" aria-labelledby="importTitle" aria-describedby="importDesc">
+  <div>
+    <header>
+      <h2 id="importTitle">Import a configuration</h2>
+      <p id="importDesc">Paste a <code>diagram.config.yaml</code> made with this configurator (or the kit's template), or choose the file. It replaces the current answers.</p>
+    </header>
+    <section style="display:grid;gap:10px">
+      <label class="label sr-only" for="importText">YAML to import</label>
+      <textarea class="textarea" id="importText" spellcheck="false" placeholder="version: 2&#10;project:&#10;  name: …"></textarea>
+      <div class="row"><label class="label" for="importFile">Or choose a file</label><input type="file" id="importFile" accept=".yaml,.yml,text/yaml,text/plain"></div>
+      <p class="err" id="importErr" role="alert"></p>
+    </section>
+    <footer>
+      <button type="button" class="btn" data-variant="outline" id="importCancel">Cancel</button>
+      <button type="button" class="btn" id="importGo">Import</button>
+    </footer>
+  </div>
+</dialog>
+
+<!-- Confirm dialog (instead of the browser's own confirm popup) -->
+<dialog id="confirmDialog" class="dialog" aria-labelledby="confirmTitle" aria-describedby="confirmText">
+  <div>
+    <header>
+      <h2 id="confirmTitle"></h2>
+      <p id="confirmText"></p>
+    </header>
+    <footer>
+      <button type="button" class="btn" data-variant="outline" id="confirmCancel">Cancel</button>
+      <button type="button" class="btn" id="confirmOk">OK</button>
+    </footer>
+  </div>
+</dialog>
+
+<div id="toaster" class="toaster" data-align="end"></div>
+
+<script>
+"use strict";
+/* ==========================================================================================
+   Blueprint Deck configurator
+   A small app in plain JavaScript, no build step:
+     1. constants   allowed values, mirrored from skill/blueprint-deck/templates/diagram.config.yaml
+     2. state       the answers (shared sections + a list of diagrams), defaults, persistence
+     3. YAML        a tiny serializer for the config, and a parser to import it back
+     4. form        declarative field lists rendered to HTML, one delegated input handler
+     5. diagrams    tabs: add, duplicate, remove, copy settings, viewpoint suggestions
+     6. output      YAML, prompt, copy, download
+     7. preview     the Acme example in an iframe, re-themed live with postMessage
+   ========================================================================================== */
+
+/* ------------------------------------------------------------------ 1. constants */
+const STORAGE_KEY = "blueprint-deck-config-v2";
+const SCHEME_KEY = "blueprint-deck-configurator-scheme";
+
+// The engine's theme presets (engine/src/core.js): background, a box colour, primary, secondary.
+const THEMES = [
+  { id: "midnight", mode: "dark", bg: "#050914", node: "#182142", primary: "#3b82f6", secondary: "#7c3aed" },
+  { id: "blueprint", mode: "dark", bg: "#06132a", node: "#14284f", primary: "#1f6feb", secondary: "#22b8e6" },
+  { id: "graphite", mode: "dark", bg: "#0a0b0e", node: "#24262d", primary: "#22d3ee", secondary: "#6366f1" },
+  { id: "forest", mode: "dark", bg: "#04100c", node: "#123026", primary: "#10b981", secondary: "#0ea5e9" },
+  { id: "ember", mode: "dark", bg: "#0f0708", node: "#34181b", primary: "#e11d48", secondary: "#f97316" },
+  { id: "light", mode: "light", bg: "#f4f6fa", node: "#ffffff", primary: "#2563eb", secondary: "#7c3aed" },
+  { id: "paper", mode: "light", bg: "#f7f3ec", node: "#fffdf9", primary: "#c2410c", secondary: "#0f766e" },
+];
+const themeById = id => THEMES.find(t => t.id === id) || THEMES[0];
+const presetColor = (p) => themeById(state.branding.theme)[p.endsWith("primary") ? "primary" : "secondary"];
+
+const TYPES = [
+  ["architecture", "Architecture", "Components and how they connect: users left, system in the middle, providers right."],
+  ["data-flow", "Data flow", "How data moves: sources, processing stages and stores, consumers."],
+  ["process", "Process", "Steps in order: phases, hand-offs, manual vs. automated."],
+  ["journey", "Journey", "A customer's path: stages, touchpoints, pains and opportunities."],
+  ["ecosystem", "Ecosystem", "You in the middle; partners, products and integrations around you."],
+  ["org", "Organisation", "Units, teams and roles, and how they work together."],
+  ["custom", "Custom", "Your own structure; describe it in the map notes."],
+];
+const VIEWPOINTS = [
+  ["product", "Product", "What it does for whom: capabilities, outcomes and value. Best for executives, business, customers, investors."],
+  ["mixed", "Mixed", "Capabilities first, with the technology underneath named in a few words."],
+  ["technical", "Technical", "Components, runtimes, protocols and versions, with alternatives and the exit path. For architects and engineers."],
+];
+// When the viewpoint changes, these fields get suggested values, unless the user has set them.
+const VIEWPOINT_DEFAULTS = {
+  product: { "audience.who": ["executives"], "audience.tone": "executive", "audience.goal": "Understand what the platform does, for whom, and what comes next",
+    "map.technology": "from-viewpoint", "personas.enabled": true, "tour.steps": "12-18", "tour.story": "problem-solution" },
+  mixed: { "audience.who": ["executives", "architects"], "audience.tone": "executive", "audience.goal": "Understand what the platform does and the technology underneath it",
+    "map.technology": "pick", "personas.enabled": true, "tour.steps": "12-18", "tour.story": "problem-solution" },
+  technical: { "audience.who": ["architects", "engineers"], "audience.tone": "technical", "audience.goal": "Understand how the platform is built and run, and why each technology was chosen",
+    "map.technology": "full", "tour.steps": "8-12", "tour.story": "component-walk" },
+};
+const WHO = ["executives", "architects", "engineers", "business", "customers", "investors"];
+const VIEW_PRESETS = [
+  ["main-flow", "How does a request (or the main flow) travel?"],
+  ["governance", "Who controls, approves and audits what?"],
+  ["operations", "How is it run, monitored and supported?"],
+  ["deployment", "Where does it run, and how is it shipped?"],
+  ["data", "Where does data live and move?"],
+  ["security", "Identity, access, secrets and trust boundaries"],
+  ["cost", "What drives cost, and who pays?"],
+  ["roadmap", "What exists now, next and later?"],
+];
+const TOUR_INCLUDE = [["roadmap", "Roadmap"], ["options", "Options sheet"], ["open-questions", "Open questions"]];
+
+/* ------------------------------------------------------------------ 2. state */
+// The state mirrors the config 1:1, in the template's key order. Keys starting with "_" are UI bookkeeping and
+// never reach the YAML: _touched = fields the user set (viewpoint suggestions leave them alone),
+// _autoId = the id follows the name, _overrideSources = this diagram has its own sources.
+function defaultShared() {
+  return {
+    version: 2,
+    project: { name: "My Platform", subtitle: "Product blueprint", maturity: "planned", one_liner: "" },
+    branding: { website: "", theme: "midnight", primary: "", secondary: "", shape: "rounded", logo: "", name_rules: [] },
+    sources: { include: ["docs/**/*.md", "README.md"], exclude: [], priority: [], derive_status_from: [], on_conflict: "report", cite_sources: true, invent: "never" },
+    behaviour: { hero: true, tour_position: "auto", zoom_to_focus: true, edges_filter_by_view: true, edge_labels: "focus", particles: "main-flow",
+      overview_edges: "all", legend: "collapsed", editor: true, keyboard: true },
+    workflow: { confirm_structure: true, pause_after_extract: false, output: "index.html" },
+    diagrams: [],
+    comments: "",
+  };
+}
+function defaultDiagram(id = "platform", name = "Platform") {
+  return {
+    id, name, type: "architecture", viewpoint: "product", focus: "",
+    audience: { who: ["executives"], goal: "Understand what the platform does, for whom, and what comes next", tone: "executive", language: "en" },
+    sources: { include: [], exclude: [], priority: [], derive_status_from: [] },
+    map: { detail: "medium", external: true, customer_owned: true, frame_label: "", technology: "from-viewpoint", must_show: [], leave_out: [],
+      status: { enabled: true, meaning: "scope", values: [] }, notes: "" },
+    personas: { enabled: true, names: [] },
+    views: { presets: ["main-flow", "governance", "operations", "deployment"], custom: [] },
+    tour: { enabled: true, steps: "12-18", story: "problem-solution", use_case: "", opening: "problem", closing: "why-this",
+      include: ["roadmap", "options", "open-questions"], notes: "" },
+    overlays: { roadmap: { enabled: true, source: "" }, options: { enabled: false, title: "", source: "" }, custom: [] },
+    comments: "",
+    _touched: {}, _autoId: true, _overrideSources: false,
+  };
+}
+function defaultState() { const s = defaultShared(); s.diagrams.push(defaultDiagram()); return s; }
+
+const isObj = v => v !== null && typeof v === "object" && !Array.isArray(v);
+const clone = v => JSON.parse(JSON.stringify(v));
+const getPath = (o, p) => p.split(".").reduce((a, k) => (a == null ? undefined : a[k]), o);
+function setPath(o, p, v) { const ks = p.split("."); const last = ks.pop(); ks.reduce((a, k) => (isObj(a[k]) ? a[k] : (a[k] = {})), o)[last] = v; }
+const slugify = s => String(s || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function uniqueId(base, used) { let id = base, n = 2; while (used.has(id)) id = `${base}-${n++}`; return id; }
+
+// Copy the known keys of src into target (target holds the defaults, and so the types). Unknown keys are collected.
+function mergeKnown(target, src, path, unknown) {
+  if (!isObj(src)) return target;
+  for (const k of Object.keys(src)) if (!(k in target) && !k.startsWith("_")) unknown.push(path + k);
+  for (const k of Object.keys(target)) {
+    if (!(k in src) || k === "diagrams") continue;
+    const t = target[k], v = src[k];
+    if (k === "_touched") target[k] = isObj(v) ? { ...v } : {};
+    else if (isObj(t)) mergeKnown(t, isObj(v) ? v : {}, path + k + ".", unknown);
+    else if (Array.isArray(t)) target[k] = Array.isArray(v) ? v.filter(x => x != null && x !== "").map(String) : (v == null || v === "" ? [] : [String(v)]);
+    else if (typeof t === "boolean") target[k] = v === true || v === "true";
+    else if (typeof t === "number") target[k] = Number(v) || t;
+    else target[k] = v == null ? "" : String(v).replace(/\s+$/, "");
+  }
+  return target;
+}
+// A config (from storage or an import) -> a full state with every key present.
+function fromConfig(cfg, fromFile) {
+  const unknown = [];
+  const s = mergeKnown(defaultShared(), cfg, "", unknown);
+  let list = cfg.diagrams;
+  if (!Array.isArray(list)) { // version 1: one diagram, its settings at the top level
+    const one = {};
+    for (const k of Object.keys(defaultDiagram())) if (k in cfg && k !== "sources" && k !== "comments") one[k] = cfg[k];
+    list = [one];
+    for (let i = unknown.length - 1; i >= 0; i--) if (unknown[i] in one) unknown.splice(i, 1);
+  }
+  const used = new Set();
+  s.diagrams = list.filter(isObj).map((src, i) => {
+    const d = mergeKnown(defaultDiagram(), src, `diagrams[${i}].`, unknown);
+    if (fromFile) {
+      d._overrideSources = isObj(src.sources) && Object.keys(src.sources).length > 0;
+      d._touched = diffPaths(defaultDiagram(), d);
+      d._autoId = !src.id || src.id === slugify(src.name);
+    }
+    d.id = uniqueId(slugify(d.id) || slugify(d.name) || "diagram", used); used.add(d.id);
+    return d;
+  });
+  if (!s.diagrams.length) s.diagrams.push(defaultDiagram());
+  s.version = 2;
+  return { state: s, unknown };
+}
+// Leaf paths whose value differs from the defaults (after an import they count as "set by the user").
+function diffPaths(def, d, prefix = "", out = {}) {
+  for (const k of Object.keys(def)) {
+    if (k.startsWith("_")) continue;
+    if (isObj(def[k])) diffPaths(def[k], d[k] || {}, prefix + k + ".", out);
+    else if (JSON.stringify(def[k]) !== JSON.stringify(d[k])) out[prefix + k] = true;
+  }
+  return out;
+}
+// The clean config that is written to YAML: no "_" keys, trimmed texts, the sources override only when on
+// (and then only the lists that were filled; an empty {} means "use the shared sources", as in the template).
+function toConfig(s) {
+  const strip = v => {
+    if (Array.isArray(v)) return v.map(strip);
+    if (isObj(v)) { const o = {}; for (const [k, x] of Object.entries(v)) if (!k.startsWith("_")) o[k] = strip(x); return o; }
+    return typeof v === "string" ? v.trim() : v;
+  };
+  const cfg = strip(s);
+  cfg.diagrams = s.diagrams.map(d => {
+    const c = strip(d), o = {};
+    if (d._overrideSources) for (const [k, v] of Object.entries(c.sources)) if (v.length) o[k] = v;
+    c.sources = o;
+    return c;
+  });
+  return cfg;
+}
+
+let state, ui = { active: 0, open: {} };
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      state = fromConfig(isObj(saved.state) ? saved.state : {}, false).state;
+      ui = { active: 0, open: {}, ...(isObj(saved.ui) ? saved.ui : {}) };
+      ui.active = Math.min(Math.max(0, ui.active | 0), state.diagrams.length - 1);
+      return;
+    }
+  } catch (e) { /* storage blocked or corrupt: start fresh */ }
+  state = defaultState();
+}
+let saveTimer = 0;
+function save() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ state, ui })); } catch (e) { /* private mode */ } }, 200);
+}
+
+/* ------------------------------------------------------------------ 3. YAML */
+// BEGIN yaml (the Node test loads this block; keep it free of DOM access)
+// Serializer: block mappings and block lists in the template's key order (= object insertion order).
+// Strings are quoted unless they are a plain lowercase word (enum values, ids, language codes); "off", "yes",
+// "no" … are always quoted because YAML 1.1 parsers read them as booleans. Multi-line strings become "|" blocks.
+const YAML_RESERVED = /^(true|false|yes|no|on|off|y|n|null|~)$/i;
+function yamlScalar(v) {
+  if (v === null || v === undefined) return '""';
+  if (typeof v === "boolean" || typeof v === "number") return String(v);
+  const s = String(v);
+  if (/^[a-z][a-z0-9-]*$/.test(s) && !YAML_RESERVED.test(s)) return s;
+  return JSON.stringify(s); // a JSON string is a valid YAML double-quoted scalar
+}
+function yamlEntry(indent, key, v) {
+  const pad = " ".repeat(indent);
+  if (Array.isArray(v)) return v.length ? [`${pad}${key}:`, ...yamlSeq(v, indent + 2)] : [`${pad}${key}: []`];
+  if (v !== null && typeof v === "object") return Object.keys(v).length ? [`${pad}${key}:`, ...yamlMap(v, indent + 2)] : [`${pad}${key}: {}`];
+  if (typeof v === "string" && v.includes("\n") && !/^\s/.test(v)) {
+    return [`${pad}${key}: |`, ...v.replace(/\s+$/, "").split("\n").map(l => (l.trim() ? `${pad}  ${l.replace(/\s+$/, "")}` : ""))];
+  }
+  return [`${pad}${key}: ${yamlScalar(v)}`];
+}
+function yamlMap(obj, indent) {
+  const out = [];
+  for (const [k, v] of Object.entries(obj)) if (v !== undefined) out.push(...yamlEntry(indent, k, v));
+  return out;
+}
+function yamlSeq(arr, indent) {
+  const pad = " ".repeat(indent), out = [];
+  for (const item of arr) {
+    if (item !== null && typeof item === "object" && !Array.isArray(item)) {
+      const lines = yamlMap(item, indent + 2);
+      if (!lines.length) { out.push(`${pad}- {}`); continue; }
+      lines[0] = `${pad}- ${lines[0].slice(indent + 2)}`;
+      out.push(...lines);
+    } else if (Array.isArray(item)) out.push(`${pad}- ${JSON.stringify(item)}`);
+    else out.push(`${pad}- ${yamlScalar(typeof item === "string" ? item.replace(/\s*\n\s*/g, " ") : item)}`);
+  }
+  return out;
+}
+// The whole file: a short header, the shared sections, the diagrams, the top-level comments.
+function toYaml(cfg) {
+  const L = [
+    "# diagram.config.yaml: how your Blueprint Deck should be generated (made with the Blueprint Deck configurator).",
+    "# Put it in <your repo>/diagrams/ and ask your agent: \"/blueprint-deck diagrams/diagram.config.yaml\".",
+    "# Every key is explained in the kit's annotated template: skill/blueprint-deck/templates/diagram.config.yaml",
+    `version: ${cfg.version || 2}`,
+    "",
+    "# ---------------------------------------------------------------- shared by every diagram in the file",
+  ];
+  for (const k of ["project", "branding", "sources", "behaviour", "workflow"]) L.push(...yamlEntry(0, k, cfg[k] || {}), "");
+  L.push(`# ---------------------------------------------------------------- one entry per diagram (${cfg.diagrams.length === 1 ? "one entry = one diagram, no switcher" : "several entries = one file with a switcher"})`);
+  L.push("diagrams:");
+  cfg.diagrams.forEach((d, i) => { if (i) L.push(""); L.push(...yamlSeq([d], 2)); });
+  L.push("", ...yamlEntry(0, "comments", cfg.comments || ""));
+  return L.join("\n") + "\n";
+}
+
+// Parser for Import: the subset this page writes, plus what the kit's template uses (one-line flow lists and
+// maps, comments, "|" blocks). Not a general YAML parser: anchors, tags and multi-line flow values are not supported.
+function parseYaml(text) {
+  const lines = String(text).replace(/\r\n?/g, "\n").replace(/\t/g, "  ").split("\n");
+  let i = 0;
+  const fail = msg => { throw new Error(`line ${i + 1}: ${msg}`); };
+  const stripComment = s => {
+    let q = null;
+    for (let k = 0; k < s.length; k++) {
+      const c = s[k];
+      if (q) { if (q === '"' && c === "\\") k++; else if (c === q) q = null; }
+      else if ((c === '"' || c === "'") && (k === 0 || /[\s:\[{,]/.test(s[k - 1]))) q = c;
+      else if (c === "#" && (k === 0 || /\s/.test(s[k - 1]))) return s.slice(0, k);
+    }
+    return s;
+  };
+  const info = idx => {
+    const s = stripComment(lines[idx]).replace(/\s+$/, "");
+    if (!s.trim() || /^(---|\.\.\.)$/.test(s.trim())) return null;
+    return { indent: s.length - s.replace(/^ +/, "").length, text: s.trim() };
+  };
+  const skip = () => { while (i < lines.length && !info(i)) i++; };
+  const isItem = t => t === "-" || t.startsWith("- ");
+  const keyRe = /^("(?:[^"\\]|\\.)*"|'(?:[^']|'')*'|[^\s"'#\-\[{][^:]*?|-[^\s:][^:]*?)\s*:(?:\s+(.*))?$/;
+
+  function scalar(s) {
+    s = s.trim();
+    if (s.startsWith('"')) { try { return JSON.parse(s); } catch (e) { fail(`bad quoted string ${s}`); } }
+    if (s.startsWith("'")) { if (s.length < 2 || !s.endsWith("'")) fail(`bad quoted string ${s}`); return s.slice(1, -1).replace(/''/g, "'"); }
+    if (s === "true") return true;
+    if (s === "false") return false;
+    if (s === "null" || s === "~" || s === "") return null;
+    if (/^-?\d+(\.\d+)?$/.test(s)) return Number(s);
+    return s;
+  }
+  function flow(s) { // one-line [a, "b"] and { k: v } values, nested allowed
+    let p = 0;
+    const ws = () => { while (/\s/.test(s[p] || "")) p++; };
+    const token = isKey => {
+      ws();
+      if (s[p] === '"' || s[p] === "'") {
+        const q = s[p]; let e = p + 1;
+        while (e < s.length && s[e] !== q) { if (q === '"' && s[e] === "\\") e++; e++; }
+        const raw = s.slice(p, e + 1); p = e + 1; return scalar(raw);
+      }
+      const start = p; while (p < s.length && !(isKey ? /[:,}\]]/ : /[,}\]]/).test(s[p])) p++;
+      return scalar(s.slice(start, p));
+    };
+    const value = () => {
+      ws();
+      if (s[p] === "[") {
+        p++; const a = []; ws(); if (s[p] === "]") { p++; return a; }
+        for (;;) { a.push(value()); ws(); if (s[p] === ",") { p++; continue; } if (s[p] === "]") { p++; return a; } fail("expected , or ] in a flow list"); }
+      }
+      if (s[p] === "{") {
+        p++; const o = {}; ws(); if (s[p] === "}") { p++; return o; }
+        for (;;) {
+          const k = token(true); ws(); if (s[p] !== ":") fail("expected : in a flow map"); p++;
+          o[String(k)] = value(); ws();
+          if (s[p] === ",") { p++; continue; } if (s[p] === "}") { p++; return o; } fail("expected , or } in a flow map");
+        }
+      }
+      return token(false);
+    };
+    const v = value(); ws(); if (p < s.length) fail(`unexpected text after a flow value: ${s.slice(p)}`);
+    return v;
+  }
+  const inline = s => (/^[\[{]/.test(s) ? flow(s) : scalar(s));
+
+  function node(minIndent) {
+    skip();
+    if (i >= lines.length) return null;
+    const l = info(i);
+    if (l.indent < minIndent) return null;
+    return isItem(l.text) ? seq(l.indent) : map(l.indent);
+  }
+  function block(indent, style) { // "|" and ">" scalars: raw lines indented deeper than the key
+    const out = []; let ci = -1;
+    while (i < lines.length) {
+      const raw = lines[i];
+      if (raw.trim()) { const ind = raw.length - raw.replace(/^ +/, "").length; if (ind <= indent) break; if (ci < 0) ci = ind; out.push(raw.slice(Math.min(ci, ind))); }
+      else out.push("");
+      i++;
+    }
+    while (out.length && out[out.length - 1] === "") out.pop();
+    const body = style[0] === ">" ? out.join(" ").replace(/ {2,}/g, " ") : out.join("\n");
+    return style.endsWith("-") ? body : body + (body ? "\n" : "");
+  }
+  function afterKey(rest, indent) {
+    if (rest === undefined || rest === "") {
+      skip();
+      if (i < lines.length) { const n = info(i); if (n.indent > indent || (n.indent === indent && isItem(n.text))) return node(n.indent); }
+      return null;
+    }
+    if (/^[|>][+-]?$/.test(rest)) return block(indent, rest);
+    return inline(rest);
+  }
+  function map(indent) {
+    const o = {};
+    for (;;) {
+      skip(); if (i >= lines.length) break;
+      const l = info(i);
+      if (l.indent < indent || (l.indent === indent && isItem(l.text))) break;
+      if (l.indent > indent) fail("unexpected indentation");
+      const m = l.text.match(keyRe); if (!m) fail(`expected "key: value", got "${l.text}"`);
+      const key = /^["']/.test(m[1]) ? String(scalar(m[1])) : m[1].trim();
+      i++;
+      o[key] = afterKey(m[2], indent);
+    }
+    return o;
+  }
+  function seq(indent) {
+    const a = [];
+    for (;;) {
+      skip(); if (i >= lines.length) break;
+      const l = info(i);
+      if (l.indent !== indent || !isItem(l.text)) { if (l.indent > indent) fail("unexpected indentation"); break; }
+      const rest = l.text === "-" ? "" : l.text.slice(2).trim();
+      if (!rest) { i++; a.push(node(indent + 1)); continue; }
+      if (!/^[\[{"']/.test(rest) && keyRe.test(rest)) { // "- key: value": a mapping whose keys line up after the dash
+        lines[i] = " ".repeat(indent + 2) + rest;
+        a.push(map(indent + 2));
+        continue;
+      }
+      i++; a.push(inline(rest));
+    }
+    return a;
+  }
+  const root = node(0);
+  skip();
+  if (i < lines.length) fail("unexpected content");
+  return root;
+}
+// END yaml
+
+/* ------------------------------------------------------------------ 4. form */
+// Field spec: { p: path, l: label, lx: label extra, t: type, o: options, h: hint (HTML), ph: placeholder,
+// w: full width, show: "path" (visible when truthy) or "path=value" }. { g: "…" } is a group title.
+// Types: text, area, list (one item per line), select, seg (segmented), cards (option cards), switch, chips,
+// color, theme. Shared fields' paths point into the state; diagram fields' paths into the active diagram.
+const SHARED_SECTIONS = [
+  { id: "project", n: 1, title: "Project", sub: "The title of the file, and how finished the thing is", open: true, fields: [
+    { p: "project.name", l: "Name", t: "text", ph: "My Platform", h: "Title of the file, and of the switcher when there are several diagrams." },
+    { p: "project.subtitle", l: "Subtitle", t: "text", ph: "Product blueprint" },
+    { p: "project.maturity", l: "Maturity", t: "seg", o: [["planned", "Planned"], ["partly-built", "Partly built"], ["running", "Running"]], w: true,
+      h: "Sets how status and wording are phrased. Planned things are never shown as built." },
+    { p: "project.one_liner", l: "One-liner", lx: "optional", t: "text", w: true, ph: "One API for every model, with guardrails on every request",
+      h: "The sentence the audience should remember. It becomes the lead on the start screen." },
+  ] },
+  { id: "branding", n: 2, title: "Branding", sub: "Theme, colours, shape, logo and naming rules (the preview follows along)", open: true, fields: [
+    { p: "branding.website", l: "Website", lx: "optional", t: "text", type: "url", w: true, ph: "https://example.com",
+      h: "The agent opens this site and takes the logo, the brand colours and the product name from it. Colours and a logo you set below win." },
+    { p: "branding.theme", l: "Theme", t: "theme", o: THEMES, w: true },
+    { p: "branding.primary", l: "Primary colour", t: "color", h: "Main brand colour. Empty = the theme's own." },
+    { p: "branding.secondary", l: "Secondary colour", t: "color", h: "Second colour, for accents. Empty = the theme's own." },
+    { p: "branding.shape", l: "Shape", t: "seg", o: [["rounded", "Rounded"], ["square", "Square"], ["pill", "Pill"]], h: "Corners of boxes, areas and buttons." },
+    { p: "branding.logo", l: "Logo", lx: "optional", t: "text", ph: "icon:shopping-cart  or  assets/logo.svg",
+      h: "<code>icon:&lt;lucide name&gt;</code>, or a path to an SVG/PNG in the repo (it is stored inside the file). Empty = from the website, if set." },
+    { p: "branding.name_rules", l: "Name rules", lx: "one per line", t: "list", w: true, ph: "Say Acme Group, never Acme Ltd",
+      h: "Applied to every text in the diagram, including the start screen and the sheets." },
+  ] },
+];
+const SHARED_LATE = [
+  { id: "sources", n: 4, title: "Default sources", sub: "What the agent reads for every diagram. A diagram can use its own sources instead (in its tab, under \"Sources for this diagram\")", fields: [
+    { p: "sources.include", l: "Read", lx: "globs, one per line", t: "list", ph: "docs/**/*.md\nREADME.md", h: "Relative to the repository root." },
+    { p: "sources.exclude", l: "Skip", lx: "globs, one per line", t: "list", ph: "docs/archive/**" },
+    { p: "sources.priority", l: "Priority", lx: "one per line", t: "list", ph: "docs/decisions.md", h: "Files that win when sources disagree, most important first." },
+    { p: "sources.derive_status_from", l: "Derive status from", lx: "one per line", t: "list", ph: "helm/\nargocd/",
+      h: "Manifests that show what really runs. A box counts as running only if they deploy it." },
+    { p: "sources.on_conflict", l: "When sources disagree", t: "select",
+      o: [["report", "report: resolve it and list it in the report"], ["ask", "ask: stop and ask me first"], ["priority", "priority: follow the priority list"]] },
+    { p: "sources.invent", l: "Inventing", t: "select", o: [["never", "never: no numbers, names or claims that aren't in the sources"]],
+      h: "Fixed: a Blueprint Deck only says what the sources say." },
+    { p: "sources.cite_sources", l: "Show \"Sources\" in each box's panel", t: "switch", h: "The file and section each box was taken from." },
+  ] },
+  { id: "behaviour", n: 5, title: "Behaviour", sub: "How the finished diagram reacts", fields: [
+    { p: "behaviour.hero", l: "Start screen", t: "switch", h: "Title, pillars and \"Start the guided tour\"." },
+    { p: "behaviour.zoom_to_focus", l: "Zoom to what is highlighted", t: "switch" },
+    { p: "behaviour.edges_filter_by_view", l: "Only the tab's kinds of connections", t: "switch", h: "Clicking a box inside a tab shows only that tab's connections." },
+    { p: "behaviour.editor", l: "Built-in editor (press E)", t: "switch", h: "Off locks the file." },
+    { p: "behaviour.keyboard", l: "Keyboard shortcuts", t: "switch" },
+    { p: "behaviour.tour_position", l: "Tour card", t: "seg", o: [["auto", "Auto"], ["right", "Right"], ["bottom", "Bottom"]], h: "Auto: a sidebar on wide screens, at the bottom otherwise." },
+    { p: "behaviour.edge_labels", l: "Connection labels", t: "seg", o: [["focus", "On focus"], ["never", "Never"]] },
+    { p: "behaviour.particles", l: "Moving dots", t: "seg", o: [["main-flow", "Main flow"], ["focus-only", "On focus"], ["off", "Off"]] },
+    { p: "behaviour.overview_edges", l: "Connections in the overview", t: "seg", o: [["all", "All"], ["main", "Main flow"], ["none", "None"]], h: "Main flow reads better on dense maps (40+ boxes)." },
+    { p: "behaviour.legend", l: "Legend", t: "seg", o: [["collapsed", "Collapsed"], ["open", "Open"], ["off", "Off"]] },
+  ] },
+  { id: "workflow", n: 6, title: "Workflow", sub: "How the agent works with you", fields: [
+    { p: "workflow.confirm_structure", l: "Propose the structure first", t: "switch", h: "The agent shows the areas, personas, tabs and the tour outline, and waits for your OK." },
+    { p: "workflow.pause_after_extract", l: "Pause after extracting", t: "switch", h: "Stop after writing the content and the report, before checking the result." },
+    { p: "workflow.output", l: "Output file", t: "text", ph: "index.html", h: "Relative to the config file's folder (diagrams/)." },
+  ] },
+  { id: "notes", n: 7, title: "Anything else", sub: "Notes for the agent about the whole file", fields: [
+    { p: "comments", l: "Comments", t: "area", w: true, ph: "What the audience cares about, what to emphasise, what is sensitive, what the last version got wrong.",
+      h: "The agent treats this as instructions; it overrides the source priority." },
+  ] },
+];
+// The per-diagram form, in collapsible sub-sections.
+const DIAGRAM_SECTIONS = [
+  { id: "basics", title: "Basics", open: true, fields: [
+    { p: "name", l: "Name", t: "text", h: "Shown in the switcher when the file has several diagrams." },
+    { p: "id", l: "Id", t: "text", h: "Lowercase slug. Follows the name until you change it." },
+    { p: "type", l: "Type", t: "cards", o: TYPES, w: true },
+    { p: "viewpoint", l: "Viewpoint", t: "cards", o: VIEWPOINTS, w: true,
+      h: "Changes what goes into every box and panel. Changing it suggests a matching audience, technology and tour (fields you set yourself are kept)." },
+    { p: "focus", l: "Focus", t: "area", w: true, ph: "How a customer request flows through the platform and where it is governed.", h: "What this diagram shows, in one or two sentences." },
+  ] },
+  { id: "audience", title: "Audience", sub: "who watches decides the tone and the depth", open: true, fields: [
+    { p: "audience.who", l: "Who", t: "chips", o: WHO.map(w => [w, w[0].toUpperCase() + w.slice(1)]), w: true },
+    { p: "audience.goal", l: "Goal", t: "text", w: true, h: "What they should understand at the end." },
+    { p: "audience.tone", l: "Tone", t: "seg", o: [["executive", "Executive"], ["technical", "Technical"], ["sales", "Sales"]],
+      h: "Executive: outcomes first, little jargon. Technical: protocols, formats, failure modes. Sales: value and proof." },
+    { p: "audience.language", l: "Language", t: "text", list: "langs", ph: "en", h: "Language code for every text in the diagram." },
+  ] },
+  { id: "map", title: "Map", sub: "the clickable map", fields: [
+    { p: "map.detail", l: "Detail", t: "seg", o: [["overview", "Overview"], ["medium", "Medium"], ["detailed", "Detailed"]], h: "Overview ~12-20 boxes, medium ~25-40, detailed ~40-60." },
+    { p: "map.technology", l: "Technology in panels", t: "select",
+      o: [["from-viewpoint", "from-viewpoint: follow the viewpoint"], ["full", "full: the pick + alternatives and exit path"], ["pick", "pick: the chosen technology only"], ["off", "off: no technology"]] },
+    { p: "map.external", l: "Show external parties", t: "switch", h: "Users, client apps and third-party services, marked as External." },
+    { p: "map.customer_owned", l: "Mark what the customer owns", t: "switch", h: "Their data centre, VPC or identity provider, drawn with a Customer badge." },
+    { p: "map.frame_label", l: "Frame caption", lx: "optional", t: "text", w: true, ph: "Kubernetes · open source only · no SaaS", h: "Caption on the frame around what is ours." },
+    { p: "map.must_show", l: "Must show", lx: "one per line", t: "list" },
+    { p: "map.leave_out", l: "Leave out", lx: "one per line", t: "list" },
+    { g: "Status" },
+    { p: "map.status.enabled", l: "Status tags on boxes", t: "switch" },
+    { p: "map.status.meaning", l: "Status means", t: "seg", o: [["scope", "Scope"], ["build", "Build"], ["custom", "Custom"]], h: "Scope: MVP / Next / Later. Build: Running / Planned.", show: "map.status.enabled" },
+    { p: "map.status.values", l: "Status values", lx: "one per line", t: "list", ph: "Pilot\nPhase 2", show: "map.status.meaning=custom" },
+    { p: "map.notes", l: "Layout and naming notes", t: "area", w: true, ph: "Group the detectors next to the gateway. Say \"Access layer\", not \"Edge\"." },
+  ] },
+  { id: "personas", title: "Personas", sub: "each gets a path through the map", fields: [
+    { p: "personas.enabled", l: "Personas", t: "switch", w: true, h: "Taken from the users, roles and actors in the sources (never invented). Each gets a numbered path through the map." },
+    { p: "personas.names", l: "Exactly these", lx: "optional, one per line", t: "list", ph: "Platform owner\nApplication builder", show: "personas.enabled" },
+  ] },
+  { id: "views", title: "Tabs", sub: "views along the top; the overview is always first", fields: [
+    { p: "views.presets", l: "Preset tabs", t: "chips", o: VIEW_PRESETS.map(([v, h]) => [v, v, h]), w: true,
+      h: "Each tab answers one question and lights up only what belongs to it. 4-8 tabs work best." },
+    { p: "views.custom", l: "Custom tabs", lx: "one per line", t: "list", w: true, ph: "Usage patterns: a list U1/U2/U3, each highlighting its path" },
+  ] },
+  { id: "tour", title: "Guided tour", sub: "the story you present", fields: [
+    { p: "tour.enabled", l: "Guided tour", t: "switch", w: true },
+    { p: "tour.steps", l: "Steps", t: "text", list: "stepsList", ph: "12-18", show: "tour.enabled" },
+    { p: "tour.story", l: "Story", t: "select", show: "tour.enabled",
+      o: [["problem-solution", "problem-solution"], ["component-walk", "component-walk"], ["use-case", "use-case: follow one scenario"], ["value-first", "value-first"]] },
+    { p: "tour.use_case", l: "Use case to follow", t: "text", w: true, ph: "A support agent asks the assistant about an order", show: "tour.story=use-case" },
+    { p: "tour.opening", l: "Opening", t: "seg", o: [["problem", "Problem"], ["vision", "Vision"], ["context", "Context"]], show: "tour.enabled" },
+    { p: "tour.closing", l: "Closing", t: "seg", o: [["why-this", "Why this"], ["next-steps", "Next steps"], ["call-to-action", "Call to action"]], show: "tour.enabled" },
+    { p: "tour.include", l: "Also include", t: "chips", o: TOUR_INCLUDE, w: true, show: "tour.enabled" },
+    { p: "tour.notes", l: "Story notes", t: "area", w: true, show: "tour.enabled" },
+  ] },
+  { id: "overlays", title: "Sheets", sub: "full-screen overlays for tables and options", fields: [
+    { p: "overlays.roadmap.enabled", l: "Roadmap sheet", t: "switch" },
+    { p: "overlays.roadmap.source", l: "Roadmap source", lx: "optional", t: "text", ph: "docs/roadmap.md", show: "overlays.roadmap.enabled" },
+    { p: "overlays.options.enabled", l: "Options sheet", t: "switch", h: "Pilot options, pricing or sizing tiers: 2-4 cards, one recommended." },
+    { p: "overlays.options.title", l: "Options title", t: "text", ph: "Pilot options", show: "overlays.options.enabled" },
+    { p: "overlays.options.source", l: "Options source", lx: "optional", t: "text", ph: "docs/pilot.md", show: "overlays.options.enabled" },
+    { p: "overlays.custom", l: "Other sheets", lx: "one per line", t: "list", w: true, ph: "Hardware sizing: small / medium / large, from docs/sizing.md" },
+  ] },
+  { id: "dsources", title: "Sources for this diagram", sub: "the default sources, or this diagram's own", fields: [
+    { p: "_overrideSources", l: "Use its own sources", t: "switch", w: true, h: "Off: this diagram reads the default sources. On: the lists you fill here replace the defaults for this diagram (e.g. only docs/product/** for a product view, docs/ops/** for an operations view)." },
+    { p: "sources.include", l: "Read", lx: "globs, one per line", t: "list", ph: "docs/product/**", show: "_overrideSources" },
+    { p: "sources.exclude", l: "Skip", lx: "one per line", t: "list", show: "_overrideSources" },
+    { p: "sources.priority", l: "Priority", lx: "one per line", t: "list", show: "_overrideSources" },
+    { p: "sources.derive_status_from", l: "Derive status from", lx: "one per line", t: "list", show: "_overrideSources" },
+  ] },
+  { id: "dcomments", title: "Comments", sub: "anything else for this diagram", fields: [
+    { p: "comments", l: "Comments", t: "area", w: true, ph: "Emphasise the guardrails; this audience was burned by shadow AI." },
+  ] },
+];
+
+const CHEV = '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
+let uid = 0;
+
+// One field to HTML. `scope` is "s" (shared) or "d" (active diagram); `obj` holds the values.
+function fieldHtml(f, scope, obj) {
+  if (f.g) return `<div class="group-title">${esc(f.g)}</div>`;
+  const id = `f${++uid}`, v = getPath(obj, f.p);
+  const data = t => `data-scope="${scope}" data-path="${esc(f.p)}" data-type="${t || f.t}"`;
+  const hint = f.h ? `<p class="hint" id="${id}-h">${f.h}</p>` : "";
+  const desc = f.h ? ` aria-describedby="${id}-h"` : "";
+  const lab = `${esc(f.l)}${f.lx ? ` <small>(${esc(f.lx)})</small>` : ""}`;
+  const cls = `f${f.w ? " wide" : ""}${f.t === "switch" ? " switch" : ""}`;
+  const show = f.show ? ` data-show="${esc(f.show)}"` : "";
+  const radios = (wrapCls, render) => `<span class="label" id="${id}-l">${lab}</span><div class="${wrapCls}" role="radiogroup" aria-labelledby="${id}-l"${desc}>${f.o.map(render).join("")}</div>${hint}`;
+  let inner = "";
+  switch (f.t) {
+    case "text":
+      inner = `<label class="label" for="${id}">${lab}</label><input class="input" type="${f.type || "text"}" id="${id}" ${data()} value="${esc(v)}" placeholder="${esc(f.ph || "")}"${f.list ? ` list="${f.list}"` : ""}${desc} autocomplete="off" spellcheck="false">${hint}`;
+      break;
+    case "area": case "list":
+      inner = `<label class="label" for="${id}">${lab}</label><textarea class="textarea${f.t === "list" ? " list" : ""}" id="${id}" ${data()} placeholder="${esc(f.ph || "")}"${desc} rows="3" spellcheck="${f.t === "area"}">${esc(f.t === "list" ? (v || []).join("\n") : v)}</textarea>${hint}`;
+      break;
+    case "select":
+      inner = `<label class="label" for="${id}">${lab}</label><select class="select" id="${id}" ${data()}${desc}>${f.o.map(([val, txt]) => `<option value="${esc(val)}"${val === v ? " selected" : ""}>${esc(txt)}</option>`).join("")}</select>${hint}`;
+      break;
+    case "switch":
+      inner = `<input class="input" type="checkbox" role="switch" id="${id}" ${data()}${v ? " checked" : ""}${desc}><div><label class="label" for="${id}">${lab}</label>${hint}</div>`;
+      break;
+    case "seg":
+      inner = radios("seg", ([val, txt]) => `<label><input type="radio" name="${id}" value="${esc(val)}" ${data()}${val === v ? " checked" : ""}>${esc(txt)}</label>`);
+      break;
+    case "cards":
+      inner = radios("cards", ([val, txt, help]) => `<label class="ocard"><input type="radio" name="${id}" value="${esc(val)}" ${data()}${val === v ? " checked" : ""}><b>${esc(txt)}</b><span>${esc(help)}</span></label>`);
+      break;
+    case "theme":
+      inner = radios("swatches", t => `<label class="swatch"><input type="radio" name="${id}" value="${t.id}" ${data()}${t.id === v ? " checked" : ""}>
+          <span class="pv" style="background:${t.bg}" aria-hidden="true"><i class="a" style="background:${t.primary}"></i><i class="b" style="background:${t.secondary}"></i><i class="c" style="background:${t.node};border:1px solid ${t.mode === "dark" ? "rgba(255,255,255,.12)" : "rgba(0,0,0,.1)"}"></i></span>
+          <span class="nm">${t.id[0].toUpperCase() + t.id.slice(1)} <small>${t.mode}</small></span></label>`);
+      break;
+    case "chips":
+      inner = `<span class="label" id="${id}-l">${lab}</span><div class="chips" role="group" aria-labelledby="${id}-l"${desc}>${f.o.map(([val, txt, help]) =>
+        `<label class="chip"${help ? ` title="${esc(help)}"` : ""}><input class="input" type="checkbox" value="${esc(val)}" ${data()}${(v || []).includes(val) ? " checked" : ""}>${esc(txt)}${help ? `<span class="sr-only">: ${esc(help)}</span>` : ""}</label>`).join("")}</div>${hint}`;
+      break;
+    case "color": {
+      const preset = presetColor(f.p);
+      inner = `<label class="label" for="${id}">${lab}</label><div class="color-row">
+        <input type="color" ${data("color-pick")} value="${esc(v || preset)}" aria-label="${esc(f.l)}: colour picker">
+        <input class="input" type="text" id="${id}" ${data()} value="${esc(v)}" placeholder="${esc(preset)}" maxlength="7" spellcheck="false" autocomplete="off"${desc}>
+        <button type="button" class="btn" data-variant="outline" data-size="sm" data-action="clear-color" data-color="${esc(f.p)}" aria-label="Clear the ${esc(f.l.toLowerCase())}">Clear</button></div>${hint}`;
+      break;
+    }
+  }
+  return `<div class="${cls}"${show}>${inner}</div>`;
+}
+
+function sectionHtml(sec, scope, obj) {
+  const open = ui.open[sec.id] ?? !!sec.open;
+  return `<details class="sec" data-sec="${sec.id}"${open ? " open" : ""}><summary><span class="num" aria-hidden="true">${sec.n}</span><div><h2>${esc(sec.title)}</h2><p>${esc(sec.sub)}</p></div>${CHEV}</summary>
+    <div class="body"><div class="grid">${sec.fields.map(f => fieldHtml(f, scope, obj)).join("")}</div></div></details>`;
+}
+
+// The whole form: shared sections, the diagrams section (tabs), the later shared sections.
+function renderForm() {
+  const form = document.getElementById("form");
+  const openD = ui.open.diagrams ?? true;
+  form.innerHTML = SHARED_SECTIONS.map(s => sectionHtml(s, "s", state)).join("") +
+    `<details class="sec" data-sec="diagrams"${openD ? " open" : ""}><summary><span class="num" aria-hidden="true">3</span><div><h2>Diagrams</h2><p>One tab per diagram. Several diagrams share one file with a switcher (e.g. a product view and a technical view).</p></div>${CHEV}</summary>
+      <div class="body" id="diagramArea"></div></details>` +
+    SHARED_LATE.map(s => sectionHtml(s, "s", state)).join("") +
+    `<datalist id="langs">${["en", "de", "cs", "sk", "fr", "es", "it", "nl", "pl", "pt", "sv", "ja"].map(l => `<option value="${l}">`).join("")}</datalist>
+     <datalist id="stepsList">${["8-12", "12-18", "15-20", "18-22"].map(l => `<option value="${l}">`).join("")}</datalist>`;
+  renderDiagrams();
+  applyVisibility(form);
+}
+
+// Diagram tabs + toolbar + the active diagram's form. data-tabs-initialized keeps Basecoat's tabs.js away:
+// these tabs are re-rendered by this page.
+function renderDiagrams() {
+  const area = document.getElementById("diagramArea");
+  const d = state.diagrams[ui.active];
+  const others = state.diagrams.map((x, i) => [x, i]).filter(([, i]) => i !== ui.active);
+  area.innerHTML = `<div class="dtabs-bar">
+      <div class="tabs" data-tabs-initialized="true"><nav role="tablist" aria-label="Diagrams">${state.diagrams.map((x, i) =>
+        `<button type="button" role="tab" id="dtab-${i}" aria-controls="dpanel" aria-selected="${i === ui.active}" tabindex="${i === ui.active ? 0 : -1}" data-dtab="${i}">${esc(x.name || x.id || `Diagram ${i + 1}`)}</button>`).join("")}</nav></div>
+      <div class="dtools">
+        <button type="button" class="btn" data-variant="outline" data-size="sm" data-action="add-diagram">+ Add</button>
+        <button type="button" class="btn" data-variant="outline" data-size="sm" data-action="dup-diagram">Duplicate</button>
+        ${others.length ? `<label class="sr-only" for="copyFrom">Copy settings from another diagram</label>
+          <select class="select" id="copyFrom"><option value="">Copy settings from…</option>${others.map(([x, i]) => `<option value="${i}">${esc(x.name || x.id)}</option>`).join("")}</select>` : ""}
+        <button type="button" class="btn" data-variant="ghost" data-size="sm" data-action="remove-diagram"${state.diagrams.length < 2 ? " disabled" : ""}>Remove</button>
+      </div>
+    </div>
+    <div role="tabpanel" id="dpanel" aria-labelledby="dtab-${ui.active}">
+      <div class="vp-note is-hidden" id="vpNote" role="status"></div>
+      ${DIAGRAM_SECTIONS.map(sec => {
+        const key = "d-" + sec.id, open = ui.open[key] ?? !!sec.open;
+        return `<details class="sub" data-sec="${key}"${open ? " open" : ""}><summary>${esc(sec.title)}${sec.sub ? ` <small>${esc(sec.sub)}</small>` : ""}${CHEV}</summary>
+          <div class="body"><div class="grid">${sec.fields.map(f => fieldHtml(f, "d", d)).join("")}</div></div></details>`;
+      }).join("")}
+    </div>`;
+  applyVisibility(area);
+}
+
+// Show/hide fields with data-show="path" (truthy) or "path=value".
+function applyVisibility(root) {
+  root.querySelectorAll("[data-show]").forEach(el => {
+    const [p, want] = el.dataset.show.split("=");
+    const input = el.querySelector("[data-scope]");
+    const obj = input && input.dataset.scope === "d" ? state.diagrams[ui.active] : state;
+    const v = getPath(obj, p);
+    el.classList.toggle("is-hidden", want === undefined ? !v : v !== want);
+  });
+}
+
+// One delegated handler: read the input's value into the state.
+function onInput(e) {
+  const el = e.target;
+  if (!el.dataset || !el.dataset.path || !el.dataset.scope) return;
+  const scope = el.dataset.scope, p = el.dataset.path, t = el.dataset.type;
+  const obj = scope === "d" ? state.diagrams[ui.active] : state;
+  let v;
+  switch (t) {
+    case "switch": v = el.checked; break;
+    case "seg": case "cards": case "theme": if (!el.checked) return; v = el.value; break;
+    case "chips": v = [...el.closest(".chips").querySelectorAll("input:checked")].map(x => x.value); break;
+    case "list": v = el.value.split("\n").map(x => x.trim()).filter(Boolean); break;
+    case "color-pick": v = el.value.toLowerCase(); syncColor(p, v); break;
+    case "color": {
+      const hex = normHex(el.value), bad = el.value.trim() !== "" && !hex;
+      el.setAttribute("aria-invalid", String(bad));
+      if (bad) return; // keep the last valid colour until the text is one
+      v = hex; syncColor(p, v); break;
+    }
+    case "text": v = scope === "d" && p === "id" ? slugify(el.value) : el.value; break;
+    default: v = el.value;
+  }
+  if (JSON.stringify(getPath(obj, p)) === JSON.stringify(v)) return;
+  setPath(obj, p, v);
+  if (scope === "d") {
+    const d = obj;
+    if (!p.startsWith("_")) d._touched[p] = true;
+    if (p === "name") {
+      if (d._autoId) {
+        d.id = uniqueId(slugify(v) || "diagram", new Set(state.diagrams.filter(x => x !== d).map(x => x.id)));
+        const idEl = document.querySelector('[data-scope="d"][data-path="id"]'); if (idEl) idEl.value = d.id;
+      }
+      const tab = document.getElementById(`dtab-${ui.active}`); if (tab) tab.textContent = v || d.id || `Diagram ${ui.active + 1}`;
+    }
+    if (p === "id") {
+      d._autoId = false;
+      const others = new Set(state.diagrams.filter(x => x !== d).map(x => x.id));
+      el.setAttribute("aria-invalid", String(!v || others.has(v)));
+    }
+    if (p === "viewpoint") applyViewpoint(d, v);
+  }
+  if (p === "branding.theme") updateColorPlaceholders();
+  if (p.startsWith("branding.")) schedulePreview();
+  applyVisibility(scope === "d" ? document.getElementById("diagramArea") : document.getElementById("form"));
+  changed();
+}
+// "#abc" / "abc" / "#AABBCC" -> "#aabbcc"; "" stays ""; anything else -> null (invalid).
+function normHex(s) {
+  s = String(s || "").trim().toLowerCase();
+  if (!s) return "";
+  const m = s.match(/^#?([0-9a-f]{3}|[0-9a-f]{6})$/);
+  if (!m) return null;
+  return "#" + (m[1].length === 3 ? m[1].split("").map(c => c + c).join("") : m[1]);
+}
+const colorEls = p => [...document.querySelectorAll(`[data-path="${p}"]`)];
+function syncColor(p, v) {
+  for (const el of colorEls(p)) {
+    if (el.dataset.type === "color-pick") el.value = v || presetColor(p);
+    else if (el.dataset.type === "color" && document.activeElement !== el) { el.value = v || ""; el.removeAttribute("aria-invalid"); }
+  }
+}
+function updateColorPlaceholders() {
+  for (const p of ["branding.primary", "branding.secondary"]) for (const el of colorEls(p)) {
+    if (el.dataset.type === "color") el.placeholder = presetColor(p);
+    if (el.dataset.type === "color-pick" && !getPath(state, p)) el.value = presetColor(p);
+  }
+}
+
+/* ------------------------------------------------------------------ 5. diagrams */
+// Suggest defaults for the new viewpoint, only for fields the user hasn't set.
+function applyViewpoint(d, vp) {
+  const sug = VIEWPOINT_DEFAULTS[vp] || {}, changedKeys = [];
+  for (const [p, v] of Object.entries(sug)) {
+    if (d._touched[p] || JSON.stringify(getPath(d, p)) === JSON.stringify(v)) continue;
+    setPath(d, p, clone(v)); changedKeys.push(p);
+  }
+  if (!changedKeys.length) return;
+  renderDiagrams(); // keeps the open sections
+  const note = document.getElementById("vpNote");
+  const label = p => ({ who: "audience", goal: "goal", tone: "tone", technology: "technology", enabled: "personas", steps: "tour steps", story: "story" }[p.split(".").pop()] || p);
+  note.innerHTML = `Suggested for the <b>${esc(vp)}</b> viewpoint: ${changedKeys.map(p => `${esc(label(p))} → <code>${esc([].concat(getPath(d, p)).join(", "))}</code>`).join(", ")}. Fields you set yourself were kept.`;
+  note.classList.remove("is-hidden");
+  document.querySelector(`[data-scope="d"][data-path="viewpoint"][value="${vp}"]`)?.focus();
+}
+function selectDiagram(i, focusTab) {
+  ui.active = Math.max(0, Math.min(i, state.diagrams.length - 1));
+  renderDiagrams(); save();
+  if (focusTab) document.getElementById(`dtab-${ui.active}`)?.focus();
+}
+const usedIds = () => new Set(state.diagrams.map(d => d.id));
+function addDiagram() {
+  const n = state.diagrams.length + 1;
+  state.diagrams.push(defaultDiagram(uniqueId(`diagram-${n}`, usedIds()), `Diagram ${n}`));
+  selectDiagram(state.diagrams.length - 1, false); changed();
+  document.querySelector('[data-scope="d"][data-path="name"]')?.select();
+}
+function duplicateDiagram() {
+  const src = state.diagrams[ui.active], d = clone(src);
+  d.name = `${src.name || src.id} (copy)`;
+  d.id = uniqueId(slugify(d.name) || "diagram", usedIds()); d._autoId = true;
+  state.diagrams.splice(ui.active + 1, 0, d);
+  selectDiagram(ui.active + 1, true); changed();
+  toast("Diagram duplicated", `"${d.name}"`);
+}
+// A styled confirmation (Basecoat dialog). Resolves true for OK, false for Cancel, Esc or a click outside.
+function ask(title, text, okLabel = "OK", danger = false) {
+  const dlg = document.getElementById("confirmDialog");
+  const ok = document.getElementById("confirmOk"), cancel = document.getElementById("confirmCancel");
+  document.getElementById("confirmTitle").textContent = title;
+  document.getElementById("confirmText").textContent = text;
+  ok.textContent = okLabel;
+  if (danger) ok.dataset.variant = "destructive"; else delete ok.dataset.variant;
+  return new Promise(resolve => {
+    const done = v => { ok.onclick = cancel.onclick = dlg.onclose = dlg.onclick = null; if (dlg.open) dlg.close(); resolve(v); };
+    ok.onclick = () => done(true);
+    cancel.onclick = () => done(false);
+    dlg.onclose = () => done(false);
+    dlg.onclick = e => { if (e.target === dlg) done(false); };
+    dlg.showModal();
+    ok.focus();
+  });
+}
+async function removeDiagram() {
+  if (state.diagrams.length < 2) return;
+  const d = state.diagrams[ui.active];
+  if (!(await ask("Remove this diagram?", `"${d.name || d.id}" and all its settings will be removed from the configuration.`, "Remove", true))) return;
+  state.diagrams.splice(ui.active, 1);
+  selectDiagram(ui.active, true); changed();
+  toast("Diagram removed", "", "info");
+}
+// Copy everything except the id and the name from another diagram into the active one.
+async function copyFrom(i) {
+  const src = state.diagrams[i], d = state.diagrams[ui.active];
+  if (!src || !(await ask("Copy settings?", `Replace the settings of "${d.name || d.id}" with those of "${src.name || src.id}". The id and name stay.`, "Copy settings"))) { renderDiagrams(); return; }
+  state.diagrams[ui.active] = Object.assign(clone(src), { id: d.id, name: d.name, _autoId: d._autoId });
+  renderDiagrams(); changed();
+  toast("Settings copied", `From "${src.name || src.id}".`);
+}
+
+/* ------------------------------------------------------------------ 6. output */
+let yamlText = "", promptText = "", outTimer = 0;
+function buildPrompt(yaml) {
+  return "Use the blueprint-deck skill to generate a Blueprint Deck for this repository.\n" +
+    "Save this configuration as diagrams/diagram.config.yaml first, then follow it:\n\n```yaml\n" + yaml + "```\n";
+}
+function changed() {
+  save();
+  clearTimeout(outTimer);
+  outTimer = setTimeout(renderOutput, 60);
+}
+function renderOutput() {
+  yamlText = toYaml(toConfig(state));
+  promptText = buildPrompt(yamlText);
+  document.getElementById("yamlOut").textContent = yamlText;
+  document.getElementById("promptOut").textContent = promptText;
+}
+async function copyText(text, what) {
+  let ok = false;
+  try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); ok = true; } } catch (e) { /* fall back */ }
+  if (!ok) { // file:// in some browsers: the old way
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;top:-1000px;opacity:0";
+    document.body.appendChild(ta); ta.select();
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    ta.remove();
+  }
+  toast(ok ? `${what} copied` : "Couldn't copy", ok ? "" : "Select the text and copy it by hand.", ok ? "success" : "error");
+}
+function download() {
+  renderOutput();
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([yamlText], { type: "text/yaml;charset=utf-8" }));
+  a.download = "diagram.config.yaml";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast("Downloaded diagram.config.yaml", "Put it in <your repo>/diagrams/.");
+}
+function toast(title, description = "", category = "success") {
+  const t = document.getElementById("toaster");
+  if (t && typeof t.toast === "function") t.toast({ category, title, description });
+}
+
+/* ------------------------------------------------------------------ 7. preview */
+// The Acme example opened with ?preview listens for { bdPreview: { theme } } messages and re-renders live.
+const frame = document.getElementById("previewFrame");
+let previewReady = false, previewTimer = 0;
+function previewTheme() {
+  const b = state.branding;
+  const th = { preset: b.theme, shape: b.shape };
+  // Empty colour = the preset's, so the key is left out. The engine merges a message into the previous theme,
+  // though, so after a custom colour was sent, a cleared one must be sent as undefined to drop it again.
+  const p = normHex(b.primary), s = normHex(b.secondary);
+  th.primary = p || undefined; th.secondary = s || undefined;
+  if (!p && !sentCustom.primary) delete th.primary;
+  if (!s && !sentCustom.secondary) delete th.secondary;
+  return th;
+}
+const sentCustom = { primary: false, secondary: false };
+function sendPreview() {
+  if (!previewReady || !frame.contentWindow) return;
+  const theme = previewTheme();
+  if (theme.primary) sentCustom.primary = true;
+  if (theme.secondary) sentCustom.secondary = true;
+  try { frame.contentWindow.postMessage({ bdPreview: { theme } }, "*"); } catch (e) { /* ignore */ }
+}
+function schedulePreview() { clearTimeout(previewTimer); previewTimer = setTimeout(sendPreview, 120); }
+function hidePreview() {
+  document.getElementById("previewBox").classList.add("is-hidden");
+  document.getElementById("previewOff").classList.remove("is-hidden");
+}
+function initPreview() {
+  const box = document.getElementById("previewBox");
+  // Render the deck at 1280×800 and scale it to the column, so it looks as it does on a screen.
+  const fit = () => { const w = box.clientWidth; if (w) frame.style.transform = `scale(${w / 1280})`; };
+  if ("ResizeObserver" in window) new ResizeObserver(fit).observe(box); else addEventListener("resize", fit);
+  fit();
+  frame.addEventListener("load", () => {
+    // Same origin (hosted): make sure it is a Blueprint Deck and not a 404 page. file:// is opaque: trust it.
+    try { const doc = frame.contentDocument; if (doc && !doc.getElementById("bd-data")) { hidePreview(); return; } } catch (e) { /* cross-origin */ }
+    previewReady = true;
+    sendPreview();
+    setTimeout(sendPreview, 400); // in case the engine was still starting
+  });
+  frame.addEventListener("error", hidePreview);
+  setTimeout(() => { if (!previewReady) hidePreview(); }, 15000);
+}
+
+/* ------------------------------------------------------------------ wiring */
+function setScheme(dark, remember) {
+  document.documentElement.classList.toggle("dark", dark);
+  if (remember) try { localStorage.setItem(SCHEME_KEY, dark ? "dark" : "light"); } catch (e) { /* ignore */ }
+}
+function openImport() {
+  const dlg = document.getElementById("importDialog");
+  document.getElementById("importErr").textContent = "";
+  document.getElementById("importText").value = "";
+  document.getElementById("importFile").value = "";
+  if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+  document.getElementById("importText").focus();
+}
+function closeImport() { const dlg = document.getElementById("importDialog"); if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); }
+function doImport() {
+  const err = document.getElementById("importErr");
+  const text = document.getElementById("importText").value;
+  if (!text.trim()) { err.textContent = "Paste a configuration first."; return; }
+  let cfg;
+  try { cfg = parseYaml(text); } catch (e) { err.textContent = "This page can't read that configuration:\n" + e.message; return; }
+  if (!isObj(cfg)) { err.textContent = "Expected a YAML mapping (key: value lines)."; return; }
+  const { state: s, unknown } = fromConfig(cfg, true);
+  state = s; ui.active = 0;
+  closeImport();
+  renderForm(); renderOutput(); save(); sendPreview();
+  toast("Configuration imported",
+    unknown.length ? `Ignored unknown keys: ${unknown.slice(0, 6).join(", ")}${unknown.length > 6 ? " …" : ""}` : `${s.diagrams.length} diagram${s.diagrams.length > 1 ? "s" : ""}.`,
+    unknown.length ? "warning" : "success");
+}
+
+function init() {
+  load();
+  renderForm();
+  renderOutput();
+  initPreview();
+
+  const form = document.getElementById("form");
+  form.addEventListener("input", onInput); // fires for text, textarea, select, checkbox, radio and colour inputs
+  form.addEventListener("change", e => { if (e.target.id === "copyFrom" && e.target.value !== "") copyFrom(+e.target.value); });
+  // remember which sections are open (toggle doesn't bubble: listen in the capture phase)
+  form.addEventListener("toggle", e => { const s = e.target.dataset && e.target.dataset.sec; if (s) { ui.open[s] = e.target.open; save(); } }, true);
+  form.addEventListener("focusout", e => { // a half-typed colour snaps back to the saved one
+    const el = e.target;
+    if (el.dataset && el.dataset.type === "color") { el.value = getPath(state, el.dataset.path) || ""; el.removeAttribute("aria-invalid"); }
+    if (el.dataset && el.dataset.scope === "d" && el.dataset.path === "id") { el.value = state.diagrams[ui.active].id; el.removeAttribute("aria-invalid"); }
+  });
+  form.addEventListener("click", e => {
+    const tab = e.target.closest("[data-dtab]");
+    if (tab) { selectDiagram(+tab.dataset.dtab, true); return; }
+    const btn = e.target.closest("button[data-action]"); if (!btn) return;
+    const a = btn.dataset.action;
+    if (a === "add-diagram") addDiagram();
+    else if (a === "dup-diagram") duplicateDiagram();
+    else if (a === "remove-diagram") removeDiagram();
+    else if (a === "clear-color") {
+      const p = btn.dataset.color;
+      setPath(state, p, "");
+      for (const el of colorEls(p)) { if (el.dataset.type === "color") { el.value = ""; el.removeAttribute("aria-invalid"); } if (el.dataset.type === "color-pick") el.value = presetColor(p); }
+      schedulePreview(); changed();
+    }
+  });
+  // arrow keys between diagram tabs (WAI-ARIA tabs pattern)
+  form.addEventListener("keydown", e => {
+    const tab = e.target.closest && e.target.closest("[data-dtab]"); if (!tab) return;
+    const n = state.diagrams.length, i = +tab.dataset.dtab;
+    const next = { ArrowRight: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, Home: 0, End: n - 1 }[e.key];
+    if (next !== undefined) { e.preventDefault(); selectDiagram(next, true); }
+  });
+
+  document.getElementById("btnCopyPrompt").addEventListener("click", () => { renderOutput(); copyText(promptText, "Prompt"); });
+  document.getElementById("btnCopyYaml").addEventListener("click", () => { renderOutput(); copyText(yamlText, "YAML"); });
+  document.getElementById("btnDownload").addEventListener("click", download);
+  document.querySelectorAll("[data-copy]").forEach(b => b.addEventListener("click", () => copyText(document.querySelector(b.dataset.copy).textContent, "Command")));
+  document.getElementById("btnReset").addEventListener("click", async () => {
+    if (!(await ask("Reset everything?", "Every answer goes back to the defaults. This can't be undone.", "Reset", true))) return;
+    state = defaultState(); ui = { active: 0, open: {} };
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* ignore */ }
+    renderForm(); renderOutput(); sendPreview();
+    toast("Reset to defaults", "", "info");
+  });
+  document.getElementById("btnScheme").addEventListener("click", () => setScheme(!document.documentElement.classList.contains("dark"), true));
+  if (window.matchMedia) {
+    const mq = matchMedia("(prefers-color-scheme: dark)");
+    const follow = e => { let saved = null; try { saved = localStorage.getItem(SCHEME_KEY); } catch (x) { /* ignore */ } if (!saved) setScheme(e.matches, false); };
+    if (mq.addEventListener) mq.addEventListener("change", follow);
+  }
+
+  document.getElementById("btnImport").addEventListener("click", openImport);
+  document.getElementById("importCancel").addEventListener("click", closeImport);
+  document.getElementById("importGo").addEventListener("click", doImport);
+  document.getElementById("importFile").addEventListener("change", e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => { document.getElementById("importText").value = String(r.result || ""); };
+    r.readAsText(f);
+  });
+}
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
+</script>
+</body>
+</html>

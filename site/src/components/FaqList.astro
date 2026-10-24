@@ -1,0 +1,18 @@
+---
+import Icon from "./Icon.astro";
+interface Props { items: { q: string; a: string }[]; open?: number }
+const { items, open = -1 } = Astro.props;
+---
+<section class="accordion">
+  {items.map((f, i) => (
+    <details open={i === open}>
+      <summary class="text-[0.9375rem]">
+        <span>{f.q}</span>
+        <Icon name="chevron-down" />
+      </summary>
+      <section>
+        <p class="text-muted-foreground leading-relaxed [&_code]:rounded [&_code]:bg-muted [&_code]:px-1 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[0.85em]" set:html={f.a} />
+      </section>
+    </details>
+  ))}
+</section>

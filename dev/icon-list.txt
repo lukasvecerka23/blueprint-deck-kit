@@ -1,0 +1,36 @@
+# Lucide icons bundled into every diagram (one per line). Run dev/make-icons.mjs after changing it.
+# people & orgs
+user user-round users users-round user-check user-plus user-cog user-search contact id-card circle-user handshake baby person-standing accessibility
+building building-complex landmark factory warehouse store school hospital house hotel castle tent
+graduation-cap briefcase briefcase-business crown award trophy medal badge-check
+# devices & apps
+app-window monitor laptop smartphone tablet tv watch printer keyboard mouse-pointer-click headphones mic camera webcam scan-line qr-code barcode
+layout-dashboard layout-grid layout-list panels-top-left gauge chart-line chart-bar chart-pie chart-column-big chart-no-axes-combined trending-up trending-down activity
+# communication
+mail message-circle message-square messages-square send inbox bell bell-ring phone phone-call megaphone rss at-sign share-2 video
+# data & storage
+database database-zap database-backup hard-drive hard-drive-download archive package package-open boxes box container file file-text files file-code file-check file-search file-lock file-spreadsheet folder folder-open folder-tree folder-git-2 table table-2 sheet notebook book book-open library
+# compute & infra
+server server-cog cpu memory-stick microchip cloud cloud-cog cloud-upload cloud-download cloudy layers layers-2 network workflow waypoints cable plug plug-zap power battery-charging zap
+# network & security
+globe globe-lock earth wifi radio radio-tower antenna satellite router ethernet-port signal
+shield shield-check shield-alert shield-half shield-ellipsis shield-user lock lock-open key key-round key-square fingerprint-pattern scan-face eye eye-off siren bug bug-off ban
+# AI
+bot bot-message-square brain brain-circuit sparkles sparkle wand-sparkles atom orbit
+# dev & ops
+code code-xml terminal square-terminal braces brackets git-branch git-merge git-pull-request git-commit-horizontal blocks puzzle component cog settings settings-2 sliders-horizontal wrench hammer construction rocket flask-conical test-tube test-tubes microscope ship anchor
+monitor-check monitor-cog list-checks list-todo clipboard-check clipboard-list kanban square-kanban
+# business & finance
+coins banknote credit-card wallet piggy-bank receipt receipt-text landmark badge-dollar-sign badge-percent euro dollar-sign percent calculator scale scale-3d gavel signature stamp
+# commerce & logistics
+shopping-cart shopping-bag shopping-basket tag tags gift truck car bus train-front plane ship-wheel forklift map map-pin map-pinned navigation compass route milestone flag flag-triangle-right signpost locate
+# process & flow
+arrow-right arrow-left arrow-up arrow-down arrow-right-left arrow-up-down arrow-big-right move-right repeat refresh-cw refresh-ccw rotate-cw undo-2 redo-2 shuffle split merge git-fork funnel list-filter combine replace replace-all iteration-ccw infinity step-forward play circle-play pause circle-stop square-check circle-check circle-x circle-alert circle-question-mark circle-dot circle-dashed target crosshair goal check check-check x plus minus
+# time
+calendar calendar-check calendar-clock calendar-days clock clock-alert timer hourglass alarm-clock
+# status & feedback
+info triangle-alert octagon-alert badge-alert thumbs-up thumbs-down heart heart-handshake star sun moon lightbulb flame snowflake leaf sprout tree-pine recycle droplet
+# misc
+link link-2 unlink paperclip pin bookmark search zoom-in scan download upload external-link log-in log-out door-open house hand hand-coins hand-helping handshake message-square-quote quote pen pencil pen-tool eraser brush palette image images film shapes square circle triangle hexagon diamond grid-3x3 list list-ordered menu ellipsis
+stethoscope pill syringe heart-pulse dumbbell utensils coffee
+wifi-off audio-waveform rows-3 radar chart-bar sun-moon contrast

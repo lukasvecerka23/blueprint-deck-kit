@@ -1,0 +1,20 @@
+/* The original palette (blue → violet on Basecoat's neutral theme), kept to switch back:
+   This is the palette in use. palette-blueprint.css is the alternative (navy, blueprint blue, cyan, amber).
+   The matching logo, favicon and social image are in design/classic/. In diagrams this is the "midnight" theme. */
+:root {
+  --brand: oklch(0.546 0.215 262.9);       /* blueprint blue */
+  --brand-soft: oklch(0.546 0.215 262.9 / 0.1);
+  --brand-2: oklch(0.6 0.2 292);           /* violet, for gradients */
+  --code-bg: oklch(0.985 0.002 260);
+  --grid-line: oklch(0.55 0.05 262 / 0.07);
+}
+.dark {
+  --brand: oklch(0.7 0.16 258);
+  --brand-soft: oklch(0.7 0.16 258 / 0.14);
+  --brand-2: oklch(0.72 0.16 292);
+  --code-bg: oklch(0.19 0.006 265);
+  --grid-line: oklch(0.8 0.05 262 / 0.06);
+}
+
+
+:root { --warm: var(--brand); }

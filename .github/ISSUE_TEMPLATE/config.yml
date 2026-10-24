@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://blueprint-deck.lukasvecerka.dev/docs/
+    about: How to install, configure, edit and share

@@ -1,0 +1,135 @@
+# diagram.config.yaml: "How PostgreSQL works", a public example for Blueprint Deck Kit.
+# Sources are the official PostgreSQL documentation (current version, 18 at the time of writing).
+# PostgreSQL is a trademark of the PostgreSQL Community Association; the name is used factually, no logo.
+version: 2
+
+# ---------------------------------------------------------------- shared by every diagram in the file
+project:
+  name: "How PostgreSQL works"
+  subtitle: "Architecture · technical view · from the official docs"
+  maturity: running
+  one_liner: "One supervisor, one backend per connection, and a write-ahead log that makes every change safe, recoverable and replicable."
+
+branding:
+  website: ""                          # no website branding: no logo images, the name is used factually
+  theme: paper
+  primary: "#336791"
+  secondary: "#0d9488"
+  shape: square
+  logo: "icon:database"
+  name_rules: ["Write PostgreSQL, never Postgres or PG in titles"]
+
+sources:
+  include:
+    - "https://www.postgresql.org/docs/current/tutorial-arch.html"
+    - "https://www.postgresql.org/docs/current/query-path.html"
+    - "https://www.postgresql.org/docs/current/connect-estab.html"
+    - "https://www.postgresql.org/docs/current/parser-stage.html"
+    - "https://www.postgresql.org/docs/current/rule-system.html"
+    - "https://www.postgresql.org/docs/current/planner-optimizer.html"
+    - "https://www.postgresql.org/docs/current/executor.html"
+    - "https://www.postgresql.org/docs/current/mvcc-intro.html"
+    - "https://www.postgresql.org/docs/current/wal-intro.html"
+    - "https://www.postgresql.org/docs/current/wal-async-commit.html"
+    - "https://www.postgresql.org/docs/current/wal-configuration.html"
+    - "https://www.postgresql.org/docs/current/routine-vacuuming.html"
+    - "https://www.postgresql.org/docs/current/runtime-config-resource.html"
+    - "https://www.postgresql.org/docs/current/runtime-config-wal.html"
+    - "https://www.postgresql.org/docs/current/high-availability.html"
+    - "https://www.postgresql.org/docs/current/warm-standby.html"
+    - "https://www.postgresql.org/docs/current/hot-standby.html"
+    - "https://www.postgresql.org/docs/current/continuous-archiving.html"
+    - "https://www.postgresql.org/docs/current/logical-replication.html"
+    - "https://www.postgresql.org/docs/current/logical-replication-architecture.html"
+    - "https://www.postgresql.org/docs/current/storage-file-layout.html"
+    - "https://www.postgresql.org/docs/current/storage-page-layout.html"
+    - "https://www.postgresql.org/docs/current/storage-toast.html"
+    - "https://www.postgresql.org/docs/current/monitoring-ps.html"
+    - "https://www.postgresql.org/docs/current/monitoring-stats.html"
+    - "https://www.postgresql.org/docs/current/app-psql.html"
+    - "https://www.postgresql.org/docs/current/glossary.html"
+  exclude: []
+  priority: []
+  derive_status_from: []
+  on_conflict: report
+  cite_sources: true
+  invent: never
+
+behaviour:
+  hero: true
+  tour_position: auto
+  zoom_to_focus: true
+  edges_filter_by_view: true
+  edge_labels: focus
+  particles: main-flow
+  overview_edges: all
+  legend: collapsed
+  editor: true
+  keyboard: true
+
+workflow:
+  confirm_structure: false             # generated unattended; the proposed structure is in extraction-report.md
+  pause_after_extract: false
+  output: "index.html"
+
+# ---------------------------------------------------------------- one diagram
+diagrams:
+  - id: postgresql
+    name: "PostgreSQL internals"
+    type: architecture
+    viewpoint: technical
+    focus: "What happens inside one PostgreSQL server: processes, the path of a query, memory, the write-ahead log, MVCC and vacuum, storage on disk, and how WAL feeds replicas."
+
+    audience:
+      who: [engineers]
+      goal: "Engineers who use PostgreSQL every day but have never looked inside understand where their query goes and why their data is safe."
+      tone: technical
+      language: en
+
+    sources: {}
+
+    map:
+      detail: medium
+      external: true
+      customer_owned: false
+      frame_label: "<b>One PostgreSQL instance</b> · the primary server"
+      technology: from-viewpoint
+      must_show: [postmaster, backend per connection, parser, rewriter, planner, executor, shared buffers, WAL buffers, work_mem, checkpointer, background writer, WAL writer, autovacuum, WAL files, heap, TOAST, streaming replica, WAL archive, logical replication]
+      leave_out: [version-specific numbers the docs do not give]
+      status:
+        enabled: false
+        meaning: build
+        values: []
+      notes: "Clients on the left, the instance in the middle (framed), other servers and the WAL archive on the right."
+
+    personas:
+      enabled: false                   # the docs define no user roles; a technical view does without personas
+      names: []
+
+    views:
+      presets: [main-flow, operations]
+      custom:
+        - "Path of a query"
+        - "Writing safely (WAL)"
+        - "MVCC & vacuum"
+        - "Replication: a list of streaming replica, WAL archive and logical replication, each highlighting its path"
+
+    tour:
+      enabled: true
+      steps: "12-14"
+      story: use-case
+      use_case: "Follow one UPDATE statement from the client to disk and on to a replica."
+      opening: context
+      closing: why-this
+      include: []
+      notes: ""
+
+    overlays:
+      roadmap: { enabled: false, source: "" }
+      options: { enabled: false, title: "", source: "" }
+      custom: []
+
+    comments: "Write facts only as the docs state them. Defaults (shared_buffers, work_mem, checkpoint_timeout) only where the docs give them."
+
+comments: |
+  A public example: shows that Blueprint Deck is not only for product blueprints.

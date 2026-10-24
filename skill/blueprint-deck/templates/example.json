@@ -1,0 +1,747 @@
+{
+ "meta": {
+  "title": "Acme Commerce Platform",
+  "subtitle": "Platform architecture · fictional",
+  "type": "architecture",
+  "language": "en",
+  "logo": "icon:shopping-cart",
+  "viewpoint": "mixed"
+ },
+ "hero": {
+  "eyebrow": "Example diagram",
+  "title": "Acme Commerce Platform",
+  "lead": "A fictional online shop, used to show what a Blueprint Deck is: a clickable map with personas, tabs, a guided tour, a roadmap and an options sheet, in one file.",
+  "pillars": [
+   {
+    "icon": "zap",
+    "color": "#38bdf8",
+    "title": "Fast checkout",
+    "text": "Every order flows through one API and one payment service"
+   },
+   {
+    "icon": "shield",
+    "color": "#f43f5e",
+    "title": "Safe by default",
+    "text": "Fraud checks and audit on every payment"
+   },
+   {
+    "icon": "chart-line",
+    "color": "#a3e635",
+    "title": "Measured",
+    "text": "Orders, latency and revenue on one dashboard"
+   }
+  ],
+  "footnote": "Fictional example · all content invented for the demo · use ← → in the tour"
+ },
+ "settings": {
+  "edges": {
+   "mainFlow": "order"
+  },
+  "layout": {
+   "grid": {
+    "columns": [
+     260,
+     560,
+     300
+    ],
+    "rows": [
+     420,
+     230
+    ],
+    "gap": 40,
+    "origin": [
+     60,
+     120
+    ]
+   }
+  }
+ },
+ "status": {
+  "toggleLabel": "Status",
+  "toggleTitle": "What runs today and what is planned",
+  "values": [
+   {
+    "id": "live",
+    "label": "Live",
+    "long": "Running in production",
+    "color": "#6ee7b7"
+   },
+   {
+    "id": "planned",
+    "label": "Planned",
+    "long": "Planned",
+    "color": "#fcd34d",
+    "dashed": true
+   }
+  ]
+ },
+ "frame": {
+  "label": "<b>Acme platform</b> · one Kubernetes cluster"
+ },
+ "zones": [
+  {
+   "id": "customers",
+   "title": "Customers",
+   "color": "#94a3b8",
+   "grid": [
+    0,
+    0
+   ],
+   "desc": "The people and apps that place orders.",
+   "sources": [
+    "README.md#customers"
+   ],
+   "boundary": "external"
+  },
+  {
+   "id": "core",
+   "title": "Commerce core",
+   "sub": "Order path",
+   "color": "#a78bfa",
+   "grid": [
+    1,
+    0
+   ],
+   "layout": {
+    "columns": 2
+   },
+   "desc": "Everything an order touches between the click and the confirmation email.",
+   "points": [
+    "One public API",
+    "Payment and fraud checks in the request path"
+   ],
+   "sources": [
+    "docs/architecture.md#core"
+   ]
+  },
+  {
+   "id": "external",
+   "title": "Partners",
+   "color": "#22d3ee",
+   "grid": [
+    2,
+    0
+   ],
+   "desc": "Third-party services the platform calls.",
+   "sources": [
+    "docs/architecture.md#partners"
+   ],
+   "boundary": "partner"
+  },
+  {
+   "id": "ops",
+   "title": "Operations",
+   "sub": "Run & observe",
+   "color": "#a3e635",
+   "grid": [
+    1,
+    1
+   ],
+   "layout": {
+    "columns": 2
+   },
+   "desc": "Metrics, logs and deployments for the whole platform.",
+   "sources": [
+    "docs/operations.md"
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "id": "web",
+   "zone": "customers",
+   "title": "Web shop",
+   "sub": "Browser storefront",
+   "icon": "monitor",
+   "what": "The storefront customers browse and buy in.",
+   "why": [
+    "Main revenue channel"
+   ],
+   "sources": [
+    "README.md#customers"
+   ]
+  },
+  {
+   "id": "mobile",
+   "zone": "customers",
+   "title": "Mobile app",
+   "sub": "iOS and Android",
+   "icon": "smartphone",
+   "what": "The native apps, using the same API as the web shop.",
+   "why": [
+    "One API for every channel"
+   ],
+   "sources": [
+    "README.md#customers"
+   ]
+  },
+  {
+   "id": "api",
+   "zone": "core",
+   "span": 2,
+   "size": "big",
+   "title": "Commerce API",
+   "sub": "One public API for carts, orders and accounts",
+   "icon": "route",
+   "badge": "Core",
+   "status": "live",
+   "what": "The single entry point for every channel. It authenticates the caller and routes to the order, catalog and payment services.",
+   "why": [
+    "New channels need no new backend",
+    "One place for rate limits and auth"
+   ],
+   "pick": "Kong Gateway, chosen for its plugin ecosystem.",
+   "alt": "Envoy Gateway; routes are plain config, so switching is a migration, not a rewrite.",
+   "sources": [
+    "docs/architecture.md#api"
+   ]
+  },
+  {
+   "id": "catalog",
+   "zone": "core",
+   "title": "Catalog",
+   "sub": "Products, prices, stock",
+   "icon": "tag",
+   "status": "live",
+   "what": "Products, prices and stock levels.",
+   "why": [
+    "Prices are consistent across channels"
+   ],
+   "sources": [
+    "docs/architecture.md#catalog"
+   ]
+  },
+  {
+   "id": "orders",
+   "zone": "core",
+   "title": "Order service",
+   "sub": "Carts, orders, invoices",
+   "icon": "shopping-cart",
+   "status": "live",
+   "what": "Owns the order lifecycle from cart to invoice.",
+   "why": [
+    "One source of truth for orders"
+   ],
+   "sources": [
+    "docs/architecture.md#orders"
+   ]
+  },
+  {
+   "id": "fraud",
+   "zone": "core",
+   "title": "Fraud checks",
+   "sub": "Score before capture",
+   "icon": "shield",
+   "status": "planned",
+   "what": "Scores each payment before it is captured and blocks the risky ones.",
+   "why": [
+    "Fewer chargebacks"
+   ],
+   "sources": [
+    "docs/roadmap.md#fraud"
+   ]
+  },
+  {
+   "id": "payments",
+   "zone": "core",
+   "title": "Payments",
+   "sub": "Authorise and capture",
+   "icon": "credit-card",
+   "status": "live",
+   "what": "Authorises and captures payments through the payment provider.",
+   "why": [
+    "Card data never touches the order service"
+   ],
+   "sources": [
+    "docs/architecture.md#payments"
+   ]
+  },
+  {
+   "id": "psp",
+   "zone": "external",
+   "title": "Payment provider",
+   "sub": "Card network access",
+   "icon": "banknote",
+   "what": "The external payment service provider.",
+   "why": [
+    "No card data stored by Acme"
+   ],
+   "sources": [
+    "docs/architecture.md#partners"
+   ]
+  },
+  {
+   "id": "mail",
+   "zone": "external",
+   "title": "Email service",
+   "sub": "Order confirmations",
+   "icon": "mail",
+   "what": "Sends order confirmations and receipts.",
+   "why": [
+    "Customers get a receipt within seconds"
+   ],
+   "sources": [
+    "docs/architecture.md#partners"
+   ]
+  },
+  {
+   "id": "metrics",
+   "zone": "ops",
+   "title": "Metrics & alerts",
+   "sub": "Prometheus · Grafana",
+   "icon": "chart-bar",
+   "status": "live",
+   "what": "Collects metrics from every service and alerts on errors and latency.",
+   "why": [
+    "Problems are found before customers report them"
+   ],
+   "sources": [
+    "docs/operations.md#metrics"
+   ]
+  },
+  {
+   "id": "deploy",
+   "zone": "ops",
+   "title": "Deployments",
+   "sub": "GitOps with Argo CD",
+   "icon": "git-branch",
+   "status": "live",
+   "what": "Every change is deployed from Git through Argo CD.",
+   "why": [
+    "Every release is reviewable and reversible"
+   ],
+   "sources": [
+    "docs/operations.md#deploy"
+   ]
+  },
+  {
+   "id": "logs",
+   "zone": "ops",
+   "title": "Logs",
+   "sub": "Central search",
+   "icon": "search",
+   "status": "planned",
+   "what": "Central log search for all services.",
+   "why": [
+    "One place to debug an order"
+   ],
+   "sources": [
+    "docs/roadmap.md#logs"
+   ]
+  }
+ ],
+ "edges": [
+  [
+   "web",
+   "api",
+   [
+    "order"
+   ],
+   "HTTPS"
+  ],
+  [
+   "mobile",
+   "api",
+   [
+    "order"
+   ]
+  ],
+  [
+   "api",
+   "orders",
+   [
+    "order"
+   ],
+   "place order"
+  ],
+  [
+   "api",
+   "catalog",
+   [
+    "order"
+   ]
+  ],
+  [
+   "orders",
+   "payments",
+   [
+    "order",
+    "pay"
+   ]
+  ],
+  [
+   "payments",
+   "fraud",
+   [
+    "pay"
+   ],
+   "",
+   true
+  ],
+  [
+   "payments",
+   "psp",
+   [
+    "order",
+    "pay"
+   ],
+   "authorise"
+  ],
+  [
+   "orders",
+   "mail",
+   [
+    "order"
+   ]
+  ],
+  [
+   "metrics",
+   "logs",
+   [
+    "ops"
+   ],
+   "",
+   true
+  ],
+  [
+   "deploy",
+   "zone:core",
+   [
+    "ops"
+   ]
+  ],
+  [
+   "zone:core",
+   "metrics",
+   [
+    "ops"
+   ],
+   "metrics"
+  ]
+ ],
+ "groups": {
+  "order-path": [
+   "web",
+   "mobile",
+   "api",
+   "orders",
+   "catalog",
+   "payments",
+   "psp",
+   "mail"
+  ]
+ },
+ "lenses": [
+  {
+   "id": "overview",
+   "title": "Overview",
+   "color": "#e2e8f0"
+  },
+  {
+   "id": "order",
+   "title": "Order path",
+   "color": "#a78bfa",
+   "nodes": [
+    "@order-path"
+   ],
+   "edges": [
+    "order"
+   ]
+  },
+  {
+   "id": "pay",
+   "title": "Payments",
+   "color": "#f43f5e",
+   "nodes": [
+    "orders",
+    "payments",
+    "fraud",
+    "psp"
+   ],
+   "edges": [
+    "pay"
+   ]
+  },
+  {
+   "id": "ops",
+   "title": "Operations",
+   "color": "#a3e635",
+   "zones": [
+    "ops"
+   ],
+   "nodes": [
+    "api",
+    "orders"
+   ],
+   "edges": [
+    "ops"
+   ]
+  },
+  {
+   "id": "channels",
+   "title": "Channels",
+   "color": "#38bdf8",
+   "list": "channels",
+   "fit": "all"
+  }
+ ],
+ "lists": {
+  "channels": {
+   "title": "Sales channels",
+   "eyebrow": "Who orders",
+   "sub": "Click one",
+   "icon": "users",
+   "color": "#38bdf8",
+   "intro": "Both channels use the same API, so a new channel needs no new backend.",
+   "edges": [
+    "order"
+   ],
+   "items": [
+    {
+     "tag": "WEB",
+     "title": "Web shop",
+     "sub": "~70% of orders",
+     "text": "Browser storefront.",
+     "nodes": [
+      "web",
+      "api",
+      "orders",
+      "catalog",
+      "payments"
+     ]
+    },
+    {
+     "tag": "APP",
+     "title": "Mobile app",
+     "sub": "~30% of orders",
+     "text": "Native apps.",
+     "nodes": [
+      "mobile",
+      "api",
+      "orders",
+      "catalog",
+      "payments"
+     ]
+    }
+   ]
+  }
+ },
+ "tour": [
+  {
+   "title": "One platform behind every order",
+   "fit": "all",
+   "text": "Acme sells through a web shop and mobile apps. Every order goes through one API, one order service and one payment path, so a new channel or a new payment rule is added once."
+  },
+  {
+   "title": "One API for every channel",
+   "nodes": [
+    "web",
+    "mobile",
+    "api"
+   ],
+   "edges": [
+    "order"
+   ],
+   "text": "The web shop and the apps call the same Commerce API. It authenticates every call and routes it to the right service."
+  },
+  {
+   "title": "From cart to confirmation",
+   "nodes": [
+    "@order-path"
+   ],
+   "edges": [
+    "order"
+   ],
+   "summary": [
+    [
+     "Place",
+     "The order service records the order"
+    ],
+    [
+     "Pay",
+     "Payments authorises with the provider"
+    ],
+    [
+     "Confirm",
+     "The customer gets an email"
+    ]
+   ],
+   "text": "An order touches four services and two partners, and each step is visible on the map."
+  },
+  {
+   "title": "Fraud checks before capture",
+   "nodes": [
+    "payments",
+    "fraud",
+    "psp"
+   ],
+   "edges": [
+    "pay"
+   ],
+   "text": "Planned: every payment is scored before capture, and risky ones are held for review."
+  },
+  {
+   "title": "Pick a launch option",
+   "overlay": "options",
+   "fit": "all",
+   "text": "Two ways to roll out fraud checks:"
+  },
+  {
+   "roadmap": true
+  },
+  {
+   "title": "Why this platform",
+   "fit": "all",
+   "text": "One API, one order path, measured end to end.",
+   "summary": [
+    [
+     "One API",
+     "Every channel"
+    ],
+    [
+     "Safe",
+     "Checks in the payment path"
+    ],
+    [
+     "Measured",
+     "One dashboard"
+    ]
+   ]
+  }
+ ],
+ "roadmap": {
+  "title": "Roadmap",
+  "lead": "What ships when.",
+  "phases": [
+   {
+    "when": "Q1",
+    "title": "Harden the core",
+    "main": true,
+    "text": "Hover an item to see its components.",
+    "items": [
+     {
+      "title": "Fraud checks",
+      "text": "Score every payment before capture.",
+      "nodes": [
+       "fraud",
+       "payments"
+      ]
+     },
+     {
+      "title": "Central logs",
+      "text": "One search across all services.",
+      "nodes": [
+       "logs"
+      ]
+     }
+    ]
+   },
+   {
+    "when": "Q2",
+    "title": "Grow channels",
+    "text": "New channels on the same API.",
+    "items": [
+     {
+      "title": "Partner API",
+      "text": "Marketplaces order through the Commerce API.",
+      "note": "needs fraud checks",
+      "nodes": [
+       "api"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "overlays": [
+  {
+   "id": "options",
+   "title": "Fraud check rollout",
+   "eyebrow": "Acme Commerce",
+   "icon": "target",
+   "buttonLabel": "Options",
+   "lead": "Two ways to introduce fraud scoring.",
+   "blocks": [
+    {
+     "type": "cards",
+     "cards": [
+      {
+       "tag": "Option A",
+       "title": "Shadow mode first",
+       "main": true,
+       "text": "Score every payment but block nothing for four weeks.",
+       "rows": [
+        [
+         "Risk",
+         "Low"
+        ],
+        [
+         "Time to value",
+         "6 weeks"
+        ]
+       ]
+      },
+      {
+       "tag": "Option B",
+       "title": "Block from day one",
+       "text": "Hold risky payments immediately.",
+       "rows": [
+        [
+         "Risk",
+         "Medium"
+        ],
+        [
+         "Time to value",
+         "2 weeks"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "type": "note",
+     "title": "Recommendation",
+     "text": "Option A: measure false positives before blocking real customers."
+    }
+   ]
+  }
+ ],
+ "personas": [
+  {
+   "id": "shopper",
+   "tag": "P1",
+   "title": "Shopper",
+   "sub": "Find it, pay, get it delivered",
+   "color": "#38bdf8",
+   "text": "Buys on the web shop or in the app and expects the same prices, the same cart and a confirmation within seconds.",
+   "path": [
+    "web",
+    "api",
+    "orders",
+    "payments",
+    "psp"
+   ],
+   "nodes": [
+    "catalog",
+    "mail"
+   ]
+  },
+  {
+   "id": "ops",
+   "tag": "P2",
+   "title": "Operations engineer",
+   "sub": "Keep it running, ship safely",
+   "color": "#a3e635",
+   "text": "Ships changes through one deployment path and is paged by alerts, not by customers.",
+   "path": [
+    "deploy",
+    "api",
+    "metrics",
+    "logs"
+   ]
+  }
+ ],
+ "theme": {
+  "preset": "midnight"
+ }
+}

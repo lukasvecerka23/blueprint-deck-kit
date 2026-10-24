@@ -1,0 +1,68 @@
+---
+import Command from "./Command.astro";
+import { INSTALL, SITE } from "../data/site";
+
+const tabs = [
+  { id: "unix", label: "macOS / Linux" },
+  { id: "windows", label: "Windows" },
+  { id: "claude", label: "Claude Code" },
+  { id: "codex", label: "Codex" },
+  { id: "other", label: "Other agents" },
+  { id: "manual", label: "Manual" },
+];
+const id = Astro.props.id ?? "install";
+---
+<div class="tabs w-full gap-4" id={`${id}-tabs`}>
+  <nav role="tablist" aria-orientation="horizontal" class="max-w-full overflow-x-auto">
+    {tabs.map((t, i) => (
+      <button type="button" role="tab" id={`${id}-tab-${t.id}`} aria-controls={`${id}-panel-${t.id}`}
+        aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1}>{t.label}</button>
+    ))}
+  </nav>
+
+  <div role="tabpanel" id={`${id}-panel-unix`} aria-labelledby={`${id}-tab-unix`} tabindex="-1" class="space-y-3">
+    <Command code={INSTALL.sh} />
+    <p class="text-sm text-muted-foreground">Installs the skill for every agent it finds on your computer
+      (<code class="font-mono text-xs">~/.claude/skills</code>, <code class="font-mono text-xs">~/.codex/skills</code>, <code class="font-mono text-xs">~/.agents/skills</code>).
+      Add <code class="font-mono text-xs">--project</code> to install into the current repository instead, <code class="font-mono text-xs">--uninstall</code> to remove it.
+      It only copies files; nothing else is installed. <a class="underline underline-offset-4 hover:text-foreground" href="/install.sh">Read the script</a>.</p>
+  </div>
+
+  <div role="tabpanel" id={`${id}-panel-windows`} aria-labelledby={`${id}-tab-windows`} tabindex="-1" class="space-y-3" hidden>
+    <Command code={INSTALL.ps} prompt="PS>" />
+    <p class="text-sm text-muted-foreground">Run in PowerShell. Same behaviour as the shell script: every agent found, or pass
+      <code class="font-mono text-xs">-Agent claude|codex|agents|all</code>, <code class="font-mono text-xs">-Project</code> or <code class="font-mono text-xs">-Uninstall</code>.
+      <a class="underline underline-offset-4 hover:text-foreground" href="/install.ps1">Read the script</a>.</p>
+  </div>
+
+  <div role="tabpanel" id={`${id}-panel-claude`} aria-labelledby={`${id}-tab-claude`} tabindex="-1" class="space-y-3" hidden>
+    <Command code={INSTALL.shAgent("claude")} />
+    <Command code={INSTALL.psAgent("claude")} prompt="PS>" />
+    <p class="text-sm text-muted-foreground">Installs into <code class="font-mono text-xs">~/.claude/skills/blueprint-deck</code>. Start a new Claude Code session in your repository
+      and paste the prompt from the configurator, or type <code class="font-mono text-xs">/blueprint-deck</code>.</p>
+  </div>
+
+  <div role="tabpanel" id={`${id}-panel-codex`} aria-labelledby={`${id}-tab-codex`} tabindex="-1" class="space-y-3" hidden>
+    <Command code={INSTALL.shAgent("codex")} />
+    <Command code={INSTALL.psAgent("codex")} prompt="PS>" />
+    <p class="text-sm text-muted-foreground">Installs into <code class="font-mono text-xs">~/.codex/skills/blueprint-deck</code>. Start a new Codex session in your repository and paste
+      the prompt from the configurator, or ask: "Use the blueprint-deck skill to make a diagram of this repo".</p>
+  </div>
+
+  <div role="tabpanel" id={`${id}-panel-other`} aria-labelledby={`${id}-tab-other`} tabindex="-1" class="space-y-3" hidden>
+    <Command code={INSTALL.shAgent("agents")} />
+    <Command code={`curl -fsSL ${SITE.url}/install.sh | sh -s -- --dir <your agent's skills folder>`} />
+    <p class="text-sm text-muted-foreground">Same script. <code class="font-mono text-xs">--agent agents</code> installs into the shared <code class="font-mono text-xs">~/.agents/skills</code> folder;
+      <code class="font-mono text-xs">--dir</code> puts it anywhere. Agents without skill support can follow <code class="font-mono text-xs">blueprint-deck/SKILL.md</code> as instructions: tell them to read it first.</p>
+  </div>
+
+  <div role="tabpanel" id={`${id}-panel-manual`} aria-labelledby={`${id}-tab-manual`} tabindex="-1" class="space-y-3" hidden>
+    <div class="flex flex-wrap items-center gap-3">
+      <a href="/blueprint-deck-skill.zip" class="btn" data-variant="outline" download>Download the skill (.zip)</a>
+      <span class="text-sm text-muted-foreground">contains one folder, <code class="font-mono text-xs">blueprint-deck/</code></span>
+    </div>
+    <Command code="unzip blueprint-deck-skill.zip -d ~/.claude/skills" />
+    <p class="text-sm text-muted-foreground">Unzip into your agent's skills folder, e.g. <code class="font-mono text-xs">~/.claude/skills/</code>, <code class="font-mono text-xs">~/.codex/skills/</code>,
+      <code class="font-mono text-xs">~/.agents/skills/</code>, or <code class="font-mono text-xs">.claude/skills/</code> inside a repository. The result is <code class="font-mono text-xs">…/skills/blueprint-deck/SKILL.md</code>.</p>
+  </div>
+</div>

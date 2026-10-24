@@ -1,0 +1,21 @@
+{
+  "name": "blueprint-deck-site",
+  "type": "module",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "sync": "node scripts/sync.mjs",
+    "predev": "node scripts/sync.mjs",
+    "dev": "astro dev",
+    "prebuild": "node scripts/sync.mjs",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.4.2",
+    "basecoat-css": "^1.1.0",
+    "tailwindcss": "^4.3.3"
+  }
+}

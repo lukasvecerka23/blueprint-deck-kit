@@ -1,0 +1,36 @@
+/* Blueprint palette: navy, blueprint blue, cyan, and a little amber for highlights (like pencil marks on a blueprint).
+   Not in use: to switch, import it in global.css instead of palette-classic.css, and copy design/blueprint/* back
+   (logo, favicon, social image). In diagrams this is the "blueprint" theme. */
+:root {
+  --brand: oklch(0.565 0.19 257);          /* blueprint blue #1f6feb */
+  --brand-soft: oklch(0.565 0.19 257 / 0.1);
+  --brand-2: oklch(0.6 0.11 222);          /* cyan #0891b2 */
+  --warm: oklch(0.68 0.16 62);             /* amber, for small highlights */
+  --code-bg: oklch(0.985 0.004 250);
+  --grid-line: oklch(0.55 0.08 255 / 0.08);
+  /* main buttons and focus rings in blueprint blue */
+  --primary: var(--brand);
+  --primary-foreground: oklch(0.99 0 0);
+  --ring: oklch(0.565 0.19 257 / 0.5);
+}
+.dark {
+  --brand: oklch(0.68 0.16 255);           /* #4d94ff */
+  --brand-soft: oklch(0.68 0.16 255 / 0.15);
+  --brand-2: oklch(0.76 0.13 222);         /* #22b8e6 */
+  --warm: oklch(0.8 0.15 75);              /* #f5a524 */
+  --code-bg: oklch(0.2 0.035 258);
+  --grid-line: oklch(0.8 0.08 250 / 0.07);
+  /* navy instead of Basecoat's neutral greys */
+  --background: oklch(0.17 0.035 260);
+  --card: oklch(0.2 0.04 260);
+  --popover: oklch(0.21 0.04 260);
+  --muted: oklch(0.25 0.04 260);
+  --accent: oklch(0.27 0.045 260);
+  --secondary: oklch(0.26 0.04 260);
+  --border: oklch(0.32 0.04 260 / 0.8);
+  --input: oklch(0.34 0.04 260 / 0.8);
+  --sidebar: oklch(0.18 0.035 260);
+  --primary: oklch(0.62 0.18 256);
+  --primary-foreground: oklch(0.99 0 0);
+  --ring: oklch(0.68 0.16 255 / 0.5);
+}

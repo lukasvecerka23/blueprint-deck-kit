@@ -1,0 +1,35 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Engine is assembled from engine/src
+        run: |
+          node dev/assemble.mjs
+          git diff --exit-code skill/blueprint-deck/blueprint-deck.html
+      - name: Examples use the current engine
+        run: |
+          node dev/assemble.mjs --upgrade examples/*/index.html
+          git diff --exit-code examples
+      - name: Examples have no errors
+        run: |
+          for f in examples/*/index.html; do echo "== $f"; node skill/blueprint-deck/tools/check.mjs "$f"; done
+      - name: Install scripts
+        run: |
+          sh -n install.sh
+          ./install.sh --dir "$RUNNER_TEMP/skills"
+          test -f "$RUNNER_TEMP/skills/blueprint-deck/SKILL.md"
+      - name: Screen checks in a real browser
+        run: |
+          npm install --no-save playwright@1
+          npx playwright install --with-deps chromium
+          node dev/browser-check.mjs examples/*/index.html

@@ -1,0 +1,49 @@
+---
+// A decorative mini map in the example's colours (cheaper than embedding every deck in the gallery).
+// When public/shots/<slug>.png exists (made with scripts/shots.mjs), the real screenshot is shown instead.
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+interface Props { accent: string; accent2: string; theme: "dark" | "light"; seed?: number; slug?: string; alt?: string }
+const { accent, accent2, theme, seed = 1, slug, alt = "Diagram preview" } = Astro.props;
+const shot = slug && existsSync(join(process.cwd(), "public", "shots", `${slug}.png`)) ? `/shots/${slug}.png` : null;
+const dark = theme === "dark";
+const bg = dark ? "#0b1020" : "#f7f8fb";
+const zone = dark ? "rgba(255,255,255,.035)" : "rgba(15,23,42,.035)";
+const zoneStroke = dark ? "rgba(255,255,255,.09)" : "rgba(15,23,42,.1)";
+const box = dark ? "#141b30" : "#ffffff";
+const boxStroke = dark ? "rgba(255,255,255,.12)" : "rgba(15,23,42,.12)";
+const text = dark ? "rgba(255,255,255,.55)" : "rgba(15,23,42,.45)";
+const grid = dark ? "rgba(255,255,255,.04)" : "rgba(15,23,42,.05)";
+// a few layouts so the cards don't all look alike
+const layouts = [
+  { zones: [[16, 22, 70, 116], [100, 22, 132, 116], [246, 22, 58, 116]], nodes: [[26, 44], [26, 90], [112, 40], [170, 40], [112, 92], [170, 92], [254, 66]] },
+  { zones: [[16, 22, 288, 34], [16, 66, 140, 72], [166, 66, 138, 72]], nodes: [[40, 30], [130, 30], [220, 30], [30, 84], [92, 106], [180, 84], [240, 106]] },
+  { zones: [[16, 22, 56, 116], [82, 22, 56, 116], [148, 22, 56, 116], [214, 22, 90, 116]], nodes: [[22, 50], [88, 70], [154, 40], [154, 96], [222, 50], [222, 96]] },
+];
+const L = layouts[(seed - 1) % layouts.length];
+const pts = L.nodes.map(([x, y]) => [x + 23, y + 9]);
+const edges = pts.slice(1).map((p, i) => [pts[i], p]);
+---
+{shot ? <img src={shot} alt={alt} class="block h-full w-full object-cover object-top" loading="lazy" width="1600" height="800" /> : <svg viewBox="0 0 320 160" class="block h-full w-full" role="img" aria-label="Diagram preview" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id={`grid-${seed}`} width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0H0V16" fill="none" stroke={grid} /></pattern>
+    <radialGradient id={`glow-${seed}`} cx="20%" cy="0%" r="80%"><stop offset="0" stop-color={accent} stop-opacity={dark ? ".35" : ".14"} /><stop offset="1" stop-color={accent} stop-opacity="0" /></radialGradient>
+  </defs>
+  <rect width="320" height="160" fill={bg} />
+  <rect width="320" height="160" fill={`url(#grid-${seed})`} />
+  <rect width="320" height="160" fill={`url(#glow-${seed})`} />
+  {L.zones.map(([x, y, w, h]) => <rect x={x} y={y} width={w} height={h} rx="7" fill={zone} stroke={zoneStroke} />)}
+  {edges.map(([a, b], i) => (
+    <path d={`M${a[0]} ${a[1]} C ${(a[0] + b[0]) / 2} ${a[1]}, ${(a[0] + b[0]) / 2} ${b[1]}, ${b[0]} ${b[1]}`} fill="none"
+      stroke={i % 3 === 0 ? accent2 : accent} stroke-opacity={i % 2 ? ".45" : ".8"} stroke-width="1.3" />
+  ))}
+  {L.nodes.map(([x, y], i) => (
+    <g>
+      <rect x={x} y={y} width="46" height="18" rx="4" fill={box} stroke={i === 2 ? accent : boxStroke} stroke-width={i === 2 ? 1.4 : 1} />
+      <rect x={x + 5} y={y + 5} width="8" height="8" rx="2" fill={i % 3 === 0 ? accent2 : accent} opacity=".9" />
+      <rect x={x + 17} y={y + 6.5} width="22" height="2.4" rx="1.2" fill={text} />
+      <rect x={x + 17} y={y + 10.5} width="14" height="2" rx="1" fill={text} opacity=".6" />
+    </g>
+  ))}
+  <rect x="16" y="8" width="60" height="5" rx="2.5" fill={text} />
+</svg>}

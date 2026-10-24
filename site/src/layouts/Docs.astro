@@ -1,0 +1,119 @@
+---
+// Docs layout. Used by .astro docs pages (props) and by .md pages (`layout:` frontmatter → frontmatter + headings).
+import Base from "./Base.astro";
+import Icon from "../components/Icon.astro";
+import { DOCS_NAV, SITE } from "../data/site";
+
+interface Heading { depth: number; slug: string; text: string }
+interface Props {
+  title?: string;
+  description?: string;
+  headings?: Heading[];
+  frontmatter?: { title?: string; description?: string; source?: string };
+  /** the content brings its own h1 (rendered reference files) */
+  ownTitle?: boolean;
+  /** path in the repository, for "Edit on GitHub" */
+  source?: string;
+}
+const p = Astro.props;
+const title = p.title ?? p.frontmatter?.title ?? "Docs";
+const description = p.description ?? p.frontmatter?.description;
+const source = p.source ?? p.frontmatter?.source;
+const toc = (p.headings ?? []).filter(h => h.depth === 2 || h.depth === 3);
+
+const path = Astro.url.pathname.replace(/\/?$/, "/");
+const groups = [...new Set(DOCS_NAV.map(n => n.group ?? "Guide"))];
+const flat = DOCS_NAV;
+const idx = flat.findIndex(n => n.href === path);
+const prev = idx > 0 ? flat[idx - 1] : null;
+const next = idx >= 0 && idx < flat.length - 1 ? flat[idx + 1] : null;
+---
+<Base title={title} description={description}>
+  <div class="mx-auto flex max-w-7xl gap-10 px-4 sm:px-6">
+    <!-- sidebar -->
+    <aside class="hidden w-56 shrink-0 md:block">
+      <nav class="sticky top-14 max-h-[calc(100dvh-3.5rem)] overflow-y-auto py-10 pr-2 text-sm" aria-label="Docs">
+        {groups.map(g => (
+          <div class="mb-6">
+            <h2 class="mb-2 px-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">{g}</h2>
+            <ul class="space-y-0.5">
+              {DOCS_NAV.filter(n => (n.group ?? "Guide") === g).map(n => (
+                <li>
+                  <a href={n.href} aria-current={n.href === path ? "page" : undefined}
+                    class:list={["block rounded-md px-2 py-1.5 transition-colors", n.href === path ? "bg-accent font-medium text-foreground" : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"]}>{n.title}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+        <div class="mt-8 border-t pt-6">
+          <a href="/configurator/" class="flex items-center gap-2 px-2 py-1.5 text-muted-foreground hover:text-foreground"><Icon name="sliders-horizontal" class="size-4" /> Configurator</a>
+          <a href="/gallery/" class="flex items-center gap-2 px-2 py-1.5 text-muted-foreground hover:text-foreground"><Icon name="layout-grid" class="size-4" /> Examples</a>
+          <a href={SITE.repo} class="flex items-center gap-2 px-2 py-1.5 text-muted-foreground hover:text-foreground"><Icon name="github" class="size-4" /> GitHub</a>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="min-w-0 flex-1 py-10">
+      <!-- mobile docs nav -->
+      <details class="mb-8 rounded-lg border md:hidden">
+        <summary class="flex cursor-pointer items-center justify-between px-4 py-3 text-sm font-medium [&::-webkit-details-marker]:hidden">
+          <span>Docs: {title}</span><Icon name="chevron-down" class="size-4 text-muted-foreground" />
+        </summary>
+        <ul class="border-t p-2 text-sm">
+          {DOCS_NAV.map(n => <li><a href={n.href} class:list={["block rounded-md px-3 py-2", n.href === path ? "bg-accent font-medium" : "text-muted-foreground"]}>{n.title}</a></li>)}
+        </ul>
+      </details>
+
+      <div class="flex gap-10">
+        <article class="min-w-0 flex-1">
+          {!p.ownTitle && (
+            <header class="mb-8">
+              <h1 class="text-3xl font-semibold tracking-tight">{title}</h1>
+              {description && <p class="mt-3 text-lg text-muted-foreground">{description}</p>}
+            </header>
+          )}
+          <div class:list={["prose", p.ownTitle && "reference"]}>
+            <slot />
+          </div>
+
+          <footer class="mt-16 space-y-6 border-t pt-6">
+            {source && (
+              <p class="text-sm text-muted-foreground">
+                This page is rendered from <a class="font-medium text-foreground underline underline-offset-4" href={`${SITE.repo}/blob/main/${source}`}><code class="font-mono text-xs">{source}</code></a>, the same file the agent reads.
+              </p>
+            )}
+            <nav class="grid gap-3 sm:grid-cols-2" aria-label="Previous and next page">
+              {prev ? (
+                <a href={prev.href} class="rounded-lg border p-4 transition-colors hover:bg-accent/50">
+                  <span class="text-xs text-muted-foreground">Previous</span>
+                  <span class="mt-1 flex items-center gap-1.5 font-medium"><Icon name="arrow-left" class="size-4" />{prev.title}</span>
+                </a>
+              ) : <span />}
+              {next && (
+                <a href={next.href} class="rounded-lg border p-4 text-right transition-colors hover:bg-accent/50">
+                  <span class="text-xs text-muted-foreground">Next</span>
+                  <span class="mt-1 flex items-center justify-end gap-1.5 font-medium">{next.title}<Icon name="arrow-right" class="size-4" /></span>
+                </a>
+              )}
+            </nav>
+          </footer>
+        </article>
+
+        <!-- on this page -->
+        {toc.length > 1 && (
+          <aside class="hidden w-52 shrink-0 xl:block">
+            <nav class="sticky top-24 max-h-[calc(100dvh-7rem)] overflow-y-auto text-sm" aria-label="On this page">
+              <h2 class="mb-3 text-xs font-medium tracking-wide text-muted-foreground uppercase">On this page</h2>
+              <ul class="space-y-1.5 border-l">
+                {toc.map(h => (
+                  <li><a href={`#${h.slug}`} class:list={["-ml-px block border-l border-transparent text-muted-foreground hover:border-foreground hover:text-foreground", h.depth === 3 ? "pl-6 text-[0.8125rem]" : "pl-3"]}>{h.text}</a></li>
+                ))}
+              </ul>
+            </nav>
+          </aside>
+        )}
+      </div>
+    </div>
+  </div>
+</Base>

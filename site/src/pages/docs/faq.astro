@@ -1,0 +1,17 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import { FAQ } from "../../data/faq";
+
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const headings = FAQ.map(f => ({ depth: 2, slug: slug(f.q), text: f.q }));
+---
+<Docs title="FAQ" description="Common questions about Blueprint Deck Kit." headings={headings}>
+  {FAQ.map(f => (
+    <section>
+      <h2 id={slug(f.q)} class="mt-10! text-lg!">{f.q}</h2>
+      <p set:html={f.a} />
+    </section>
+  ))}
+  <h2 id="more" class="mt-10! text-lg!">Something else?</h2>
+  <p>Open an issue on <a href="https://github.com/lukasvecerka23/blueprint-deck-kit/issues">GitHub</a>.</p>
+</Docs>

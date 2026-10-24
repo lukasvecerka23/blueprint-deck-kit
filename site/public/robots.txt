@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://blueprint-deck.lukasvecerka.dev/sitemap-index.xml

@@ -1,0 +1,229 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import Command from "../components/Command.astro";
+import InstallTabs from "../components/InstallTabs.astro";
+import FaqList from "../components/FaqList.astro";
+import ExamplePreview from "../components/ExamplePreview.astro";
+import { EXAMPLES, exampleExists, exampleHref } from "../data/examples";
+import { FAQ } from "../data/faq";
+import { INSTALL, SITE } from "../data/site";
+
+const steps = [
+  {
+    title: "Install the skill",
+    text: "One command copies the skill into your agents' skills folders. Nothing else to install.",
+    code: INSTALL.sh,
+  },
+  {
+    title: "Describe your diagram",
+    text: "Pick the audience, viewpoint, map detail, personas, tabs and tour story in the configurator, then copy the prompt. It carries the whole config.",
+    link: { href: "/configurator/", label: "Open the configurator" },
+  },
+  {
+    title: "Paste it into your agent",
+    text: "In your repository. The agent reads the docs, proposes the structure, and writes diagrams/index.html plus an extraction report.",
+    code: "/blueprint-deck diagrams/diagram.config.yaml",
+  },
+  {
+    title: "Present, edit, share",
+    text: "Open the file and present it. Press E to fix things, ask the agent for bigger changes, then share the file or host it.",
+    keys: ["←", "→", "E", "P"],
+  },
+];
+
+const features = [
+  { icon: "presentation", title: "A guided tour", text: "Present it like slides with ← →. Each step zooms to the part of the map it talks about; roadmaps and option sheets fit right in." },
+  { icon: "users", title: "Tabs and persona paths", text: "Each tab highlights one question, like the request path or governance. Pick a persona and see its numbered path through the map." },
+  { icon: "pencil", title: "Edit it in the browser", text: "Press E to change texts, colours, logo, boxes, tabs and the tour. No agent, no rebuild." },
+  { icon: "file-check", title: "One file, opens anywhere", text: "A single offline HTML file: email it, host it, open it on a phone. Several diagrams in one file, and P for a PDF deck." },
+  { icon: "palette", title: "Your brand, your audience", text: "Light and dark themes, your colours and logo. A product view for executives or a technical view for engineers." },
+  { icon: "file-search", title: "Sourced, by any agent", text: "Works with Claude Code, Codex and other agents. Every box cites its source, and a report lists conflicts and gaps in your docs." },
+];
+
+const kinds = ["Architecture blueprints", "Product blueprints", "Data flows", "Processes", "Customer journeys", "Ecosystems", "Org maps"];
+const homeFaq = FAQ.filter(f => f.home);
+---
+<Base>
+  <!-- ============================================================ hero -->
+  <section class="relative overflow-hidden border-b">
+    <div class="pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[900px] -translate-x-1/2 rounded-full bg-brand/15 blur-3xl"></div>
+    <div class="relative mx-auto max-w-7xl px-4 pt-16 pb-12 sm:px-6 sm:pt-24">
+      <div class="mx-auto max-w-3xl text-center">
+        <div class="mb-6 flex flex-wrap items-center justify-center gap-2">
+          <span class="badge gap-1.5 rounded-full px-3 py-1 text-xs font-semibold" data-variant="secondary">
+            <Icon name="heart" class="size-3.5 text-warm" /> 100% free · open source
+          </span>
+          <a href="#install" class="badge gap-1.5 rounded-full px-3 py-1 text-xs" data-variant="outline">
+            <Icon name="sparkles" class="size-3.5 text-brand" /> An agent skill for Claude Code, Codex and more
+          </a>
+        </div>
+        <h1 class="text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
+          Turn your docs into a <span class="text-gradient">deck people will love</span>
+        </h1>
+        <p class="mx-auto mt-6 max-w-2xl text-lg text-pretty text-muted-foreground">
+          Your coding agent reads the repository's docs and writes one interactive HTML file: a pan-and-zoom map with
+          clickable boxes, tabs, personas and a guided tour. Present it, press E to edit it, send it to anyone.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <a href="/configurator/" class="btn" data-size="lg">Configure your deck <Icon name="arrow-right" /></a>
+          <a href="#install" class="btn" data-size="lg" data-variant="outline"><Icon name="terminal" /> Install the skill</a>
+        </div>
+        <Command code={INSTALL.sh} class="mx-auto mt-6 max-w-2xl text-left" />
+        <p class="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+          <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> Free forever, MIT licence</span>
+          <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> No account, no tracking</span>
+          <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> Runs on your own agent subscription</span>
+          <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> Nothing else to install</span>
+        </p>
+      </div>
+
+      <!-- live demo -->
+      <div class="mx-auto mt-14 max-w-6xl">
+        <div class="browser-frame overflow-hidden rounded-xl border bg-card">
+          <div class="flex items-center gap-3 border-b bg-muted/50 px-4 py-2.5">
+            <div class="flex gap-1.5" aria-hidden="true">
+              <span class="size-3 rounded-full bg-[#ff5f57]"></span><span class="size-3 rounded-full bg-[#febc2e]"></span><span class="size-3 rounded-full bg-[#28c840]"></span>
+            </div>
+            <div class="mx-auto flex min-w-0 items-center gap-2 rounded-md border bg-background px-3 py-1 text-xs text-muted-foreground">
+              <Icon name="file-code" class="size-3.5 shrink-0" /><span class="truncate">acme/diagrams/index.html</span>
+            </div>
+            <a href="/examples/acme/index.html" class="btn shrink-0" data-variant="ghost" data-size="sm" target="_blank" rel="noopener">
+              <Icon name="maximize-2" class="size-3.5" /><span class="hidden sm:inline">Open full screen</span>
+            </a>
+          </div>
+          <div class="relative aspect-[4/3] w-full bg-[#050914] sm:aspect-[16/9]">
+            <iframe src="/examples/acme/index.html" title="Live demo: the Acme Commerce Blueprint Deck" class="absolute inset-0 h-full w-full" loading="eager"></iframe>
+          </div>
+        </div>
+        <p class="mt-4 text-center text-sm text-muted-foreground">
+          Live demo, the real file. Click a box, try the tabs, start the tour and use
+          <kbd class="kbd">←</kbd> <kbd class="kbd">→</kbd>, or press <kbd class="kbd">E</kbd> to edit.
+          <a href="/examples/acme/index.html" class="font-medium text-foreground underline underline-offset-4">Open full screen</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ how it works -->
+  <section id="how" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28">
+    <div class="max-w-2xl">
+      <p class="text-sm font-medium text-brand">How it works</p>
+      <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">From docs to deck in four steps</h2>
+      <p class="mt-4 text-muted-foreground">The agent writes only the content (a JSON block). The engine is fixed, so every deck looks and behaves the same, and anyone can fix a text later without the agent.</p>
+    </div>
+    <ol class="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {steps.map((s, i) => (
+        <li class="card relative flex flex-col gap-4 p-6">
+          <span class="flex size-8 items-center justify-center rounded-full border bg-brand-soft font-mono text-sm font-semibold text-brand">{i + 1}</span>
+          <div>
+            <h3 class="font-semibold">{s.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+          </div>
+          <div class="mt-auto">
+            {s.code && <code class="block truncate rounded-md border bg-code px-3 py-2 font-mono text-xs" title={s.code}>{s.code}</code>}
+            {s.link && <a href={s.link.href} class="btn w-full" data-variant="outline" data-size="sm">{s.link.label} <Icon name="arrow-right" class="size-3.5" /></a>}
+            {s.keys && <div class="flex gap-1.5">{s.keys.map(k => <kbd class="kbd">{k}</kbd>)}</div>}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- ============================================================ features -->
+  <section id="features" class="border-y bg-muted/30">
+    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28">
+      <div class="max-w-2xl">
+        <p class="text-sm font-medium text-brand">Features</p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">A presentation, a map and a document in one file</h2>
+        <p class="mt-4 text-muted-foreground">Built from real presentation rounds: each feature exists because a presenter or a reviewer asked for it.</p>
+        <ul class="mt-6 flex flex-wrap gap-2">
+          {kinds.map(k => <li class="badge" data-variant="secondary">{k}</li>)}
+        </ul>
+      </div>
+      <div class="mt-12 grid gap-px overflow-hidden rounded-xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        {features.map(f => (
+          <div class="bg-background p-6">
+            <span class="flex size-9 items-center justify-center rounded-lg border bg-brand-soft text-brand"><Icon name={f.icon} class="size-[18px]" /></span>
+            <h3 class="mt-4 font-semibold">{f.title}</h3>
+            <p class="mt-1.5 text-sm leading-relaxed text-muted-foreground">{f.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ install -->
+  <section id="install" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28">
+    <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
+      <div>
+        <p class="text-sm font-medium text-brand">Install</p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">One command, then ask your agent</h2>
+        <p class="mt-4 text-muted-foreground">The skill is a folder: <code class="font-mono text-sm">SKILL.md</code>, the engine, the format reference and the style guide. The installer copies it into your agents' skills folders and does nothing else.</p>
+        <ul class="mt-6 space-y-2.5 text-sm">
+          <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /> Works with Claude Code, Codex and other Agent Skills agents</li>
+          <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /> Your agent runs locally with your own subscription</li>
+          <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /> Re-run the command to update, <code class="font-mono text-xs">--uninstall</code> to remove</li>
+        </ul>
+        <a href="/docs/" class="btn mt-8" data-variant="outline">Read the getting started guide <Icon name="arrow-right" /></a>
+      </div>
+      <div class="card p-5 sm:p-6">
+        <InstallTabs />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ examples -->
+  <section id="examples" class="border-y bg-muted/30">
+    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div class="max-w-2xl">
+          <p class="text-sm font-medium text-brand">Examples</p>
+          <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">See what an agent makes of real docs</h2>
+        </div>
+        <a href="/gallery/" class="btn" data-variant="outline">Open the gallery <Icon name="arrow-right" /></a>
+      </div>
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {EXAMPLES.map((e, i) => {
+          const ready = exampleExists(e.slug);
+          const Tag = ready ? "a" : "div";
+          return (
+          <Tag href={ready ? exampleHref(e.slug) : undefined} class:list={["group card overflow-hidden p-0 gap-0 transition-shadow", ready ? "hover:shadow-md" : "opacity-70"]}>
+            <div class="aspect-[2/1] overflow-hidden border-b">
+              <div class="h-full w-full transition-transform duration-300 group-hover:scale-[1.03]">
+                <ExamplePreview accent={e.accent} accent2={e.accent2} theme={e.theme} seed={i + 1} slug={e.slug} alt={`${e.title}: overview`} />
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="flex items-center justify-between font-semibold">{e.title}<Icon name="external-link" class="size-3.5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" /></h3>
+              <p class="mt-1 text-xs text-muted-foreground">{ready ? e.tags.join(" · ") : "Coming soon"}</p>
+            </div>
+          </Tag>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ faq -->
+  <section id="faq" class="mx-auto max-w-3xl px-4 py-20 sm:px-6 sm:py-28">
+    <p class="text-sm font-medium text-brand">FAQ</p>
+    <h2 class="mt-2 mb-8 text-3xl font-semibold tracking-tight sm:text-4xl">Questions</h2>
+    <FaqList items={homeFaq} />
+    <p class="mt-8 text-sm text-muted-foreground">More in the <a href="/docs/faq/" class="font-medium text-foreground underline underline-offset-4">docs FAQ</a>.</p>
+  </section>
+
+  <!-- ============================================================ cta -->
+  <section class="px-4 pb-20 sm:px-6 sm:pb-28">
+    <div class="relative mx-auto max-w-5xl overflow-hidden rounded-2xl border bg-card px-6 py-14 text-center sm:px-12">
+      <div class="relative">
+        <h2 class="text-3xl font-semibold tracking-tight text-balance">Describe your diagram in two minutes</h2>
+        <p class="mx-auto mt-3 max-w-xl text-muted-foreground">The configurator turns your answers into a prompt for your agent. It runs in your browser; nothing is sent anywhere.</p>
+        <div class="mt-8 flex flex-wrap justify-center gap-3">
+          <a href="/configurator/" class="btn" data-size="lg">Configure your deck <Icon name="arrow-right" /></a>
+          <a href={SITE.repo} class="btn" data-size="lg" data-variant="outline"><Icon name="github" /> Star on GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

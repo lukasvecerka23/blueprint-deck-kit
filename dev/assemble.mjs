@@ -1,0 +1,50 @@
+// Dev only (users never run this): assembles engine/src into the single engine file the skill copies for every diagram.
+//   node dev/assemble.mjs                         → skill/blueprint-deck/blueprint-deck.html (empty engine)
+//   node dev/assemble.mjs --upgrade a.html b.html → put the current engine into existing diagrams, keeping their data
+//   node dev/assemble.mjs --from-json d.json out.html [--minify-data]
+import fs from "node:fs";
+import path from "node:path";
+
+const root = path.dirname(path.dirname(new URL(import.meta.url).pathname));
+const src = f => fs.readFileSync(path.join(root, "engine/src", f), "utf8");
+const VERSION = src("core.js").match(/VERSION = "([^"]+)"/)[1];
+
+const core = src("icons.js") + "\n" + src("core.js").replace(/^if \(typeof module.*$/m, "");
+const js = [
+  "/*BD-CORE-START*/", core, "/*BD-CORE-END*/",
+  src("render.js"), src("boot.js"), src("editor.js"),
+  "if (BD) BD.start();",
+].join("\n").replace(/<\/script/gi, "<\\/script").replace(/<!--/g, "<\\!--");
+const css = src("engine.css") + "\n" + src("editor.css");
+const OPEN = '<script type="application/json" id="bd-data">';
+
+export function page(dataJson) {
+  return src("template.html")
+    .replace(/__VERSION__/g, VERSION)
+    .replace("__CSS__", () => css)
+    .replace("__JS__", () => js)
+    .replace("__DATA__", () => dataJson.replace(/<\//g, "<\\/"));
+}
+export function dataOf(html) {
+  const a = html.indexOf(OPEN);
+  if (a < 0) throw new Error("no bd-data block");
+  return html.slice(a + OPEN.length, html.indexOf("</script>", a)).trim();
+}
+const fmt = obj => JSON.stringify(obj, null, 1);
+
+const args = process.argv.slice(2);
+if (args[0] === "--upgrade") {
+  for (const f of args.slice(1)) {
+    const data = JSON.parse(dataOf(fs.readFileSync(f, "utf8")));
+    fs.writeFileSync(f, page(fmt(data)));
+    console.log("upgraded", f);
+  }
+} else if (args[0] === "--from-json") {
+  const data = JSON.parse(fs.readFileSync(args[1], "utf8"));
+  fs.writeFileSync(args[2], page(fmt(data)));
+  console.log("wrote", args[2]);
+} else {
+  const out = path.join(root, "skill/blueprint-deck/blueprint-deck.html");
+  fs.writeFileSync(out, page('{ "blueprintDeck": "empty" }'));
+  console.log(`engine ${VERSION} → ${path.relative(root, out)} (${Math.round(fs.statSync(out).size / 1024)} KB)`);
+}
