@@ -27,6 +27,7 @@ const c1 = html.indexOf("/*BD-CORE-START*/"), c2 = html.indexOf("/*BD-CORE-END*/
 if (c1 < 0 || c2 < 0) { console.error(`${file}: no engine found (is this a Blueprint Deck file?)`); process.exit(2); }
 const { BDCore, ICONS, ICON_ALIASES } = new Function(html.slice(c1, c2) + "\nreturn { BDCore, ICONS, ICON_ALIASES };")();
 if (data.blueprintDeck === "empty") { console.log("empty engine file: no diagram yet"); process.exit(0); }
+console.log(`engine ${BDCore.VERSION}`);
 
 const icons = [...Object.keys(ICONS), ...Object.keys(ICON_ALIASES)];
 const list = BDCore.diagramsOf(data) || [{ id: "main", raw: data }];

@@ -89,6 +89,15 @@ Paste the prompt into your agent, in the folder with your docs (a repository, or
 
 ---
 
+## Updating
+
+- **The skill:** run the install command again. It tells you which version it replaced and links to
+  [what's new](https://blueprint-deck.lukasvecerka.dev/changelog/). The skill also mentions it when a newer version
+  is out.
+- **Your diagrams** keep working as they are: each file carries its own engine. To give a file the new features,
+  ask your agent to "upgrade diagrams/index.html to the newest engine"; your content stays as it is. The editor
+  (E → Diagram) shows which engine a file has.
+
 ## How it works
 
 ```

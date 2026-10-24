@@ -99,3 +99,14 @@ Then make a Blueprint Deck from diagrams/diagram.config.yaml.
 - Point `sources.include` at the docs that matter for this audience; less noise gives a clearer map.
 - Write what the last version got wrong into `comments`. The agent treats every comment and note as an instruction.
 - Big repos: agents with sub-agents read in parallel and hand back structured facts, which keeps the main context free.
+
+## Updating
+
+Run the install command again: it replaces the skill and says which version it replaced
+(see the [changelog](/changelog/)). When the skill runs, it checks
+[version.json](/version.json) and tells you when a newer version is out; it never updates anything by itself.
+
+Diagrams you already made keep working: each file carries its own engine. To give a file the new features, ask your
+agent to *upgrade* it (or run `node tools/insert.mjs --upgrade diagrams/index.html`). The content stays as it is.
+The editor shows a file's engine version under **E → Diagram → This file**.
+

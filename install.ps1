@@ -64,12 +64,21 @@ if ($here -and (Test-Path (Join-Path $here "skill\$Name\SKILL.md"))) {
 }
 
 try {
+  $new = if (Test-Path (Join-Path $src "VERSION")) { (Get-Content (Join-Path $src "VERSION") -Raw).Trim() } else { "?" }
+  $updated = $false
   foreach ($t in $targets) {
     New-Item -ItemType Directory -Force -Path $t | Out-Null
     $dest = Join-Path $t $Name
+    $old = if (Test-Path (Join-Path $dest "VERSION")) { (Get-Content (Join-Path $dest "VERSION") -Raw).Trim() } else { "" }
     if (Test-Path $dest) { Remove-Item -Recurse -Force $dest }
     Copy-Item -Recurse -Path $src -Destination $dest
-    Write-Host "installed $dest"
+    if (-not $old) { Write-Host "installed Blueprint Deck Kit $new in $dest" }
+    elseif ($old -eq $new) { Write-Host "Blueprint Deck Kit $new is up to date in $dest (reinstalled)" }
+    else { Write-Host "updated Blueprint Deck Kit $old -> $new in $dest"; $updated = $true }
+  }
+  if ($updated) {
+    Write-Host "What's new: $Site/changelog/"
+    Write-Host "Existing diagrams keep their engine; to give one the new features, ask your agent to upgrade it."
   }
 } finally {
   if ($tmp) { Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue }

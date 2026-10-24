@@ -29,9 +29,11 @@ const fmt = obj => JSON.stringify(obj, null, 1).replace(/<\//g, "<\\/");
 const [a1, a2, a3] = process.argv.slice(2);
 try {
   if (a1 === "--upgrade") {
-    const data = JSON.parse(dataOf(fs.readFileSync(a2, "utf8")));
-    fs.writeFileSync(a2, withData(fs.readFileSync(ENGINE, "utf8"), fmt(data)));
-    console.log(`${a2}: engine upgraded, data kept`);
+    const old = fs.readFileSync(a2, "utf8"), engine = fs.readFileSync(ENGINE, "utf8");
+    const ver = h => (h.match(/name="generator" content="Blueprint Deck Kit ([^"]+)"/) || [])[1] || "?";
+    const data = JSON.parse(dataOf(old));
+    fs.writeFileSync(a2, withData(engine, fmt(data)));
+    console.log(`${a2}: engine ${ver(old)} -> ${ver(engine)}, data kept`);
   } else if (a1 === "--read-only") {
     const html = fs.readFileSync(a2, "utf8");
     const data = JSON.parse(dataOf(html));

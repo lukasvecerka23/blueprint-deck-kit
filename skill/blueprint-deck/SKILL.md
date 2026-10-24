@@ -35,6 +35,16 @@ changed. If a change expresses a lasting preference ("always say X", "no moving 
 (`comments`, `branding.name_rules` or `behaviour`) so a later `update` keeps it. The user may also have edited the
 file in the browser (press E); those edits are in the data block, so always re-read it before changing anything.
 
+## Before you start: versions (a few seconds, skip it if there's no network)
+
+1. Read `SKILL_DIR/VERSION` (e.g. `2.1.0`). Fetch `https://blueprint-deck.lukasvecerka.dev/version.json` with your web
+   tool or `curl -fsS --max-time 5`. If its `version` is newer, tell the user in one line, then carry on:
+   "Blueprint Deck Kit X is available (you have Y): run `<install.sh>` (Windows: `<install.ps1>`), what's new: `<changelog>`".
+   Never stop or install anything yourself because of this.
+2. When you work on an existing diagram, read its engine version from the top of the file
+   (`<meta name="generator" content="Blueprint Deck Kit X">`). If it's older than `SKILL_DIR/VERSION`, mention once
+   that the file can get the newer engine (mode `upgrade`), and do it only when the user agrees.
+
 ## 0. Find the config
 
 Use the path given, else `diagrams/diagram.config.yaml`, else `diagram.config.yaml`. The user may also paste the

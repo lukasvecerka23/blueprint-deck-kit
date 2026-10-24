@@ -6,4 +6,9 @@ const reference = defineCollection({
   loader: glob({ pattern: ["spec.md", "style-guide.md"], base: "../skill/blueprint-deck/reference" }),
 });
 
-export const collections = { reference };
+// the changelog page renders the repository's CHANGELOG.md
+const project = defineCollection({
+  loader: glob({ pattern: ["CHANGELOG.md"], base: ".." }),
+});
+
+export const collections = { reference, project };

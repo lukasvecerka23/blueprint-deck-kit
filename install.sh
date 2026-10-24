@@ -90,12 +90,20 @@ else
   [ -n "$SRC" ] && [ -f "$SRC/SKILL.md" ] || { say "download did not contain skill/$NAME" >&2; exit 1; }
 fi
 
+NEW="$(cat "$SRC/VERSION" 2>/dev/null || echo "?")"
 for t in $TARGETS; do
+  OLD="$(cat "$t/$NAME/VERSION" 2>/dev/null || true)"
   mkdir -p "$t"
   rm -rf "${t:?}/$NAME"
   cp -R "$SRC" "$t/$NAME"
-  say "installed $t/$NAME"
+  if [ -z "$OLD" ]; then say "installed Blueprint Deck Kit $NEW in $t/$NAME"
+  elif [ "$OLD" = "$NEW" ]; then say "Blueprint Deck Kit $NEW is up to date in $t/$NAME (reinstalled)"
+  else say "updated Blueprint Deck Kit $OLD -> $NEW in $t/$NAME"; UPDATED=1; fi
 done
+if [ "${UPDATED:-0}" = 1 ]; then
+  say "What's new: $SITE/changelog/"
+  say "Existing diagrams keep their engine; to give one the new features, ask your agent to upgrade it."
+fi
 
 say ""
 say "Done. Start a new agent session in the folder with your docs, then:"

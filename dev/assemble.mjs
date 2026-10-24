@@ -47,6 +47,8 @@ if (args[0] === "--upgrade") {
 } else {
   // the installed skill and its zip carry the licence and the third-party notices
   for (const f of ["LICENSE", "THIRD_PARTY_NOTICES.md"]) fs.copyFileSync(path.join(root, f), path.join(root, "skill/blueprint-deck", f));
+  // the installed skill knows its version (install.sh, the update check in SKILL.md)
+  fs.writeFileSync(path.join(root, "skill/blueprint-deck/VERSION"), VERSION + "\n");
   const out = path.join(root, "skill/blueprint-deck/blueprint-deck.html");
   fs.writeFileSync(out, page('{ "blueprintDeck": "empty" }'));
   console.log(`engine ${VERSION} → ${path.relative(root, out)} (${Math.round(fs.statSync(out).size / 1024)} KB)`);

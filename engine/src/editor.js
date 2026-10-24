@@ -296,7 +296,8 @@ const BDEditor = (() => {
         ["settings.hero", "Start screen", "check", { def: true, text: "Show the start screen" }],
       ], own, "settings"))) +
       section("Start screen", grp("own4", fields([["hero.eyebrow", "Eyebrow"], ["hero.title", "Headline"], ["hero.lead", "Lead", "area", { rows: 3 }], ["hero.footnote", "Footnote"]], own, "hero"))) +
-      section("Areas", `<button type="button" class="mini" id="addZone">+ Add an area</button><small>Click an area's title on the map to edit it.</small>`));
+      section("Areas", `<button type="button" class="mini" id="addZone">+ Add an area</button><small>Click an area's title on the map to edit it.</small>`) +
+      section("This file", `<p class="ed-note">Blueprint Deck Kit engine <b>${escA(BDCore.VERSION)}</b>. For a newer engine, update the skill (run the install command again) and ask your agent to upgrade this file; your content stays as it is. <a href="https://blueprint-deck.lukasvecerka.dev/changelog/" target="_blank" rel="noopener">What's new</a></p>`));
     wire(p.querySelector("[data-g=theme]"), th, "theme");
     wire(p.querySelector("[data-g=brand]"), brandObj, "brand");
     ["own", "own2", "own3", "own4"].forEach(g => wire(p.querySelector(`[data-g=${g}]`), own, g));

@@ -163,6 +163,17 @@ function tarSkill() {
   }
 }
 
+// what the skill's update check and the installer read: the current version and where to read what's new
+function versionJson() {
+  const m = readFileSync(join(REPO, "engine/src/core.js"), "utf8").match(/VERSION = "([^"]+)"/);
+  if (!m) return warn("no VERSION in engine/src/core.js, version.json skipped");
+  const site = "https://blueprint-deck.lukasvecerka.dev";
+  writeFileSync(join(PUBLIC, "version.json"), JSON.stringify({
+    version: m[1], changelog: site + "/changelog/", install: { sh: `curl -fsSL ${site}/install.sh | sh`, ps: `irm ${site}/install.ps1 | iex` },
+  }, null, 2) + "\n");
+  log(`version ${m[1]} -> public/version.json`);
+}
+
 mkdirSync(PUBLIC, { recursive: true });
 copyDir("configurator", "configurator");
 copyDir("examples", "examples");
@@ -171,4 +182,5 @@ copyFile("install.sh", "install.sh");
 copyFile("install.ps1", "install.ps1");
 zipSkill();
 tarSkill();
+versionJson();
 log(warnings ? `done with ${warnings} warning(s)` : "done");

@@ -48,6 +48,17 @@ Ground rules for the engine:
   mistakes an agent is likely to make, and a line in the style guide if it changes how diagrams should be written.
 - Keep old data working: rename with an alias rather than breaking existing files.
 
+## Releasing
+
+The version lives in one place: `VERSION` in `engine/src/core.js` (`dev/assemble.mjs` writes it into the engine,
+`skill/blueprint-deck/VERSION` and, through the site build, `version.json` on the website).
+
+1. Bump `VERSION` (minor for features, major if old diagrams would need an upgrade) and add a `## x.y.z (date)`
+   section at the top of `CHANGELOG.md`.
+2. `node dev/assemble.mjs && node dev/assemble.mjs --upgrade examples/*/index.html`, commit, push.
+3. `git tag vx.y.z && git push --tags`: the Release workflow checks everything and publishes a GitHub release with
+   the notes and the skill archives. The website (and so the install command and the update check) serves `main`.
+
 ## Working on the skill
 
 The skill is plain Markdown. If an agent got something wrong, the best fix is usually a sharper rule in `SKILL.md` or

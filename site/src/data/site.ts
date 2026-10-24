@@ -27,4 +27,5 @@ export const DOCS_NAV = [
   { title: "Diagram format", href: "/docs/format/", group: "Reference" },
   { title: "Style guide", href: "/docs/style-guide/", group: "Reference" },
   { title: "FAQ", href: "/docs/faq/", group: "Reference" },
+  { title: "Changelog", href: "/changelog/", group: "Reference" },
 ];
