@@ -23,7 +23,8 @@
   .node.ed-dragging { opacity: 0.3; }
   .ed-ghost { opacity: 0.9; box-shadow: 0 24px 60px rgba(var(--shadow-rgb), calc(0.6 * var(--shadow-k))); }
 
-  #ed-bar { position: fixed; z-index: 26; left: 16px; right: 468px; bottom: 12px; margin: 0 auto; width: max-content; max-width: calc(100vw - 500px); display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: var(--r-ui); background: var(--glass-strong); font-size: 13px; overflow-x: auto; }
+  /* wraps onto a second line on narrow screens instead of hiding buttons */
+  #ed-bar { position: fixed; z-index: 26; left: 16px; right: 468px; bottom: 12px; margin: 0 auto; width: max-content; max-width: calc(100vw - 500px); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; padding: 6px; border-radius: var(--r-ui); background: var(--glass-strong); font-size: 13px; }
   #ed-bar button { border: 0; background: transparent; padding: 7px 10px; border-radius: var(--r-sm); font-weight: 600; cursor: pointer; color: var(--body); white-space: nowrap; }
   #ed-bar button:hover { background: rgba(var(--fg-rgb), 0.07); color: var(--fg); }
   #ed-bar button.on { background: rgba(var(--accent-rgb), 0.16); color: var(--fg); }

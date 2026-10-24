@@ -451,7 +451,8 @@
   .node.ed-dragging { opacity: 0.3; }
   .ed-ghost { opacity: 0.9; box-shadow: 0 24px 60px rgba(var(--shadow-rgb), calc(0.6 * var(--shadow-k))); }
 
-  #ed-bar { position: fixed; z-index: 26; left: 16px; right: 468px; bottom: 12px; margin: 0 auto; width: max-content; max-width: calc(100vw - 500px); display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: var(--r-ui); background: var(--glass-strong); font-size: 13px; overflow-x: auto; }
+  /* wraps onto a second line on narrow screens instead of hiding buttons */
+  #ed-bar { position: fixed; z-index: 26; left: 16px; right: 468px; bottom: 12px; margin: 0 auto; width: max-content; max-width: calc(100vw - 500px); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; padding: 6px; border-radius: var(--r-ui); background: var(--glass-strong); font-size: 13px; }
   #ed-bar button { border: 0; background: transparent; padding: 7px 10px; border-radius: var(--r-sm); font-weight: 600; cursor: pointer; color: var(--body); white-space: nowrap; }
   #ed-bar button:hover { background: rgba(var(--fg-rgb), 0.07); color: var(--fg); }
   #ed-bar button.on { background: rgba(var(--accent-rgb), 0.16); color: var(--fg); }
@@ -2836,7 +2837,12 @@ const BD = (() => {
     if (st.tour >= 0) p.set("tour", st.tour + 1); else if (st.lens !== current.spec.lenses[0].id) p.set("lens", st.lens);
     if (st.panel && current.nodeById[st.panel]) p.set("node", st.panel);
     const url = location.href.split("#")[0] + (p.toString() ? "#" + p : "");
-    navigator.clipboard?.writeText(url).then(() => toast("Link copied: " + escH(url.length > 70 ? "…" + url.slice(-60) : url), [], 3500), () => toast(escH(url), [], 8000));
+    // a file opened from disk has a file:// address: the link works on this computer only
+    const local = location.protocol === "file:";
+    const note = local ? "<br><small>This file is opened from your disk, so the link works on this computer only. For a link others can open, host the file (see Sharing in the docs).</small>" : "";
+    const done = () => toast("Link copied" + (local ? "" : ": " + escH(url.length > 70 ? "…" + url.slice(-60) : url)) + note, [], local ? 9000 : 3500);
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(done, () => toast(escH(url) + note, [], 12000));
+    else toast(escH(url) + note, [], 12000);
   }
 
   // several diagrams: the brand box becomes a switcher (click it, or press 1–9)
@@ -3082,14 +3088,17 @@ const BDEditor = (() => {
     if (!el) return;
     if (s === null) { el.innerHTML = `<span class="ed-warn">Not applied: fix the errors in Check</span>`; return; }
     const file = BD.fileName();
+    // one Save button: into the file itself (Chrome, Edge), else a download of the updated file
+    const saveTitle = BD.fs ? (BD.hasHandle ? `Keep saving into ${file}` : `Save into ${file} (choose the file once; later changes are saved automatically)`) : `Download the updated ${file} and replace the old one`;
+    const save = `<button data-s="save" class="primary" title="${escA(saveTitle)}">Save</button>`;
     const parts = {
-      file: `<span class="ok">✓ Saved to ${escA(file)}</span>`,
+      file: `<span class="ok" title="Saved to ${escA(file)}">✓ Saved</span>`,
       saving: `<span>Saving…</span>`,
-      clean: BD.fs ? `<span>No changes</span> <button data-s="connect">Save to file…</button>` : `<span>No changes</span>`,
-      browser: `<span class="ed-warn">Saved in this browser only</span> ${BD.fs ? `<button data-s="${BD.hasHandle ? "resume" : "connect"}" class="primary">${BD.hasHandle ? "Keep saving to " + escA(file) : "Save to file…"}</button>` : ""}<button data-s="download">Download copy</button>`,
+      clean: `<span title="Nothing changed since the file was opened">No changes</span>`,
+      browser: `<span class="ed-warn" title="Your changes are kept in this browser, not yet in the file">Unsaved</span>${save}`,
     };
     el.innerHTML = parts[s] || "";
-    el.querySelectorAll("[data-s]").forEach(b => b.onclick = () => ({ connect: BD.connectFile, resume: BD.resumeFile, download: BD.download })[b.dataset.s]());
+    el.querySelectorAll("[data-s=save]").forEach(b => b.onclick = () => BD.fs ? (BD.hasHandle ? BD.resumeFile() : BD.connectFile()) : BD.download());
   }
   function toggle(onOff) {
     const want = onOff === undefined ? !ed.active : onOff;

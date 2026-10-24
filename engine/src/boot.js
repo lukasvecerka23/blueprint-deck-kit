@@ -190,7 +190,12 @@ const BD = (() => {
     if (st.tour >= 0) p.set("tour", st.tour + 1); else if (st.lens !== current.spec.lenses[0].id) p.set("lens", st.lens);
     if (st.panel && current.nodeById[st.panel]) p.set("node", st.panel);
     const url = location.href.split("#")[0] + (p.toString() ? "#" + p : "");
-    navigator.clipboard?.writeText(url).then(() => toast("Link copied: " + escH(url.length > 70 ? "…" + url.slice(-60) : url), [], 3500), () => toast(escH(url), [], 8000));
+    // a file opened from disk has a file:// address: the link works on this computer only
+    const local = location.protocol === "file:";
+    const note = local ? "<br><small>This file is opened from your disk, so the link works on this computer only. For a link others can open, host the file (see Sharing in the docs).</small>" : "";
+    const done = () => toast("Link copied" + (local ? "" : ": " + escH(url.length > 70 ? "…" + url.slice(-60) : url)) + note, [], local ? 9000 : 3500);
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(done, () => toast(escH(url) + note, [], 12000));
+    else toast(escH(url) + note, [], 12000);
   }
 
   // several diagrams: the brand box becomes a switcher (click it, or press 1–9)

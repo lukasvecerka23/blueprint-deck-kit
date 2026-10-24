@@ -93,14 +93,17 @@ const BDEditor = (() => {
     if (!el) return;
     if (s === null) { el.innerHTML = `<span class="ed-warn">Not applied: fix the errors in Check</span>`; return; }
     const file = BD.fileName();
+    // one Save button: into the file itself (Chrome, Edge), else a download of the updated file
+    const saveTitle = BD.fs ? (BD.hasHandle ? `Keep saving into ${file}` : `Save into ${file} (choose the file once; later changes are saved automatically)`) : `Download the updated ${file} and replace the old one`;
+    const save = `<button data-s="save" class="primary" title="${escA(saveTitle)}">Save</button>`;
     const parts = {
-      file: `<span class="ok">✓ Saved to ${escA(file)}</span>`,
+      file: `<span class="ok" title="Saved to ${escA(file)}">✓ Saved</span>`,
       saving: `<span>Saving…</span>`,
-      clean: BD.fs ? `<span>No changes</span> <button data-s="connect">Save to file…</button>` : `<span>No changes</span>`,
-      browser: `<span class="ed-warn">Saved in this browser only</span> ${BD.fs ? `<button data-s="${BD.hasHandle ? "resume" : "connect"}" class="primary">${BD.hasHandle ? "Keep saving to " + escA(file) : "Save to file…"}</button>` : ""}<button data-s="download">Download copy</button>`,
+      clean: `<span title="Nothing changed since the file was opened">No changes</span>`,
+      browser: `<span class="ed-warn" title="Your changes are kept in this browser, not yet in the file">Unsaved</span>${save}`,
     };
     el.innerHTML = parts[s] || "";
-    el.querySelectorAll("[data-s]").forEach(b => b.onclick = () => ({ connect: BD.connectFile, resume: BD.resumeFile, download: BD.download })[b.dataset.s]());
+    el.querySelectorAll("[data-s=save]").forEach(b => b.onclick = () => BD.fs ? (BD.hasHandle ? BD.resumeFile() : BD.connectFile()) : BD.download());
   }
   function toggle(onOff) {
     const want = onOff === undefined ? !ed.active : onOff;
