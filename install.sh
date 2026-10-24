@@ -8,12 +8,14 @@
 #   ./install.sh                      (from a clone of the repository: installs that copy)
 #
 # Options:
-#   --agent claude|codex|agents|all   where to install (default: every agent found on this computer)
+#   --agent claude|codex|agents|all   where to install (default: the agents found on this computer; with more
+#                                     than one it asks which, Enter = all)
 #   --dir <path>                      install into this skills folder instead
 #   --project                         install into the current project (./.claude/skills, ./.codex/skills, ./.agents/skills)
 #   --version <x.y.z>                 install that release (default: the latest published release)
 #   --ref <branch or tag>             install the skill as it is on a branch or tag (e.g. main: unreleased work)
 #   --uninstall                       remove the skill again
+#   --yes                             don't ask, install for every agent found
 #
 # It only copies files (about 1 MB): no Node, no Python, nothing else is installed.
 set -eu
@@ -27,6 +29,7 @@ AGENT=""
 DIR=""
 PROJECT=0
 UNINSTALL=0
+YES=0
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -36,7 +39,8 @@ while [ $# -gt 0 ]; do
     --ref) REF="$2"; shift 2 ;;
     --version) VERSION="${2#v}"; shift 2 ;;
     --uninstall) UNINSTALL=1; shift ;;
-    -h|--help) sed -n '2,17p' "$0" 2>/dev/null || echo "see https://github.com/$REPO"; exit 0 ;;
+    -y|--yes) YES=1; shift ;;
+    -h|--help) sed -n '2,19p' "$0" 2>/dev/null || echo "see https://github.com/$REPO"; exit 0 ;;
     *) echo "unknown option: $1" >&2; exit 2 ;;
   esac
 done
@@ -57,10 +61,35 @@ else
     agents) add "$B/.agents/skills" ;;
     all) add "$B/.claude/skills"; add "$B/.codex/skills"; add "$B/.agents/skills" ;;
     "")
-      { [ -d "$B/.claude" ] || command -v claude >/dev/null 2>&1; } && add "$B/.claude/skills"
-      { [ -d "$B/.codex" ] || command -v codex >/dev/null 2>&1; } && add "$B/.codex/skills"
-      [ -d "$B/.agents" ] && add "$B/.agents/skills"
-      [ -z "$TARGETS" ] && add "$B/.agents/skills"
+      # every agent found on this computer
+      FOUND=""
+      { [ -d "$B/.claude" ] || command -v claude >/dev/null 2>&1; } && FOUND="$FOUND claude"
+      { [ -d "$B/.codex" ] || command -v codex >/dev/null 2>&1; } && FOUND="$FOUND codex"
+      [ -d "$B/.agents" ] && FOUND="$FOUND agents"
+      [ -z "$FOUND" ] && FOUND="agents"
+      label() { case "$1" in claude) printf 'Claude Code' ;; codex) printf 'Codex' ;; agents) printf 'other agents (~/.agents)' ;; esac; }
+      set -- $FOUND
+      # more than one: ask which (Enter = all). Only with a terminal; never in CI, with --yes or when uninstalling.
+      # The answer is read from /dev/tty, so this also works with curl … | sh.
+      if [ $# -gt 1 ] && [ "$YES" = 0 ] && [ "$UNINSTALL" = 0 ] && [ -z "${CI:-}" ] && { : </dev/tty; } 2>/dev/null; then
+        names=""; for a in "$@"; do names="${names:+$names, }$(label "$a")"; done
+        {
+          say "Found: $names. Install for:"
+          say "  [1] all of them (default)"
+          i=2; for a in "$@"; do say "  [$i] $(label "$a")"; i=$((i + 1)); done
+          printf 'Choice [1]: '
+        } >/dev/tty
+        read -r CHOICE </dev/tty || CHOICE=""
+        case "$CHOICE" in
+          ""|1) ;;
+          *[!0-9]*) say "unknown choice '$CHOICE'" >&2; exit 2 ;;
+          *)
+            if [ "$CHOICE" -ge 2 ] && [ "$CHOICE" -le $(($# + 1)) ]; then
+              shift $((CHOICE - 2)); set -- "$1"
+            else say "unknown choice '$CHOICE'" >&2; exit 2; fi ;;
+        esac
+      fi
+      for a in "$@"; do add "$B/.$a/skills"; done
       ;;
     *) say "unknown agent '$AGENT' (claude, codex, agents or all)" >&2; exit 2 ;;
   esac

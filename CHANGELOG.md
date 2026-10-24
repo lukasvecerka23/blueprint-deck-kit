@@ -5,6 +5,12 @@ Versions: a new minor version (2.1, 2.2 …) adds features and keeps every older
 engine, ask your agent to upgrade it (or `node tools/insert.mjs --upgrade <file>`). All releases and their files:
 https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
+## Unreleased
+
+- **The installer asks which agents.** When it finds more than one (e.g. Claude Code and Codex), it asks where to
+  install; Enter installs for all of them. `--agent` picks one directly, `--yes` skips the question, and CI or a
+  non-interactive shell never asks. The install commands use the scripts on `main`, so this works without a release.
+
 ## 2.2.0 (2026-10-24)
 
 - **Diagrams from code.** The style guide has a "From code" section: services, contracts, clients and deployment

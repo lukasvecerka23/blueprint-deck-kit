@@ -49,8 +49,8 @@ Windows (PowerShell):
 irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex
 ```
 
-The script copies the skill into the skills folder of every agent it finds (`~/.claude/skills`, `~/.codex/skills`,
-`~/.agents/skills`). Options: `--agent claude|codex|agents|all`, `--dir <folder>`, `--project` (into the current
+The script copies the skill into the skills folder of the agents it finds (`~/.claude/skills`, `~/.codex/skills`,
+`~/.agents/skills`); when it finds more than one, it asks which (Enter = all, `--yes` skips the question). Options: `--agent claude|codex|agents|all`, `--dir <folder>`, `--project` (into the current
 project), `--version 2.1.0` (a specific release), `--uninstall`; with PowerShell `-Agent`, `-Version` … (run it as
 `& ([scriptblock]::Create((irm <url>))) -Version 2.1.0`).
 

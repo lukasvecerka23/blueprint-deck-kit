@@ -28,6 +28,16 @@ jobs:
           sh -n install.sh
           ./install.sh --dir "$RUNNER_TEMP/skills"
           test -f "$RUNNER_TEMP/skills/blueprint-deck/SKILL.md"
+          # the same for PowerShell (pwsh is on the runner): parse, install from the checkout, and the agent detection
+          # with two agents present (no console input in CI, so it must install for both without asking)
+          pwsh -NoProfile -Command '$null = [ScriptBlock]::Create((Get-Content ./install.ps1 -Raw))'
+          pwsh -NoProfile -File ./install.ps1 -Dir "$RUNNER_TEMP/ps-skills"
+          test -f "$RUNNER_TEMP/ps-skills/blueprint-deck/SKILL.md"
+          mkdir -p "$RUNNER_TEMP/home/.claude" "$RUNNER_TEMP/home/.codex"
+          HOME="$RUNNER_TEMP/home" pwsh -NoProfile -File ./install.ps1
+          test -f "$RUNNER_TEMP/home/.claude/skills/blueprint-deck/SKILL.md" && test -f "$RUNNER_TEMP/home/.codex/skills/blueprint-deck/SKILL.md"
+          HOME="$RUNNER_TEMP/home" pwsh -NoProfile -File ./install.ps1 -Agent codex -Uninstall
+          test ! -e "$RUNNER_TEMP/home/.codex/skills/blueprint-deck" && test -f "$RUNNER_TEMP/home/.claude/skills/blueprint-deck/SKILL.md"
       - name: Screen checks in a real browser
         run: |
           npm install --no-save playwright@1

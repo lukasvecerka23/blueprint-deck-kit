@@ -5,8 +5,9 @@
 #   (the website's short URL https://blueprint-deck.lukasvecerka.dev/install.ps1 serves this same script)
 #   .\install.ps1                     (from a clone of the repository: installs that copy)
 #
-# Parameters: -Agent claude|codex|agents|all, -Dir <skills folder>, -Project, -Version <x.y.z> (a specific release),
-#             -Ref <branch or tag> (the skill as it is on a branch, e.g. main), -Uninstall
+# Parameters: -Agent claude|codex|agents|all (default: the agents found; with more than one it asks which, Enter = all),
+#             -Dir <skills folder>, -Project, -Version <x.y.z> (a specific release),
+#             -Ref <branch or tag> (the skill as it is on a branch, e.g. main), -Uninstall, -Yes (don't ask, all found)
 # It only copies files: no Node, no Python, nothing else is installed.
 param(
   [ValidateSet("", "claude", "codex", "agents", "all")][string]$Agent = "",
@@ -14,7 +15,8 @@ param(
   [switch]$Project,
   [string]$Ref = $(if ($env:BLUEPRINT_DECK_REF) { $env:BLUEPRINT_DECK_REF } else { "" }),
   [string]$Version = "",
-  [switch]$Uninstall
+  [switch]$Uninstall,
+  [switch]$Yes
 )
 $ErrorActionPreference = "Stop"
 $Repo = "lukasvecerka23/blueprint-deck-kit"
@@ -31,10 +33,25 @@ else {
     "agents" { $targets += Join-Path $Base ".agents\skills" }
     "all"    { $targets += @((Join-Path $Base ".claude\skills"), (Join-Path $Base ".codex\skills"), (Join-Path $Base ".agents\skills")) }
     default {
-      if ((Test-Path (Join-Path $Base ".claude")) -or (Get-Command claude -ErrorAction SilentlyContinue)) { $targets += Join-Path $Base ".claude\skills" }
-      if ((Test-Path (Join-Path $Base ".codex")) -or (Get-Command codex -ErrorAction SilentlyContinue)) { $targets += Join-Path $Base ".codex\skills" }
-      if (Test-Path (Join-Path $Base ".agents")) { $targets += Join-Path $Base ".agents\skills" }
-      if ($targets.Count -eq 0) { $targets += Join-Path $Base ".agents\skills" }
+      # every agent found on this computer
+      $found = @()
+      if ((Test-Path (Join-Path $Base ".claude")) -or (Get-Command claude -ErrorAction SilentlyContinue)) { $found += @{ Id = "claude"; Label = "Claude Code" } }
+      if ((Test-Path (Join-Path $Base ".codex")) -or (Get-Command codex -ErrorAction SilentlyContinue)) { $found += @{ Id = "codex"; Label = "Codex" } }
+      if (Test-Path (Join-Path $Base ".agents")) { $found += @{ Id = "agents"; Label = "other agents (~\.agents)" } }
+      if ($found.Count -eq 0) { $found += @{ Id = "agents"; Label = "other agents (~\.agents)" } }
+      # more than one: ask which (Enter = all). Only in an interactive console; never in CI, with -Yes or when uninstalling.
+      if ($found.Count -gt 1 -and -not $Yes -and -not $Uninstall -and -not $env:CI -and [Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
+        Write-Host ("Found: " + (($found | ForEach-Object { $_.Label }) -join ", ") + ". Install for:")
+        Write-Host "  [1] all of them (default)"
+        for ($i = 0; $i -lt $found.Count; $i++) { Write-Host ("  [" + ($i + 2) + "] " + $found[$i].Label) }
+        $choice = (Read-Host "Choice [1]").Trim()
+        if ($choice -and $choice -ne "1") {
+          $n = 0
+          if (-not [int]::TryParse($choice, [ref]$n) -or $n -lt 2 -or $n -gt $found.Count + 1) { throw "unknown choice '$choice'" }
+          $found = @($found[$n - 2])
+        }
+      }
+      foreach ($f in $found) { $targets += Join-Path $Base (".$($f.Id)\skills") }
     }
   }
 }

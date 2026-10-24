@@ -27,8 +27,9 @@ irm https://blueprint-deck.lukasvecerka.dev/install.ps1 | iex
 ```
 
 The installer downloads the latest [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) from GitHub
-and copies the `blueprint-deck` skill folder into the skills folder of every agent it finds (`~/.claude/skills`,
-`~/.codex/skills`, `~/.agents/skills`). It installs nothing else. Run it again to update.
+and copies the `blueprint-deck` skill folder into the skills folder of the agents it finds (`~/.claude/skills`,
+`~/.codex/skills`, `~/.agents/skills`). When it finds more than one, it asks which (press Enter for all of them).
+It installs nothing else. Run it again to update.
 
 | option (sh) | option (PowerShell) | what it does |
 |---|---|---|
@@ -38,6 +39,7 @@ and copies the `blueprint-deck` skill folder into the skills folder of every age
 | `--version <x.y.z>` | `-Version <x.y.z>` | a specific release (default: the latest) |
 | `--ref <branch or tag>` | `-Ref …` | the skill as it is on a branch, e.g. unreleased work on `main` |
 | `--uninstall` | `-Uninstall` | remove the skill again |
+| `--yes` | `-Yes` | don't ask, install for every agent found |
 
 Pass options to the piped script with `sh -s --`, for example to install for Codex only:
 
