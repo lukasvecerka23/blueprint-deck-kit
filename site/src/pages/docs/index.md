@@ -5,7 +5,7 @@ description: Install the skill, describe your diagram, let your agent write it, 
 ---
 
 Blueprint Deck Kit is an **agent skill**. You install it once; afterwards your coding agent (Claude Code, Codex or any
-agent that supports Agent Skills) can turn your docs (a repository, a folder of Markdown, text or PDF files, wiki exports or web pages) into a **Blueprint Deck**: one self-contained HTML file
+agent that supports Agent Skills) can turn your docs or code (a codebase, a folder of Markdown, text or PDF files, wiki exports or web pages) into a **Blueprint Deck**: one self-contained HTML file
 with a pan-and-zoom map, clickable boxes with side panels, tabs, personas with their paths, a guided tour, roadmap and
 option sheets, a built-in editor and a PDF export.
 
@@ -57,7 +57,7 @@ as `diagrams/diagram.config.yaml` in your project folder; see [Configuring](/doc
 
 ## 3. Paste it into your agent
 
-Start a new agent session in the folder with your docs and paste the prompt. In Claude Code you can also type
+Start a new agent session in your project folder and paste the prompt. In Claude Code you can also type
 `/blueprint-deck` (optionally followed by a config path). The agent then:
 
 1. saves the config to `diagrams/diagram.config.yaml`;

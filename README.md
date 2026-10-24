@@ -6,7 +6,7 @@
 
 ![A Blueprint Deck: a pan-and-zoom map of a system with areas, boxes, connections and tabs](docs/images/overview.jpg)
 
-Your coding agent (Claude Code, Codex or any agent that supports skills) reads your docs and writes a
+Your coding agent (Claude Code, Codex or any agent that supports skills) reads your docs or your code and writes a
 *Blueprint Deck*: a pan-and-zoom map of your product, process or system that is also a slide deck.
 
 - **Click any box** for a side panel: what it is, why it matters, the technology, its sources.
@@ -71,7 +71,7 @@ things it needs.
 
 ### 3. Generate
 
-Paste the prompt into your agent, in the folder with your docs (a repository, or any folder of Markdown, text or PDF files). The agent:
+Paste the prompt into your agent, in your project folder: a code repository, or any folder of docs (Markdown, text or PDF files). The agent:
 1. reads the sources from the config,
 2. proposes the structure (areas, personas, tabs, tour) and waits for your OK,
 3. writes `diagrams/index.html` and an `extraction-report.md` (sources read, conflicts between your docs, gaps,
@@ -108,7 +108,7 @@ Paste the prompt into your agent, in the folder with your docs (a repository, or
 
 ```
 diagram.config.yaml ──▶ your agent + the blueprint-deck skill ──▶ diagrams/index.html
-   what you want           reads your docs, writes the content       the engine + your diagram's JSON
+   what you want           reads docs or code, writes the content    the engine + your diagram's JSON
    (configurator)          as JSON, checks the result                 one file, opens anywhere
 ```
 
@@ -128,6 +128,7 @@ Open them from [`examples/`](examples/) or the [gallery](https://blueprint-deck.
 - `blueprint-deck`: this kit explaining itself
 - `saas-onboarding`: a customer journey (fictional), light theme
 - `postgresql`: how PostgreSQL works, a technical view built from the official docs
+- `online-boutique`: Google's microservices demo, built from its code alone (unofficial)
 
 ## Security
 

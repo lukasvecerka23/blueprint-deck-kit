@@ -1,0 +1,141 @@
+# diagram.config.yaml: "Online Boutique, from the code", a public example for Blueprint Deck Kit.
+# Shows that a Blueprint Deck can be built from a codebase (services, gRPC contracts, clients, manifests), not only from docs.
+# Online Boutique is Google's open-source microservices demo (Apache-2.0). This is an unofficial diagram of it.
+version: 2
+
+# ---------------------------------------------------------------- shared by every diagram in the file
+project:
+  name: "Online Boutique, from the code"
+  subtitle: "Architecture · technical view · built from source and manifests"
+  maturity: running
+  one_liner: "One Go frontend fans out over gRPC to ten small services; one checkout call fans out again; Redis holds the only state."
+
+branding:
+  website: ""                          # no website branding: no logos, the project name is used factually
+  theme: graphite
+  primary: "#38bdf8"
+  secondary: "#f472b6"
+  shape: pill
+  logo: "icon:shopping-bag"
+  name_rules: ["Say Online Boutique; name services as they are named in the code (frontend, checkoutservice …) in sub or panel text"]
+
+sources:
+  # Paths inside the cloned repository https://github.com/GoogleCloudPlatform/microservices-demo
+  # (not inside this project): see comments.
+  include:
+    - "README.md"
+    - "protos/demo.proto"
+    - "src/frontend/main.go"
+    - "src/frontend/rpc.go"
+    - "src/frontend/handlers.go"
+    - "src/frontend/middleware.go"
+    - "src/checkoutservice/main.go"
+    - "src/cartservice/src/Startup.cs"
+    - "src/cartservice/src/services/CartService.cs"
+    - "src/cartservice/src/cartstore/RedisCartStore.cs"
+    - "src/cartservice/src/cartservice.csproj"
+    - "src/productcatalogservice/server.go"
+    - "src/productcatalogservice/product_catalog.go"
+    - "src/productcatalogservice/catalog_loader.go"
+    - "src/currencyservice/server.js"
+    - "src/paymentservice/charge.js"
+    - "src/shippingservice/main.go"
+    - "src/shippingservice/quote.go"
+    - "src/emailservice/email_server.py"
+    - "src/recommendationservice/recommendation_server.py"
+    - "src/adservice/src/main/java/hipstershop/AdService.java"
+    - "src/loadgenerator/locustfile.py"
+    - "src/*/Dockerfile"
+    - "kubernetes-manifests/*.yaml"
+    - "skaffold.yaml"
+    - "release/kubernetes-manifests.yaml"
+  exclude: ["src/*/genproto/**", "**/*_pb2*.py", "**/package-lock.json", "**/go.sum", "helm-chart/**", "terraform/**"]
+  priority: ["code and manifests", "README.md"]
+  derive_status_from: []
+  on_conflict: report
+  cite_sources: true
+  invent: never
+
+behaviour:
+  hero: true
+  tour_position: auto
+  zoom_to_focus: true
+  edges_filter_by_view: true
+  edge_labels: focus
+  particles: main-flow
+  overview_edges: all
+  legend: collapsed
+  editor: true
+  keyboard: true
+
+workflow:
+  confirm_structure: false             # generated unattended; the proposed structure is in extraction-report.md
+  pause_after_extract: false
+  output: "index.html"
+  read_only_copy: false
+
+# ---------------------------------------------------------------- one diagram
+diagrams:
+  - id: boutique
+    name: "Online Boutique"
+    type: architecture
+    viewpoint: technical
+    focus: "The deployable services of Online Boutique, which service calls which (with the gRPC method), where state lives, and how it is deployed on Kubernetes."
+
+    audience:
+      who: [engineers]
+      goal: "Engineers who are new to the codebase know which service does what, who calls whom, and where to start reading."
+      tone: technical
+      language: en
+
+    sources: {}
+
+    map:
+      detail: overview
+      external: true
+      customer_owned: false
+      frame_label: "<b>One Kubernetes namespace</b> · kubernetes-manifests/"
+      technology: from-viewpoint
+      must_show: [frontend, cartservice, checkoutservice, paymentservice, shippingservice, emailservice, currencyservice, productcatalogservice, recommendationservice, adservice, redis-cart, loadgenerator, browser]
+      leave_out: [optional kustomize components as boxes, generated protobuf code]
+      status:
+        enabled: false
+        meaning: build
+        values: []
+      notes: "Browser on the left, frontend next to it, the services it calls stacked to its right, checkout and its downstream services below, data on the right, platform along the bottom."
+
+    personas:
+      enabled: false                   # a code repository has no user roles; no personas
+      names: []
+      on_map: false
+
+    views:
+      presets: [main-flow, data, deployment]
+      custom:
+        - "Path of a page view"
+        - "Placing an order (the checkout fan-out)"
+
+    tour:
+      enabled: true
+      steps: "8-12"
+      story: use-case
+      use_case: "Follow one shopper from the home page to a placed order."
+      opening: context
+      closing: why-this
+      include: []
+      notes: ""
+
+    overlays:
+      roadmap: { enabled: false, source: "" }
+      options: { enabled: false, title: "", source: "" }
+      custom: []
+
+    comments: >
+      The sources are outside this repository: a shallow clone of GoogleCloudPlatform/microservices-demo at commit
+      38e7348eb289eb5b87c0c6e8cb19ced0449dc389. Cite every source as a GitHub URL pinned to that commit, with line ranges.
+      Every connection needs evidence in the code (gRPC client construction, *_SERVICE_ADDR variables, REDIS_ADDR,
+      HTTP calls). Say in the hero footnote that this is an unofficial diagram of Google's Online Boutique (Apache-2.0).
+
+comments: |
+  A public example: shows that Blueprint Deck builds diagrams from code, not only from docs.
+  Facts only as the code shows them; mocks (payment, shipping, email) are called mocks.

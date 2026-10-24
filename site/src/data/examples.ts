@@ -8,6 +8,7 @@ export interface Example {
   accent: string;
   accent2: string;
   diagrams: number;
+  home?: boolean; // false: only in the gallery, not on the landing page (it shows four)
 }
 
 export const EXAMPLES: Example[] = [
@@ -22,7 +23,18 @@ export const EXAMPLES: Example[] = [
     diagrams: 2,
   },
   {
+    slug: "online-boutique",
+    title: "Online Boutique, from the code",
+    description: "Google's open-source microservices demo, read from its code alone: gRPC clients, manifests and the proto contract. Every connection has evidence in the code. Unofficial.",
+    tags: ["Architecture", "From code", "Technical viewpoint"],
+    theme: "dark",
+    accent: "#ec4899",
+    accent2: "#38bdf8",
+    diagrams: 1,
+  },
+  {
     slug: "blueprint-deck",
+    home: false,
     title: "Blueprint Deck Kit",
     description: "The kit's own architecture: the skill, the engine, the configurator and how a deck is made, generated from this repository.",
     tags: ["Architecture", "Mixed viewpoint"],

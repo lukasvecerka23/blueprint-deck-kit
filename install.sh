@@ -115,7 +115,7 @@ if [ "${UPDATED:-0}" = 1 ]; then
 fi
 
 say ""
-say "Done. Start a new agent session in the folder with your docs, then:"
+say "Done. Start a new agent session in your project folder (code or docs), then:"
 say "  1. Describe your diagram: https://blueprint-deck.lukasvecerka.dev/configurator/"
 say "  2. Paste the prompt it gives you (or ask: \"Use the blueprint-deck skill to make a diagram of this repo\")."
 say "  In Claude Code you can also type /$NAME."

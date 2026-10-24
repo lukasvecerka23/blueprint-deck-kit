@@ -65,6 +65,45 @@ The same sources can produce both; when the config asks for two audiences, make 
   audit, budget check), the main flow edges must go *through* those boxes in the map and in every tab and persona path
   that shows that flow. A guardrail that is only mentioned in a panel reads as optional.
 
+## From code
+
+When the sources are code (alone or with docs), draw the system, not the source tree:
+
+- **Areas** are what a person would point at on a whiteboard: the parts of the product, deployable services grouped by
+  job (storefront, ordering, payments), data stores, external services, the platform it runs on. Never one area per
+  folder.
+- **Boxes** are deployable units and the things they talk to: services, workers, APIs, databases, caches, queues,
+  third-party APIs. Never classes, functions or files. A library shared by several services is a box only if the
+  audience needs it.
+- **Connections come from evidence in the code:** RPC and HTTP clients (generated gRPC stubs, `fetch`, client
+  libraries), message topics and queues, database connection strings, environment variables naming another service
+  (`CART_SERVICE_ADDR`), service names in the deployment manifests. Label them with the protocol or call when it helps
+  (`gRPC GetCart`, `HTTP`, `Redis`). No evidence, no connection. Connections have no `sources` field: list the
+  evidence for each one in the extraction report. Long RPC names need room: leave about 120–160 px between the box
+  columns a labelled connection crosses, or label the protocol and put the RPCs in the target's `what`.
+- **Optional parts:** a client whose target only exists behind a flag or in an optional component (tracing, a feature
+  add-on) is left out, or drawn only if the config asks; say so in the report.
+- **API contracts** (OpenAPI, `.proto`, GraphQL schemas) are the best source for what a service offers: use the RPC
+  names in `what` and in labels.
+- **What runs** comes from the deployment files (Kubernetes, Helm, docker-compose, Terraform): replicas, images, the
+  datastore actually deployed. Use them for `status` when the config asks for it. With several (a kustomization with
+  commented entries, Helm, a release manifest), the default one counts; report the differences.
+- **Chosen by configuration:** when the code supports several backends (a cart store in Redis, Spanner or memory),
+  draw the default and name the others in `alt`. Otherwise leave `alt` out: from code, alternatives exist only when
+  the code or config offers them.
+- **Mocks and stubs** (a payment service that only pretends) say so in `sub` ("mock") so nobody mistakes them for the
+  real thing.
+- **Language and framework** belong in `sub` or `pick` ("Go · gRPC"), not in the title.
+- **Sources** cite the file and, where useful, the line range: `src/cartservice/src/cartstore/RedisCartStore.cs#L20-L60`.
+- **Big codebases:** read the entry points, manifests and API contracts first; hand each service to a sub-agent if you
+  can, asking for: what it does, what it calls (with evidence), what it stores, how it's deployed.
+- **Sources outside the project** (a third-party repository you cloned): cite GitHub/GitLab permalinks pinned to the
+  commit you read, and put the commit in the report.
+- Code tells you *what* and *how*, rarely *why*: if the config lists docs or a README too, take the purpose, audience
+  and tour story from them. When the docs and the code disagree about behaviour, the code wins; report it as a
+  conflict. Default to the technical viewpoint unless the config says otherwise.
+- For code, `include` lists where to look, not a mandate to read every file in those trees.
+
 ## Diagram types
 
 Pick `meta.type` from the config. The engine is the same; what changes is what a zone, a box and an edge mean,

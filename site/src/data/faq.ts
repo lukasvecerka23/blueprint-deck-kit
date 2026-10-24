@@ -51,6 +51,11 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
     home: true,
   },
   {
+    q: "Can it build a diagram from code?",
+    a: "Yes. Point it at a codebase and it draws the system: services, APIs, data stores, queues and external services, with connections taken from the code itself (RPC and HTTP clients, message topics, connection strings, deployment manifests), each box citing its files. The technical viewpoint suits it best; add the README or docs too for the purpose and the story. See the Online Boutique example in the gallery.",
+    home: true,
+  },
+  {
     q: "Can I send a diagram that people can't change?",
     a: "Yes. Open it and choose <b>⋯ → Download a read-only copy</b>. You name the file, and the copy has the same diagram, tour and PDF export but no editor. Your own file stays editable; after changes, download a new copy.",
     home: true,

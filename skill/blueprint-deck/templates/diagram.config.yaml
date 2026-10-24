@@ -22,6 +22,7 @@ branding:
 
 sources:                               # defaults; a diagram can override them
   include: ["docs/**/*.md", "README.md"]  # globs or URLs, relative to the project folder (not to this file); Markdown, text, PDF, code, exports
+                                       # from code, e.g. ["README.md", "src/**", "**/*.proto", "k8s/**"] (style guide: "From code")
   exclude: []
   priority: []                         # files that win when sources disagree, most important first
   derive_status_from: []               # e.g. ["helm/", "argocd/"]: manifests that show what really runs

@@ -1,6 +1,6 @@
 // Optional (maintainers): screenshots of the examples' overviews for the gallery cards → public/shots/<slug>.png.
 // Needs playwright (npm install --no-save playwright) and a running copy of the site or repo on SHOTS_BASE.
-//   SHOTS_BASE=http://localhost:4321 node scripts/shots.mjs acme blueprint-deck saas-onboarding postgresql
+//   SHOTS_BASE=http://localhost:4321 node scripts/shots.mjs acme blueprint-deck saas-onboarding postgresql online-boutique
 import { chromium } from "playwright";
 import { mkdirSync } from "node:fs";
 const base = process.env.SHOTS_BASE || "http://localhost:4321";

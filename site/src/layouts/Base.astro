@@ -7,7 +7,7 @@ import { SITE } from "../data/site";
 interface Props { title?: string; description?: string; image?: string; wide?: boolean }
 // a JPEG under ~300 KB: WhatsApp skips larger preview images
 const { title, description = SITE.description, image = "/og.jpg" } = Astro.props;
-const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name}: interactive presentation diagrams from your docs`;
+const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name}: interactive presentation diagrams from your docs or code`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
 ---

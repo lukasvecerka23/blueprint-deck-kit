@@ -5,6 +5,13 @@ Versions: a new minor version (2.1, 2.2 …) adds features and keeps every older
 engine, ask your agent to upgrade it (or `node tools/insert.mjs --upgrade <file>`). All releases and their files:
 https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
+## Unreleased
+
+- **Diagrams from code.** The style guide has a "From code" section: services, contracts, clients and deployment
+  files become the map, every connection needs evidence in the code, docs and code conflicts are reported. The
+  configurator has a "What to read" choice (docs, code, both) that fills in the source lists.
+- New example: `online-boutique`, Google's microservices demo built from its code alone.
+
 ## 2.1.0 (2026-10-24)
 
 - **Personas on the map.** A persona with a `zone` is also a box next to the applications it uses; clicking it opens

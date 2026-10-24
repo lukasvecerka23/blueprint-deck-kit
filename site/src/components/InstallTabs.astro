@@ -38,14 +38,14 @@ const id = Astro.props.id ?? "install";
   <div role="tabpanel" id={`${id}-panel-claude`} aria-labelledby={`${id}-tab-claude`} tabindex="-1" class="space-y-3" hidden>
     <Command code={INSTALL.shAgent("claude")} />
     <Command code={INSTALL.psAgent("claude")} prompt="PS>" />
-    <p class="text-sm text-muted-foreground">Installs into <code class="font-mono text-xs">~/.claude/skills/blueprint-deck</code>. Start a new Claude Code session in the folder with your docs
+    <p class="text-sm text-muted-foreground">Installs into <code class="font-mono text-xs">~/.claude/skills/blueprint-deck</code>. Start a new Claude Code session in your project folder
       and paste the prompt from the configurator, or type <code class="font-mono text-xs">/blueprint-deck</code>.</p>
   </div>
 
   <div role="tabpanel" id={`${id}-panel-codex`} aria-labelledby={`${id}-tab-codex`} tabindex="-1" class="space-y-3" hidden>
     <Command code={INSTALL.shAgent("codex")} />
     <Command code={INSTALL.psAgent("codex")} prompt="PS>" />
-    <p class="text-sm text-muted-foreground">Installs into <code class="font-mono text-xs">~/.codex/skills/blueprint-deck</code>. Start a new Codex session in the folder with your docs and paste
+    <p class="text-sm text-muted-foreground">Installs into <code class="font-mono text-xs">~/.codex/skills/blueprint-deck</code>. Start a new Codex session in your project folder and paste
       the prompt from the configurator, or ask: "Use the blueprint-deck skill to make a diagram of these docs".</p>
   </div>
 

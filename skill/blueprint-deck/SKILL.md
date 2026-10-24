@@ -1,7 +1,7 @@
 ---
 name: blueprint-deck
 license: MIT (see LICENSE in this folder)
-description: Generate, change or update an interactive presentation diagram (a "Blueprint Deck") from documentation: a repository's docs and code, a folder of Markdown, text or PDF files, wiki or Notion exports, or web pages. The result is one HTML file that works offline - a pan-and-zoom map with clickable boxes and side panels, tabs, personas with their paths, a guided tour, roadmap and option sheets, a built-in editor (press E) and PDF export. Works for architecture and product blueprints, data flows, processes, customer journeys, ecosystems and org maps; one file can hold several diagrams. Use when the user asks for an interactive diagram, blueprint, architecture or product presentation, or to change an existing Blueprint Deck.
+description: Generate, change or update an interactive presentation diagram (a "Blueprint Deck") from documentation or code: a codebase (services, APIs, manifests), a repository's docs, a folder of Markdown, text or PDF files, wiki or Notion exports, or web pages. The result is one HTML file that works offline - a pan-and-zoom map with clickable boxes and side panels, tabs, personas with their paths, a guided tour, roadmap and option sheets, a built-in editor (press E) and PDF export. Works for architecture and product blueprints, data flows, processes, customer journeys, ecosystems and org maps; one file can hold several diagrams. Use when the user asks for an interactive diagram, blueprint, architecture or product presentation, or to change an existing Blueprint Deck.
 ---
 
 # Blueprint Deck
@@ -72,6 +72,8 @@ audience, map, personas, views, tour and overlays. `sources.include` is relative
    the report. For big repos, delegate reading to sub-agents if your
    environment has them, asking for structured facts (components, actors, flows, decisions, statuses, numbers with
    their source), not prose.
+   **Code** is read differently from docs: services, contracts, clients and manifests, not every file (style guide:
+   "From code").
 2. If `derive_status_from` is set, read those manifests and record what is actually deployed.
 3. Note conflicts between sources and resolve them per `on_conflict` (`ask` = stop and ask before writing).
 4. Branding: if `branding.website` is set, fetch the page (with your web tool, or `curl -sL`). Take the logo

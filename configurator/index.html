@@ -369,6 +369,16 @@ const VIEW_PRESETS = [
   ["cost", "What drives cost, and who pays?"],
   ["roadmap", "What exists now, next and later?"],
 ];
+// "What to read": fills in the source lists for docs, code or both (the lists stay editable)
+const CODE_INCLUDE = ["README.md", "src/**", "services/**", "apps/**", "**/*.proto", "**/openapi*.{yaml,yml,json}",
+  "docker-compose*.yml", "k8s/**", "kubernetes/**", "helm/**", "package.json", "go.mod", "pyproject.toml"];
+const CODE_EXCLUDE = ["**/node_modules/**", "**/vendor/**", "**/dist/**", "**/build/**", "**/*.test.*", "**/*_test.go", "**/test/**", "**/tests/**"];
+const CODE_STATUS = ["k8s/", "kubernetes/", "helm/", "docker-compose.yml"];
+const SOURCE_PRESETS = {
+  docs: { include: ["docs/**/*.md", "README.md"], exclude: [], derive_status_from: [] },
+  code: { include: CODE_INCLUDE, exclude: CODE_EXCLUDE, derive_status_from: CODE_STATUS },
+  both: { include: ["docs/**/*.md", ...CODE_INCLUDE], exclude: CODE_EXCLUDE, derive_status_from: CODE_STATUS },
+};
 const TOUR_INCLUDE = [["roadmap", "Roadmap"], ["options", "Options sheet"], ["open-questions", "Open questions"]];
 
 /* ------------------------------------------------------------------ 2. state */
@@ -380,7 +390,7 @@ function defaultShared() {
     version: 2,
     project: { name: "My Platform", subtitle: "Product blueprint", maturity: "planned", one_liner: "" },
     branding: { website: "", theme: "midnight", primary: "", secondary: "", shape: "rounded", logo: "", name_rules: [] },
-    sources: { include: ["docs/**/*.md", "README.md"], exclude: [], priority: [], derive_status_from: [], on_conflict: "report", cite_sources: true, invent: "never" },
+    sources: { _read: "docs", include: ["docs/**/*.md", "README.md"], exclude: [], priority: [], derive_status_from: [], on_conflict: "report", cite_sources: true, invent: "never" },
     behaviour: { hero: true, tour_position: "auto", zoom_to_focus: true, edges_filter_by_view: true, edge_labels: "focus", particles: "main-flow",
       overview_edges: "all", legend: "collapsed", editor: true, keyboard: true },
     workflow: { confirm_structure: true, pause_after_extract: false, output: "index.html", read_only_copy: false },
@@ -716,7 +726,7 @@ const SHARED_SECTIONS = [
     { p: "branding.theme", l: "Theme", t: "theme", o: THEMES, w: true },
     { p: "branding.primary", l: "Primary colour", t: "color", h: "Main brand colour. Empty = the theme's own." },
     { p: "branding.secondary", l: "Secondary colour", t: "color", h: "Second colour, for accents. Empty = the theme's own." },
-    { p: "branding.shape", l: "Shape", t: "seg", o: [["rounded", "Rounded"], ["square", "Square"], ["pill", "Pill"]], h: "Corners of boxes, areas and buttons." },
+    { p: "branding.shape", l: "Shape", t: "seg", o: [["rounded", "Rounded"], ["square", "Square"], ["pill", "Pill"]], h: "Corners of areas and boxes; menus and panels stay the same." },
     { p: "branding.logo", l: "Logo", lx: "optional", t: "text", ph: "icon:shopping-cart  or  assets/logo.svg",
       h: "<code>icon:&lt;lucide name&gt;</code>, or a path to an SVG/PNG in the repo (it is stored inside the file). Empty = from the website, if set." },
     { p: "branding.name_rules", l: "Name rules", lx: "one per line", t: "list", w: true, ph: "Say Acme Group, never Acme Ltd",
@@ -725,7 +735,9 @@ const SHARED_SECTIONS = [
 ];
 const SHARED_LATE = [
   { id: "sources", n: 4, title: "Default sources", sub: "What the agent reads for every diagram. A diagram can use its own sources instead (in its tab, under \"Sources for this diagram\")", fields: [
-    { p: "sources.include", l: "Read", lx: "globs, one per line", t: "list", ph: "docs/**/*.md\nREADME.md", h: "Relative to the folder you run the agent in (a repository or any folder with docs). Markdown, text, PDF, code or URLs." },
+    { p: "sources._read", l: "What to read", t: "seg", o: [["docs", "Docs"], ["code", "Code"], ["both", "Docs + code"]], w: true,
+      h: "Fills in the lists below (you can still edit them). Code: services, APIs, contracts and deployment files become the diagram; the technical viewpoint fits it best." },
+    { p: "sources.include", l: "Read", lx: "globs, one per line", t: "list", ph: "docs/**/*.md\nREADME.md", h: "Relative to the folder you run the agent in (a codebase or any folder with docs). Markdown, text, PDF, code or URLs." },
     { p: "sources.exclude", l: "Skip", lx: "globs, one per line", t: "list", ph: "docs/archive/**" },
     { p: "sources.priority", l: "Priority", lx: "one per line", t: "list", ph: "docs/decisions.md", h: "Files that win when sources disagree, most important first." },
     { p: "sources.derive_status_from", l: "Derive status from", lx: "one per line", t: "list", ph: "helm/\nargocd/",
@@ -986,6 +998,14 @@ function onInput(e) {
       el.setAttribute("aria-invalid", String(!v || others.has(v)));
     }
     if (p === "viewpoint") applyViewpoint(d, v);
+  }
+  if (p === "sources._read" && SOURCE_PRESETS[v]) {
+    Object.assign(state.sources, JSON.parse(JSON.stringify(SOURCE_PRESETS[v])));
+    // code reads best as a technical view: suggest it for diagrams whose viewpoint wasn't chosen by hand
+    if (v !== "docs") state.diagrams.forEach(d => { if (!d._touched.viewpoint && d.viewpoint !== "technical") { d.viewpoint = "technical"; applyViewpoint(d, "technical"); } });
+    renderForm(); changed();
+    toast("Sources filled in", v === "docs" ? "Markdown docs and the README." : "Source folders, API contracts and deployment files" + (v === "both" ? ", plus the docs." : ". Viewpoint set to technical where you hadn't chosen one."), "info");
+    return;
   }
   if (p === "branding.theme") updateColorPlaceholders();
   if (p.startsWith("branding.")) schedulePreview();
