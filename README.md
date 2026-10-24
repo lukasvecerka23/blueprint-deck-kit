@@ -129,6 +129,7 @@ Open them from [`examples/`](examples/) or the [gallery](https://blueprint-deck.
 - `saas-onboarding`: a customer journey (fictional), light theme
 - `postgresql`: how PostgreSQL works, a technical view built from the official docs
 - `online-boutique`: Google's microservices demo, built from its code alone (unofficial)
+- `meetbuddy`: a macOS meeting recorder from its code, a product and a technical diagram in one file (unofficial)
 
 ## Security
 

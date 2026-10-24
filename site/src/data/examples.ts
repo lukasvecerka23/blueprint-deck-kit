@@ -63,10 +63,15 @@ export const EXAMPLES: Example[] = [
     accent2: "#0ea5e9",
     diagrams: 1,
   },
+  {
+    slug: "meetbuddy",
+    title: "meetBuddy, from the code",
+    description: "A macOS meeting recorder (Swift app + Python pipeline), read from its code: a product view of what it does for you and a technical view of how it's built, in one file. Unofficial.",
+    tags: ["Product + technical", "From code", "2 diagrams"],
+    theme: "dark",
+    accent: "#10b981",
+    accent2: "#f59e0b",
+    diagrams: 2,
+    home: false,
+  },
 ];
-
-// Build-time check: examples are generated separately; a missing one renders as "coming soon" instead of a dead link.
-import { existsSync } from "node:fs";
-import { join } from "node:path";
-export const exampleHref = (slug: string) => `/examples/${slug}/index.html`;
-export const exampleExists = (slug: string) => existsSync(join(process.cwd(), "public", "examples", slug, "index.html"));

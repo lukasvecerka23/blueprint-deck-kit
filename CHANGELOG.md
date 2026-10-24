@@ -11,6 +11,8 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
   install; Enter installs for all of them. `--agent` picks one directly, `--yes` skips the question, and CI or a
   non-interactive shell never asks. The install commands use the scripts on `main`, so this works without a release.
 
+- New example: `meetbuddy`, a macOS meeting recorder read from its code, with a product and a technical diagram.
+
 ## 2.2.0 (2026-10-24)
 
 - **Diagrams from code.** The style guide has a "From code" section: services, contracts, clients and deployment
