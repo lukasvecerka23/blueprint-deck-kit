@@ -2,7 +2,8 @@
 
 Versions: a new minor version (2.1, 2.2 …) adds features and keeps every older diagram working; a new major version
 (3.0) may need diagrams to be upgraded. To update, run the install command again; to give an existing diagram the new
-engine, ask your agent to upgrade it (or `node tools/insert.mjs --upgrade <file>`).
+engine, ask your agent to upgrade it (or `node tools/insert.mjs --upgrade <file>`). All releases and their files:
+https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
 ## 2.1.0 (2026-10-24)
 
@@ -14,8 +15,8 @@ engine, ask your agent to upgrade it (or `node tools/insert.mjs --upgrade <file>
   what's new, and the editor shows which engine a file has.
 - **Security**: every file carries a Content Security Policy (no network requests at all), and the engine removes
   scripts, event handlers and unsupported tags from the content before showing it.
-- **Versions**: the website publishes a chosen release (`site/release.json`), every release stays installable with
-  `--version`, and the changelog lists them.
+- **Versions**: releases are GitHub releases; the installer takes the latest published one, or any earlier one with
+  `--version` (PowerShell `-Version`).
 - **Licence notices** in the installed skill and in every diagram file.
 - **Editor bar** fits laptop screens: one Save button, a short status, wraps instead of hiding buttons.
 - **Shape** (rounded, square, pill) changes only the diagram, not menus and panels.

@@ -47,8 +47,8 @@ SVG markup: every file blocks network requests (Content Security Policy). Coordi
 ## meta
 
 ```json
-{ "title": "Private AI Platform", "subtitle": "Product blueprint · Phase 0", "type": "architecture",
-  "viewpoint": "product", "language": "en", "logo": "icon:shield", "url": "https://example.com" }
+{ "title": "Acme Commerce Platform", "subtitle": "Platform blueprint", "type": "architecture",
+  "viewpoint": "product", "language": "en", "logo": "icon:shopping-cart", "url": "https://acme.example" }
 ```
 - `type`: `architecture` | `data-flow` | `process` | `journey` | `ecosystem` | `org` | `custom`. Sets the UI wording
   (legend, panel kicker, tour hint), e.g. "Step" / "External party" for a process. Layout rules per type: style guide.
@@ -62,11 +62,11 @@ SVG markup: every file blocks network requests (Content Security Policy). Coordi
 
 ```json
 {
-  "eyebrow": "Product blueprint",
-  "title": "Private AI Platform",
+  "eyebrow": "Platform blueprint",
+  "title": "Acme Commerce Platform",
   "lead": "One or two sentences: what it is and for whom.",
-  "pillars": [ { "icon": "route", "color": "#a78bfa", "title": "Control", "text": "One line of value" } ],
-  "footnote": "An intended product, not yet built · based on docs/ · use ← → in the tour"
+  "pillars": [ { "icon": "zap", "color": "#38bdf8", "title": "Fast checkout", "text": "One line of value" } ],
+  "footnote": "Fictional example · based on docs/ · use ← → in the tour"
 }
 ```
 Up to 4 pillars look best.
@@ -85,7 +85,7 @@ Up to 4 pillars look best.
               "raiseOnHover": true,    // a hovered box's connections are drawn above the boxes
               "labels": "focus",       // focus = labels on highlighted edges | never
               "particles": "main",     // main = dots on the main flow and highlighted edges | focus = only highlighted | off
-              "mainFlow": "req",       // edge group drawn brighter (with dots) in the overview
+              "mainFlow": "order",     // edge group drawn brighter (with dots) in the overview
               "overview": "all" },     // edges in the overview: all (faint) | main (only mainFlow) | none
   "motion": { "intro": true },      // boxes pop in on load
   "panel":  { "sections": ["what", "why", "pick", "alt", "links", "sources"], "showSources": true,
@@ -129,24 +129,24 @@ A node gets a tag with `"status": "mvp"`. `dashed` also draws the box border das
 ## frame
 
 ```json
-{ "label": "<b>Private AI platform</b> · Kubernetes · open source only", "margin": 25 }
+{ "label": "<b>Acme platform</b> · one Kubernetes cluster", "margin": 25 }
 ```
 Without `x/y/w/h` it wraps all zones that are ours (not external or partner).
 
 ## zones
 
 ```json
-{ "id": "gateway", "title": "LLM gateway", "sub": "C2 · C3", "color": "#a78bfa",
+{ "id": "core", "title": "Commerce core", "sub": "Order path", "color": "#a78bfa",
   "grid": [2, 0],                       // or explicit "x", "y", "w", "h"; grid = [col, row, colSpan?, rowSpan?]
   "boundary": "ours",                   // ours (default) | customer | partner | external
   "base": false,                        // neutral grey: a foundation layer spanning several columns
   "frame": true,                        // false: keep this zone out of the automatic frame
-  "tag": "U1",                          // small pill on the right of the header (replaces the boundary badge)
+  "tag": "Core",                        // small pill on the right of the header (replaces the boundary badge)
   "icon": "layers",
   "layout": { "columns": 2, "gap": 16, "padding": 20, "top": 55 },
   "desc": "Panel overview: 2–4 sentences.",
   "points": ["Key point", "Key point"],
-  "sources": ["docs/02-product-scope-mvp.md#C2"] }
+  "sources": ["docs/architecture.md#commerce-core"] }
 ```
 `boundary` makes clear what is not yours: `external` (third-party services, users' own apps; dashed border, "External"
 badge, legend entry), `partner` (dashed, "Partner"), `customer` (dotted, "Customer-owned", e.g. the customer's data
@@ -156,14 +156,14 @@ Each zone needs a 6-digit hex `color`; its nodes inherit it. Keep headers short:
 ## nodes
 
 ```json
-{ "id": "llm-gw", "zone": "gateway", "title": "Unified model API", "sub": "LiteLLM · one OpenAI-compatible endpoint",
-  "icon": "route", "size": "big", "badge": "C2", "status": "mvp",
+{ "id": "api", "zone": "core", "title": "Commerce API", "sub": "One API for carts, orders and accounts",
+  "icon": "route", "size": "big", "badge": "API", "status": "mvp",
   "what": "1–3 plain sentences: what it is and does here.",
   "why": ["2–4 bullets: why it matters to the audience"],
   "pick": "Technology pick and why (optional)",
   "alt": "Alternatives and exit path (optional)",
   "extra": [ { "title": "Sizing", "text": "Paragraph or [\"bullets\"]" } ],
-  "sources": ["docs/02-product-scope-mvp.md#C2", "docs/06-product-decision-log.md#DL7"],
+  "sources": ["docs/architecture.md#commerce-api", "docs/decisions.md#adr-3"],
   "kind": "Platform component" }
 ```
 Placement: omit `x/y` to let the zone place it (in array order, filling `layout.columns`; `"span": 2` for a wider box),
@@ -175,8 +175,8 @@ or give `x`, `y`, `w`, `h` explicitly. Defaults: `w` = column width (240 if expl
 
 Object or array form:
 ```json
-{ "from": "llm-gw", "to": "kserve", "groups": ["req", "serve"], "label": "U2 / U3 · local model", "dashed": false }
-["llm-gw", "kserve", ["req", "serve"], "U2 / U3 · local model"]
+{ "from": "api", "to": "payments", "groups": ["order", "pay"], "label": "authorise · capture", "dashed": false }
+["api", "payments", ["order", "pay"], "authorise · capture"]
 ```
 `from`/`to` may be `"zone:<id>"` to connect to a whole zone. `groups` are free-form ids: tabs and tour steps select
 which groups are shown. `dashed` = optional/planned connection. The edge takes the colour of its `from` side's zone;
@@ -188,30 +188,30 @@ which boxes it passes. A connection that would run through other boxes is better
 ## groups
 
 ```json
-{ "req-core": ["c-apps", "ingress", "llm-gw"], "oss": ["@req-core", "kserve"] }
+{ "order-core": ["web", "api", "orders"], "money": ["@order-core", "payments"] }
 ```
-Use `"@req-core"` in any `nodes` or `path` list.
+Use `"@order-core"` in any `nodes` or `path` list.
 
 ## lenses (tabs)
 
 ```json
-{ "id": "gov", "title": "Governance & audit", "color": "#f43f5e",
-  "nodes": ["@gov-core"], "zones": ["guard", "audit"],   // what lights up (zones = all their nodes)
-  "edges": ["gov", "audit"],                            // which edge groups light up; ["none"] = no edges
-  "list": "patterns",                                   // optional: open this list in the side panel
-  "fit": "all", "camZones": ["edge"] }                  // optional camera: whole map / these zones
+{ "id": "pay", "title": "Payments", "color": "#f43f5e",
+  "nodes": ["@money"], "zones": ["partners"],           // what lights up (zones = all their nodes)
+  "edges": ["pay"],                                     // which edge groups light up; ["none"] = no edges
+  "list": "channels",                                   // optional: open this list in the side panel
+  "fit": "all", "camZones": ["core"] }                  // optional camera: whole map / these zones
 ```
 The first lens is the overview and normally has no `nodes`.
 
 ## personas
 
 ```json
-[ { "id": "owner", "tag": "A1", "title": "Platform owner", "sub": "Make AI available to every team, governed", "icon": "user-cog",
+[ { "id": "shopper", "tag": "P1", "title": "Shopper", "sub": "Find it, pay, get it delivered", "icon": "user",
     "text": "Pains and how the product serves them, 1–3 sentences.", "color": "#60a5fa",
-    "path": ["c-ops", "console", "llm-gw", "keys", "metrics"],     // ordered: their way through the map
-    "nodes": ["dashboards"],                                       // optional: also highlighted, not numbered
-    "edges": ["ops"],                                              // optional: also light these edge groups
-    "zone": "users" } ]                                            // optional: also a box on the map, in this zone
+    "path": ["web", "api", "orders", "payments"],                  // ordered: their way through the map
+    "nodes": ["mail"],                                             // optional: also highlighted, not numbered
+    "edges": ["order"],                                            // optional: also light these edge groups
+    "zone": "customers" } ]                                        // optional: also a box on the map, in this zone
 ```
 Personas become a **Personas** tab (unless `settings.personas.tab` is false) that opens the list `personas` in the
 side panel; a tour step can show it too with `"list": "personas"`. `icon` replaces the tag in the list.
@@ -227,10 +227,10 @@ for what they rely on without an order.
 ## lists
 
 ```json
-"patterns": { "title": "Usage patterns", "eyebrow": "How inference is served", "sub": "…", "icon": "route", "color": "#f59e0b",
-  "intro": "Shown above the items.", "edges": ["req", "serve"],
-  "items": [ { "tag": "U1", "title": "Gateway to cloud LLMs", "sub": "…", "text": "…", "color": "#22d3ee",
-               "nodes": ["@req-core", "cloudapi"], "path": ["c-apps", "llm-gw", "cloudapi"], "withInside": false } ] }
+"channels": { "title": "Sales channels", "eyebrow": "How orders come in", "sub": "…", "icon": "route", "color": "#f59e0b",
+  "intro": "Shown above the items.", "edges": ["order"],
+  "items": [ { "tag": "C1", "title": "Web shop", "sub": "…", "text": "…", "color": "#22d3ee",
+               "nodes": ["@order-core", "catalog"], "path": ["web", "api", "catalog"], "withInside": false } ] }
 ```
 Clicking an item highlights its `nodes` and `path` (plus every inside node if `withInside`) and the edges of
 `item.edges`, else the list's `edges`; with neither, every edge between highlighted nodes lights up. With a `path`,
@@ -239,12 +239,12 @@ the path's connections light up and the boxes are numbered. Open a list from a l
 ## tour
 
 ```json
-{ "title": "One API for every model", "text": "60–110 words.", "nodes": [...], "zones": [...], "edges": ["req"],
+{ "title": "One API for every channel", "text": "60–110 words.", "nodes": [...], "zones": [...], "edges": ["order"],
   "summary": [["Bold", "one line"], ["Bold", "one line"]],   // optional 2–6 tiles
-  "list": "patterns",                                        // optional clickable list in the card
-  "overlay": "pilot",                                        // optional: render an overlay's blocks as a wide sheet
+  "list": "channels",                                        // optional clickable list in the card
+  "overlay": "options",                                      // optional: render an overlay's blocks as a wide sheet
   "blocks": [0, 1],                                          // optional: only these blocks of the overlay (by index)
-  "fit": "all", "camZones": ["edge"] }
+  "fit": "all", "camZones": ["core"] }
 { "roadmap": true }                                          // expands to one step per roadmap phase
 ```
 
@@ -252,19 +252,19 @@ the path's connections light up and the boxes are numbered. Open a list from a l
 
 ```json
 { "title": "Roadmap", "lead": "How phases are paced.", "buttonLabel": "Roadmap", "buttonOpens": "tour",
-  "phases": [ { "when": "NOW", "title": "Build the governed core", "main": true, "text": "Tour text for this phase.",
-                "items": [ { "title": "E1 · Governed gateway core", "text": "Outcome …", "note": "depends on Q2", "nodes": ["llm-gw"] } ] } ],
-  "notes": [ { "title": "Runtime decision", "text": "…" } ] }
+  "phases": [ { "when": "NOW", "title": "Launch the core", "main": true, "text": "Tour text for this phase.",
+                "items": [ { "title": "Checkout v1", "text": "Outcome …", "note": "depends on the payment contract", "nodes": ["payments"] } ] } ],
+  "notes": [ { "title": "Hosting decision", "text": "…" } ] }
 ```
 The roadmap button starts a tour through the phases (`buttonOpens: "overlay"` opens the full roadmap sheet instead).
 
 ## overlays
 
 ```json
-{ "id": "pilot", "title": "Pilot options", "eyebrow": "Private AI Platform", "lead": "…", "icon": "rocket",
-  "buttonLabel": "Pilot options", "button": true,
+{ "id": "options", "title": "Launch options", "eyebrow": "Acme Commerce", "lead": "…", "icon": "rocket",
+  "buttonLabel": "Launch options", "button": true,
   "blocks": [
-    { "type": "cards", "columns": 3, "cards": [ { "tag": "Option A", "title": "…", "text": "…", "main": false, "rows": [["Effort", "~26–52 MD"]] } ] },
+    { "type": "cards", "columns": 3, "cards": [ { "tag": "Option A", "title": "…", "text": "…", "main": false, "rows": [["Effort", "~6 weeks"]] } ] },
     { "type": "note", "title": "Recommendation", "text": "…" },
     { "type": "grid", "title": "Success criteria", "columns": 3, "items": [["In active use", "…"]] },
     { "type": "text", "title": "Assumptions", "text": "…" },
@@ -292,7 +292,7 @@ Each entry in `diagrams` is a complete diagram plus `id`, `title` and `sub` for 
 
 ## Deep links
 
-`index.html#lens=gov`, `#tour=5`, `#overlay=pilot`, `#node=llm-gw`, `#zone=audit`, `#list=personas&item=2`,
+`index.html#lens=pay`, `#tour=5`, `#overlay=options`, `#node=api`, `#zone=core`, `#list=personas&item=2`,
 `#status=off`, `#d=<diagram id>`, combinable with `&`.
 `#check` runs the screen check and stores the result in `window.__diagramCheck` (re-run with `window.__diagramCheckRun()`):
 text that doesn't fit, edge labels on boxes or zone headers, highlighted boxes covered by the HUD or off screen,

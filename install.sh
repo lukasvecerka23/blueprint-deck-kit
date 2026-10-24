@@ -1,17 +1,18 @@
 #!/bin/sh
 # Blueprint Deck Kit installer: puts the blueprint-deck skill into your coding agents' skills folders.
 #
-#   curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh
-#   curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex
-#   curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --version 2.0.0   (an older release)
+#   curl -fsSL https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.sh | sh
+#   … | sh -s -- --agent codex
+#   … | sh -s -- --version 2.1.0      (a specific release; the list: https://github.com/lukasvecerka23/blueprint-deck-kit/releases)
+#   (the website's short URL https://blueprint-deck.lukasvecerka.dev/install.sh serves this same script)
 #   ./install.sh                      (from a clone of the repository: installs that copy)
 #
 # Options:
 #   --agent claude|codex|agents|all   where to install (default: every agent found on this computer)
 #   --dir <path>                      install into this skills folder instead
 #   --project                         install into the current project (./.claude/skills, ./.codex/skills, ./.agents/skills)
-#   --version <x.y.z>                 install that release (default: the latest published one)
-#   --ref <branch or tag>             install from GitHub instead (needs access while the repository is private)
+#   --version <x.y.z>                 install that release (default: the latest published release)
+#   --ref <branch or tag>             install the skill as it is on a branch or tag (e.g. main: unreleased work)
 #   --uninstall                       remove the skill again
 #
 # It only copies files (about 1 MB): no Node, no Python, nothing else is installed.
@@ -21,7 +22,7 @@ REPO="lukasvecerka23/blueprint-deck-kit"
 NAME="blueprint-deck"
 REF="${BLUEPRINT_DECK_REF:-}"
 VERSION=""
-SITE="${BLUEPRINT_DECK_SITE:-https://blueprint-deck.lukasvecerka.dev}"
+GITHUB="https://github.com/$REPO"
 AGENT=""
 DIR=""
 PROJECT=0
@@ -82,16 +83,16 @@ if [ -n "$HERE" ] && [ -f "$HERE/skill/$NAME/SKILL.md" ]; then
 else
   TMP="$(mktemp -d)"
   fetch() { if command -v curl >/dev/null 2>&1; then curl -fsSL "$1" -o "$2"; elif command -v wget >/dev/null 2>&1; then wget -qO "$2" "$1"; else say "needs curl or wget" >&2; exit 1; fi; }
-  # releases come from the website (the latest published one, or --version); --ref downloads a branch or tag from GitHub
+  # the skill comes from GitHub: the latest published release, a given --version, or a branch/tag with --ref
   if [ -n "$REF" ]; then
-    say "Downloading $REPO ($REF) from GitHub…"
+    say "Downloading $REPO ($REF)…"
     fetch "https://codeload.github.com/$REPO/tar.gz/$REF" "$TMP/kit.tgz"
   elif [ -n "$VERSION" ]; then
-    fetch "$SITE/releases/$VERSION/blueprint-deck-skill.tar.gz" "$TMP/kit.tgz" 2>/dev/null \
-      || { say "There is no release $VERSION. Versions: $SITE/changelog/" >&2; exit 1; }
-    say "Downloaded Blueprint Deck Kit $VERSION"
+    fetch "$GITHUB/releases/download/v$VERSION/blueprint-deck-skill.tar.gz" "$TMP/kit.tgz" 2>/dev/null \
+      || { say "There is no release $VERSION. Versions: $GITHUB/releases" >&2; exit 1; }
   else
-    fetch "$SITE/blueprint-deck-skill.tar.gz" "$TMP/kit.tgz"
+    fetch "$GITHUB/releases/latest/download/blueprint-deck-skill.tar.gz" "$TMP/kit.tgz" 2>/dev/null \
+      || { say "Could not download the latest release from $GITHUB/releases" >&2; exit 1; }
   fi
   tar -xzf "$TMP/kit.tgz" -C "$TMP"
   SRC="$(find "$TMP" -maxdepth 3 -type d -name "$NAME" -exec test -f "{}/SKILL.md" \; -print | head -n 1)"
@@ -109,7 +110,7 @@ for t in $TARGETS; do
   else say "updated Blueprint Deck Kit $OLD -> $NEW in $t/$NAME"; UPDATED=1; fi
 done
 if [ "${UPDATED:-0}" = 1 ]; then
-  say "What's new: $SITE/changelog/"
+  say "What's new: $GITHUB/releases"
   say "Existing diagrams keep their engine; to give one the new features, ask your agent to upgrade it."
 fi
 

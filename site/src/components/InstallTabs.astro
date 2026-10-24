@@ -58,11 +58,14 @@ const id = Astro.props.id ?? "install";
 
   <div role="tabpanel" id={`${id}-panel-manual`} aria-labelledby={`${id}-tab-manual`} tabindex="-1" class="space-y-3" hidden>
     <div class="flex flex-wrap items-center gap-3">
-      <a href="/blueprint-deck-skill.zip" class="btn" data-variant="outline" download>Download the skill (.zip)</a>
-      <span class="text-sm text-muted-foreground">contains one folder, <code class="font-mono text-xs">blueprint-deck/</code></span>
+      <a href={`${SITE.repo}/releases/latest/download/blueprint-deck-skill.zip`} class="btn" data-variant="outline">Download the skill (.zip)</a>
+      <span class="text-sm text-muted-foreground">the latest release, one folder <code class="font-mono text-xs">blueprint-deck/</code> ·
+        <a class="underline underline-offset-4 hover:text-foreground" href={`${SITE.repo}/releases`}>all versions</a></span>
     </div>
     <Command code="unzip blueprint-deck-skill.zip -d ~/.claude/skills" />
     <p class="text-sm text-muted-foreground">Unzip into your agent's skills folder, e.g. <code class="font-mono text-xs">~/.claude/skills/</code>, <code class="font-mono text-xs">~/.codex/skills/</code>,
       <code class="font-mono text-xs">~/.agents/skills/</code>, or <code class="font-mono text-xs">.claude/skills/</code> inside a repository. The result is <code class="font-mono text-xs">…/skills/blueprint-deck/SKILL.md</code>.</p>
   </div>
 </div>
+<p class="mt-4 text-sm text-muted-foreground">Installs the latest release. A specific version: add <code class="font-mono text-xs">-s -- --version 2.1.0</code>
+  (PowerShell: <code class="font-mono text-xs">-Version 2.1.0</code>) · <a class="underline underline-offset-4 hover:text-foreground" href={`${SITE.repo}/releases`}>all versions</a></p>

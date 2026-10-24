@@ -1,37 +1,20 @@
 ---
 import { getEntry, render } from "astro:content";
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
 import Docs from "../layouts/Docs.astro";
 import Command from "../components/Command.astro";
-import { INSTALL } from "../data/site";
+import { INSTALL, SITE } from "../data/site";
 
 const entry = await getEntry("project", "changelog");
 if (!entry) throw new Error("CHANGELOG.md not found");
 const { Content, headings } = await render(entry);
-// written by scripts/sync.mjs: the published version and every released one
-const vfile = join(process.cwd(), "public", "version.json");
-const info = existsSync(vfile) ? JSON.parse(readFileSync(vfile, "utf8")) : { version: "", versions: [] };
 ---
 <Docs title="Changelog" description="What changed in each version of Blueprint Deck Kit, and how to update."
   headings={headings} ownTitle source="CHANGELOG.md">
+  <section class="not-prose mb-10 rounded-xl border p-6">
+    <h2 class="text-lg font-semibold" id="all-versions">All versions</h2>
+    <p class="mt-1 text-sm text-muted-foreground">The install command gives you the latest release. Every release, with its files, is on
+      <a class="underline underline-offset-4 hover:text-foreground" href={`${SITE.repo}/releases`}>GitHub Releases</a>. To install a specific one:</p>
+    <div class="mt-4"><Command code={`${INSTALL.sh} -s -- --version 2.1.0`} /></div>
+  </section>
   <Content />
-  {info.versions && info.versions.length > 0 && (
-    <section class="not-prose mt-12 rounded-xl border p-6">
-      <h2 class="text-lg font-semibold" id="all-versions">All versions</h2>
-      <p class="mt-1 text-sm text-muted-foreground">The install command gives you {info.version}. Install another release with <code>--version</code>, or download it.</p>
-      <ul class="mt-4 divide-y text-sm">
-        {info.versions.map((v: string) => (
-          <li class="flex flex-wrap items-center justify-between gap-2 py-2">
-            <span class="font-medium">{v}{v === info.version && <span class="badge ml-2" data-variant="secondary">current</span>}</span>
-            <span class="flex gap-3 text-muted-foreground">
-              <a class="underline underline-offset-4 hover:text-foreground" href={`/releases/${v}/blueprint-deck-skill.zip`}>.zip</a>
-              <a class="underline underline-offset-4 hover:text-foreground" href={`/releases/${v}/blueprint-deck-skill.tar.gz`}>.tar.gz</a>
-            </span>
-          </li>
-        ))}
-      </ul>
-      <div class="mt-4"><Command code={`${INSTALL.sh} -s -- --version ${info.versions[info.versions.length - 1]}`} /></div>
-    </section>
-  )}
 </Docs>

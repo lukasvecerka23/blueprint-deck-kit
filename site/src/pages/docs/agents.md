@@ -103,14 +103,15 @@ Then make a Blueprint Deck from diagrams/diagram.config.yaml.
 ## Updating
 
 Run the install command again: it replaces the skill and says which version it replaced
-(see the [changelog](/changelog/)). To install a specific, older release:
+(see the [changelog](/changelog/)). To install a specific release:
 
 ```bash
-curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --version 2.0.0
+curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --version 2.1.0
 ```
 
-(PowerShell: add `-Version 2.0.0`.) All versions are listed on the [changelog](/changelog/) page. When the skill runs, it checks
-[version.json](/version.json) and tells you when a newer version is out; it never updates anything by itself.
+(PowerShell: `& ([scriptblock]::Create((irm https://blueprint-deck.lukasvecerka.dev/install.ps1))) -Version 2.1.0`.)
+Every release and its files are on [GitHub Releases](https://github.com/lukasvecerka23/blueprint-deck-kit/releases). When the skill runs, it asks GitHub for the latest
+release and tells you when a newer version is out; it never updates anything by itself.
 
 Diagrams you already made keep working: each file carries its own engine. To give a file the new features, ask your
 agent to *upgrade* it (or run `node tools/insert.mjs --upgrade diagrams/index.html`). The content stays as it is.

@@ -38,19 +38,25 @@ ecosystems and org maps, in a product (what it does for whom) or technical (comp
 
 ### 1. Install the skill (once)
 
+Installs the latest [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases):
+
 macOS / Linux:
 ```bash
-curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.sh | sh
 ```
 Windows (PowerShell):
 ```powershell
-irm https://blueprint-deck.lukasvecerka.dev/install.ps1 | iex
+irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex
 ```
 
 The script copies the skill into the skills folder of every agent it finds (`~/.claude/skills`, `~/.codex/skills`,
 `~/.agents/skills`). Options: `--agent claude|codex|agents|all`, `--dir <folder>`, `--project` (into the current
-repository), `--uninstall`. From a clone, run `./install.sh`. Prefer to do it by hand? Copy `skill/blueprint-deck/`
-into your agent's skills folder.
+project), `--version 2.1.0` (a specific release), `--uninstall`; with PowerShell `-Agent`, `-Version` … (run it as
+`& ([scriptblock]::Create((irm <url>))) -Version 2.1.0`).
+
+- **From a clone** (e.g. to try unreleased changes on `main`): `./install.sh` installs that checkout.
+- **By hand:** download `blueprint-deck-skill.zip` from a [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases)
+  and unzip it into your agent's skills folder.
 
 Nothing else to install, no account: the skill is plain files, and the agent runs on your computer with your own subscription.
 
@@ -92,8 +98,8 @@ Paste the prompt into your agent, in the folder with your docs (a repository, or
 ## Updating
 
 - **The skill:** run the install command again. It tells you which version it replaced and links to
-  [what's new](https://blueprint-deck.lukasvecerka.dev/changelog/). The skill also mentions it when a newer version
-  is out. An older release: add `--version 2.0.0` (PowerShell: `-Version 2.0.0`).
+  [what's new](https://github.com/lukasvecerka23/blueprint-deck-kit/releases). The skill also mentions it when a newer version
+  is out. A specific release: add `--version 2.1.0` (PowerShell: `-Version 2.1.0`).
 - **Your diagrams** keep working as they are: each file carries its own engine. To give a file the new features,
   ask your agent to "upgrade diagrams/index.html to the newest engine"; your content stays as it is. The editor
   (E → Diagram) shows which engine a file has.

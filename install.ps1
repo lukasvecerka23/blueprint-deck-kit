@@ -1,11 +1,12 @@
 # Blueprint Deck Kit installer for Windows: puts the blueprint-deck skill into your coding agents' skills folders.
 #
-#   irm https://blueprint-deck.lukasvecerka.dev/install.ps1 | iex
-#   & ([scriptblock]::Create((irm https://blueprint-deck.lukasvecerka.dev/install.ps1))) -Agent codex
+#   irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex
+#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1))) -Version 2.1.0
+#   (the website's short URL https://blueprint-deck.lukasvecerka.dev/install.ps1 serves this same script)
 #   .\install.ps1                     (from a clone of the repository: installs that copy)
 #
-# Parameters: -Agent claude|codex|agents|all, -Dir <skills folder>, -Project, -Version <x.y.z> (an older release),
-#             -Ref <branch or tag> (from GitHub; needs access while the repository is private), -Uninstall
+# Parameters: -Agent claude|codex|agents|all, -Dir <skills folder>, -Project, -Version <x.y.z> (a specific release),
+#             -Ref <branch or tag> (the skill as it is on a branch, e.g. main), -Uninstall
 # It only copies files: no Node, no Python, nothing else is installed.
 param(
   [ValidateSet("", "claude", "codex", "agents", "all")][string]$Agent = "",
@@ -17,7 +18,7 @@ param(
 )
 $ErrorActionPreference = "Stop"
 $Repo = "lukasvecerka23/blueprint-deck-kit"
-$Site = if ($env:BLUEPRINT_DECK_SITE) { $env:BLUEPRINT_DECK_SITE } else { "https://blueprint-deck.lukasvecerka.dev" }
+$GitHub = "https://github.com/$Repo"
 $Name = "blueprint-deck"
 $Base = if ($Project) { (Get-Location).Path } else { $HOME }
 
@@ -51,17 +52,17 @@ if ($here -and (Test-Path (Join-Path $here "skill\$Name\SKILL.md"))) {
   $tmp = Join-Path ([IO.Path]::GetTempPath()) ("blueprint-deck-" + [guid]::NewGuid())
   New-Item -ItemType Directory -Path $tmp | Out-Null
   $zip = Join-Path $tmp "kit.zip"
-  # releases come from the website (the latest published one, or -Version); -Ref downloads a branch or tag from GitHub
+  # the skill comes from GitHub: the latest published release, a given -Version, or a branch/tag with -Ref
   if ($Ref) {
-    Write-Host "Downloading $Repo ($Ref) from GitHub..."
+    Write-Host "Downloading $Repo ($Ref)..."
     Invoke-WebRequest -UseBasicParsing -Uri "https://codeload.github.com/$Repo/zip/$Ref" -OutFile $zip
   } elseif ($Version) {
     $v = $Version.TrimStart("v")
-    try { Invoke-WebRequest -UseBasicParsing -Uri "$Site/releases/$v/blueprint-deck-skill.zip" -OutFile $zip }
-    catch { throw "There is no release $v. Versions: $Site/changelog/" }
-    Write-Host "Downloaded Blueprint Deck Kit $v"
+    try { Invoke-WebRequest -UseBasicParsing -Uri "$GitHub/releases/download/v$v/blueprint-deck-skill.zip" -OutFile $zip }
+    catch { throw "There is no release $v. Versions: $GitHub/releases" }
   } else {
-    Invoke-WebRequest -UseBasicParsing -Uri "$Site/blueprint-deck-skill.zip" -OutFile $zip
+    try { Invoke-WebRequest -UseBasicParsing -Uri "$GitHub/releases/latest/download/blueprint-deck-skill.zip" -OutFile $zip }
+    catch { throw "Could not download the latest release from $GitHub/releases" }
   }
   Expand-Archive -Path $zip -DestinationPath $tmp
   $src = Get-ChildItem -Path $tmp -Directory -Recurse -Filter $Name | Where-Object { Test-Path (Join-Path $_.FullName "SKILL.md") } | Select-Object -First 1 -ExpandProperty FullName
@@ -82,7 +83,7 @@ try {
     else { Write-Host "updated Blueprint Deck Kit $old -> $new in $dest"; $updated = $true }
   }
   if ($updated) {
-    Write-Host "What's new: $Site/changelog/"
+    Write-Host "What's new: $GitHub/releases"
     Write-Host "Existing diagrams keep their engine; to give one the new features, ask your agent to upgrade it."
   }
 } finally {

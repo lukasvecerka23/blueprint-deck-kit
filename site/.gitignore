@@ -9,13 +9,10 @@ dist/
 /public/engine/
 /public/install.sh
 /public/install.ps1
-/public/blueprint-deck-skill.zip
+/public/_redirects
 
 # hand-made assets in public/ (favicon.svg, og image, robots.txt) are committed
 
 .DS_Store
 npm-debug.log*
 .env
-/public/blueprint-deck-skill.tar.gz
-/public/version.json
-/public/releases/

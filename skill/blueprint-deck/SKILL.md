@@ -37,9 +37,13 @@ file in the browser (press E); those edits are in the data block, so always re-r
 
 ## Before you start: versions (a few seconds, skip it if there's no network)
 
-1. Read `SKILL_DIR/VERSION` (e.g. `2.1.0`). Fetch `https://blueprint-deck.lukasvecerka.dev/version.json` with your web
-   tool or `curl -fsS --max-time 5`. If its `version` is newer, tell the user in one line, then carry on:
-   "Blueprint Deck Kit X is available (you have Y): run `<install.sh>` (Windows: `<install.ps1>`), what's new: `<changelog>`".
+1. Read `SKILL_DIR/VERSION` (e.g. `2.1.0`). Fetch
+   `https://api.github.com/repos/lukasvecerka23/blueprint-deck-kit/releases/latest` with your web tool or
+   `curl -fsS --max-time 5` and read `tag_name` (e.g. `v2.2.0`). If it's newer, tell the user in one line, then carry on:
+   "Blueprint Deck Kit X is available (you have Y): run
+   `curl -fsSL https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.sh | sh`
+   (Windows: `irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex`);
+   what's new: https://github.com/lukasvecerka23/blueprint-deck-kit/releases".
    Never stop or install anything yourself because of this.
 2. When you work on an existing diagram, read its engine version from the top of the file
    (`<meta name="generator" content="Blueprint Deck Kit X">`). If it's older than `SKILL_DIR/VERSION`, mention once

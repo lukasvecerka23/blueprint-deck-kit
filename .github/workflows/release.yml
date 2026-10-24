@@ -1,6 +1,7 @@
 name: Release
-# Push a tag that matches the version in engine/src/core.js (e.g. v2.1.0): the release gets the CHANGELOG section
-# as notes and the skill as .zip and .tar.gz. See CONTRIBUTING.md → Releasing.
+# Push a tag that matches the version in engine/src/core.js (e.g. v2.1.0): this creates a DRAFT GitHub release with
+# the CHANGELOG section as notes and the skill + install scripts as files. Publish the draft when you're ready: from
+# then on the install scripts (…/releases/latest/download/…) give users this version. See CONTRIBUTING.md → Releasing.
 on:
   push:
     tags: ["v*"]
@@ -30,10 +31,11 @@ jobs:
       - name: Skill archives and release notes
         run: |
           mkdir -p out
-          tar -czf out/blueprint-deck-skill-$VERSION.tar.gz -C skill blueprint-deck
-          (cd skill && zip -qr ../out/blueprint-deck-skill-$VERSION.zip blueprint-deck)
+          tar -czf out/blueprint-deck-skill.tar.gz -C skill blueprint-deck
+          (cd skill && zip -qr ../out/blueprint-deck-skill.zip blueprint-deck)
+          cp install.sh install.ps1 out/
           awk -v v="## $VERSION" '$0 ~ "^## " { p = index($0, v) == 1 } p' CHANGELOG.md | tail -n +2 > out/notes.md
       - name: GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" out/*.zip out/*.tar.gz --title "Blueprint Deck Kit $VERSION" --notes-file out/notes.md
+        run: gh release create "$GITHUB_REF_NAME" out/blueprint-deck-skill.zip out/blueprint-deck-skill.tar.gz out/install.sh out/install.ps1 --draft --title "Blueprint Deck Kit $VERSION" --notes-file out/notes.md
