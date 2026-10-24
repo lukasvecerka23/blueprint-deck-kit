@@ -16,7 +16,7 @@ branding:
   primary: "#4a4a9e"                   # the headphones
   secondary: "#8e9df3"                 # the periwinkle of the icon's background
   shape: rounded
-  logo: "icon:headphones"              # the app icon is a ghost with headphones; no brand logo is copied
+  logo: "app/Resources/Assets.xcassets/AppIcon.appiconset/icon_128x128.png"   # the app icon (MIT), stored inside the file
   name_rules: ["Say meetBuddy for the repository and Meeting Buddy for the app; Czech UI strings may be quoted with an English gloss"]
 
 sources:

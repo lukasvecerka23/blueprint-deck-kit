@@ -338,8 +338,8 @@ app as it is (`maturity: running`).
 
 No website, so the colours come from the app icon (`app/Resources/Assets.xcassets/AppIcon.appiconset/icon_256x256.png`,
 a white ghost with headphones on a lavender-to-periwinkle background): theme `light`, primary `#4a4a9e` (the
-headphones), secondary `#8e9df3` (the periwinkle of the background). The icon itself was not copied: the logo is the
-Lucide icon `headphones`, so the diagram doesn't look official. Shape `rounded`. `meta.url` links
+headphones), secondary `#8e9df3` (the periwinkle of the background). The logo is the app icon itself
+(`icon_128x128.png`, embedded as a data URI; MIT, credited in the hero footnote). Shape `rounded`. `meta.url` links
 https://github.com/mnovak99/meetBuddy. Both hero footnotes say: "Unofficial diagram of meetBuddy by mnovak99 (MIT),
 read from commit 8875a4a · not affiliated with the author".
 
