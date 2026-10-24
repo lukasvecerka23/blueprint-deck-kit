@@ -12,9 +12,9 @@ project:
 
 branding:
   website: ""                          # no website branding: no logos, the project name is used factually
-  theme: forest
-  primary: ""
-  secondary: ""
+  theme: light                         # colours from the app icon (AppIcon.appiconset/icon_256x256.png)
+  primary: "#4a4a9e"                   # the headphones
+  secondary: "#8e9df3"                 # the periwinkle of the icon's background
   shape: rounded
   logo: "icon:headphones"              # the app icon is a ghost with headphones; no brand logo is copied
   name_rules: ["Say meetBuddy for the repository and Meeting Buddy for the app; Czech UI strings may be quoted with an English gloss"]
