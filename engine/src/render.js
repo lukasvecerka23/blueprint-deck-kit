@@ -608,8 +608,28 @@ function createDiagram(SPEC, host = {}, opts = {}) {
   function linkBtn(n, label) {
     return `<button class="link" data-node="${n.id}" style="--c:${n.color};--rgb:${n.rgb}"><span class="ic">${icon(n.icon)}</span><span class="lt">${n.title}</span>${label ? `<span class="ll">${esc(label)}</span>` : ""}</button>`;
   }
+  // A source URL is shown short and clickable: a file in a GitHub/GitLab/Bitbucket repo as its path in the repo
+  // (src/frontend/main.go#L80-L120), any other page as host/…/last-part. Local paths stay plain text.
+  function shortSource(s) {
+    let u;
+    try { u = new URL(s); } catch (e) { return null; }
+    if (!/^https?:$/.test(u.protocol)) return null;
+    const host = u.hostname.replace(/^www\./, ""), parts = u.pathname.split("/").filter(Boolean).map(p => { try { return decodeURIComponent(p); } catch (e) { return p; } });
+    const line = /^#L\d/.test(u.hash) ? u.hash : "";
+    let m = null;
+    if (/(^|\.)github\.com$/.test(host) && /^(blob|tree|raw)$/.test(parts[2])) m = parts.slice(4);
+    else if (/(^|\.)gitlab\./.test(host) && parts.indexOf("-") > 1 && /^(blob|tree|raw)$/.test(parts[parts.indexOf("-") + 1])) m = parts.slice(parts.indexOf("-") + 3);
+    else if (/(^|\.)bitbucket\.org$/.test(host) && parts[2] === "src") m = parts.slice(4);
+    if (m) return (m.length ? m.join("/") : parts.slice(0, 2).join("/")) + line;
+    if (!parts.length) return host;
+    return host + "/" + (parts.length > 2 ? "…/" + parts[parts.length - 1] : parts.join("/"));
+  }
+  const sourceHtml = s => {
+    const short = shortSource(String(s));
+    return short ? `<a href="${esc(s)}" target="_blank" rel="noopener noreferrer" title="${esc(s)}"><code>${esc(short)}</code></a>` : `<code>${esc(s)}</code>`;
+  };
   const sourcesHtml = src => S.panel.showSources && src && src.length
-    ? `<h4>${L10N.sources}</h4><div class="src">${src.map(s => `<code>${esc(s)}</code>`).join(" ")}</div>` : "";
+    ? `<h4>${L10N.sources}</h4><div class="src">${src.map(sourceHtml).join(" ")}</div>` : "";
   function openNode(id) {
     const n = nodeById[id], z = zoneById[n.zone];
     // a persona's box opens the Personas panel with that persona picked

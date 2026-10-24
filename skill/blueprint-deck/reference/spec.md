@@ -166,6 +166,8 @@ Each zone needs a 6-digit hex `color`; its nodes inherit it. Keep headers short:
   "sources": ["docs/architecture.md#commerce-api", "docs/decisions.md#adr-3"],
   "kind": "Platform component" }
 ```
+`sources`: paths relative to the project, or full `https://` URLs. URLs are shown short and clickable (a file in a
+GitHub/GitLab/Bitbucket repo as its path, `src/app.go#L10-L40`; other pages as `host/…/page`), so write full permalinks.
 Placement: omit `x/y` to let the zone place it (in array order, filling `layout.columns`; `"span": 2` for a wider box),
 or give `x`, `y`, `w`, `h` explicitly. Defaults: `w` = column width (240 if explicit), `h` = 64 (normal) or 110 (`size: "big"`).
 `compact: true` uses a smaller title in big boxes. A normal box shows one line of subtitle (cut with …); a big box wraps to two.

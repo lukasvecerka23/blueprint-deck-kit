@@ -11,6 +11,9 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
   files become the map, every connection needs evidence in the code, docs and code conflicts are reported. The
   configurator has a "What to read" choice (docs, code, both) that fills in the source lists.
 - New example: `online-boutique`, Google's microservices demo built from its code alone.
+- **Short, clickable sources.** A source URL shows as its path in the repo (`src/frontend/main.go#L80-L120`) or as
+  `host/…/page.html`, linked to the full URL; local paths stay as they are. Side panels, sheets and the tour card
+  never scroll sideways: long text wraps.
 
 ## 2.1.0 (2026-10-24)
 
