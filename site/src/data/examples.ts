@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 // The gallery. Each entry links to /examples/<slug>/index.html, copied from ../examples/ by scripts/sync.mjs.
 export interface Example {
   slug: string;
@@ -75,3 +77,7 @@ export const EXAMPLES: Example[] = [
     home: false,
   },
 ];
+
+// Build-time check: examples are generated separately; a missing one renders as "coming soon" instead of a dead link.
+export const exampleHref = (slug: string) => `/examples/${slug}/index.html`;
+export const exampleExists = (slug: string) => existsSync(join(process.cwd(), "public", "examples", slug, "index.html"));
