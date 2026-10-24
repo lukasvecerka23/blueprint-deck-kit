@@ -120,6 +120,11 @@ Open them from [`examples/`](examples/) or the [gallery](https://blueprint-deck.
 - Optional: a browser tool in your agent (e.g. Playwright MCP) so it can look at the result itself, and Node 18+ for
   `check.mjs`.
 
+## Support the project
+
+Blueprint Deck Kit is free and stays free. If it saves you time, you can
+**[sponsor it on GitHub](https://github.com/sponsors/lukasvecerka23)**, once or monthly, with any amount.
+
 ## Authors
 
 Made by [Lukas Vecerka](https://github.com/lukasvecerka23), with
