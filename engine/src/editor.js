@@ -125,7 +125,12 @@ const BDEditor = (() => {
     }
     BD.rerender();
   }
-  function mounted() { decorate(); updateCounts(); }
+  let shownIndex = -1;
+  function mounted() {
+    // another diagram of the file was opened from the switcher: show its settings, not the previous diagram's
+    if (ed.active && BD.index !== shownIndex) { shownIndex = BD.index; pick = null; connectFrom = null; sel = { kind: "diagram" }; render(); return; }
+    decorate(); updateCounts();
+  }
 
   /* ------------------------------------------------------------ share: download a copy under a name you choose */
   // readOnly: the ⋯ menu's "Download a read-only copy" (only the file name to confirm); otherwise the editor's Share…
@@ -245,6 +250,7 @@ const BDEditor = (() => {
   /* ------------------------------------------------------------ panels */
   function render() {
     if (!pane || !ed.active) return;
+    shownIndex = BD.index;
     bar.querySelectorAll("[data-p]").forEach(b => b.classList.toggle("on", b.dataset.p === sel.kind || (sel.kind === "step" && b.dataset.p === "tour") || (sel.kind === "lens" && b.dataset.p === "tabs") || (sel.kind === "persona" && b.dataset.p === "personas")));
     const fn = { diagram: pDiagram, zone: pZone, node: pNode, tabs: pTabs, lens: pLens, tour: pTour, step: pStep, personas: pPersonas, persona: pPersona, check: pCheck }[sel.kind] || pDiagram;
     const scroll = pane.querySelector(".ed-body")?.scrollTop || 0;
@@ -270,7 +276,7 @@ const BDEditor = (() => {
         ["preset", "Theme", "select", { options: Object.keys(T).map(k => [k, k[0].toUpperCase() + k.slice(1) + (T[k].mode === "light" && k !== "light" ? " (light)" : "")]), def: "midnight" }],
         ["primary", "Main colour", "color", { def: resolved.primary, clear: true }],
         ["secondary", "Second colour", "color", { def: resolved.secondary, clear: true }],
-        ["shape", "Shape", "seg", { options: [["rounded", "Rounded"], ["square", "Square"], ["pill", "Pill"]], def: "rounded" }],
+        ["shape", "Shape", "seg", { options: [["rounded", "Rounded"], ["square", "Square"], ["pill", "Pill"]], def: "rounded", hint: "Areas and boxes; menus and panels stay the same." }],
       ], th, "theme"))) +
       section("Branding" + (multi ? " <small>(all diagrams)</small>" : ""), `
         <div class="fld"><label>Logo</label><div class="logof"><span class="lg">${logoPreview()}</span>

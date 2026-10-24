@@ -1155,7 +1155,8 @@
     --shadow-rgb: 0, 0, 0; --shadow-k: 1; --tone: 0%;
     --ok: #a7f3d0; --ok-rgb: 52, 211, 153; --warn: #fcd34d; --warn-rgb: 251, 191, 36;
     --stroke: rgba(var(--fg-rgb), 0.08); --stroke-strong: rgba(var(--fg-rgb), 0.16);
-    --r-zone: 22px; --r-node: 14px; --r-ui: 14px; --r-sm: 10px; --r-chip: 99px; --r-panel: 20px;
+    --r-zone: 22px; --r-node: 14px; --r-ic: 10px; --r-tag: 99px;     /* the diagram: set by theme.shape */
+    --r-ui: 14px; --r-sm: 10px; --r-chip: 99px; --r-panel: 20px;     /* menus, panels, buttons: always the same */
     --font: "Inter", "Avenir Next", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --ease: cubic-bezier(.65, .05, .25, 1);
   }
@@ -1207,7 +1208,7 @@
   .zone-head { position: absolute; top: 13px; left: 18px; right: 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; white-space: nowrap; }
   .zone-title { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--cx); }
   .zone-sub { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
-  .zone-tag { margin-left: auto; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; padding: 3px 8px; border-radius: var(--r-chip); color: var(--cx); border: 1px solid rgba(var(--rgb), 0.4); flex: none; }
+  .zone-tag { margin-left: auto; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; padding: 3px 8px; border-radius: var(--r-tag); color: var(--cx); border: 1px solid rgba(var(--rgb), 0.4); flex: none; }
   .zone-tag.bt { color: var(--muted); border-style: dashed; border-color: var(--stroke-strong); }
   .zone-head:hover .zone-title { text-decoration: underline; text-underline-offset: 4px; }
 
@@ -1224,20 +1225,20 @@
   .node:hover { transform: translateY(-2px); border-color: rgba(var(--rgb), 0.8); box-shadow: 0 14px 34px rgba(var(--shadow-rgb), calc(0.5 * var(--shadow-k))), 0 0 30px rgba(var(--rgb), 0.28); }
   .node.sel { border-color: var(--c); box-shadow: 0 0 0 2px rgba(var(--rgb), 0.9), 0 0 46px rgba(var(--rgb), 0.5), 0 14px 34px rgba(var(--shadow-rgb), calc(0.5 * var(--shadow-k))); }
   .node.outside { border-style: dashed; }
-  .node .ic { width: 36px; height: 36px; border-radius: var(--r-sm); flex: none; display: grid; place-items: center; background: rgba(var(--rgb), 0.14); color: var(--cx); box-shadow: inset 0 0 0 1px rgba(var(--rgb), 0.18); overflow: hidden; }
+  .node .ic { width: 36px; height: 36px; border-radius: var(--r-ic); flex: none; display: grid; place-items: center; background: rgba(var(--rgb), 0.14); color: var(--cx); box-shadow: inset 0 0 0 1px rgba(var(--rgb), 0.18); overflow: hidden; }
   .ic img, .p-ic img, .pillar .ic img { width: 70%; height: 70%; object-fit: contain; }
   svg.i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   .node .tx { min-width: 0; }
   .node .t { font-size: 14.5px; font-weight: 600; line-height: 1.2; white-space: nowrap; }
   .node .s { font-size: 12px; color: var(--muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .node.big { gap: 14px; }
-  .node.big .ic { width: 48px; height: 48px; border-radius: calc(var(--r-sm) * 1.3); }
+  .node.big .ic { width: 48px; height: 48px; border-radius: calc(var(--r-ic) * 1.3); }
   .node.big svg.i { width: 26px; height: 26px; }
   .node.big .t { font-size: 18px; }
   .node.big.compact .t { font-size: 15.5px; }
   .node.big .s { font-size: 12.5px; white-space: normal; line-height: 1.35; }
-  .node .badge { position: absolute; top: -9px; right: 12px; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; padding: 2px 7px; border-radius: var(--r-chip); background: var(--ink); color: var(--cx); border: 1px solid rgba(var(--rgb), 0.45); }
-  .node .st { display: none; position: absolute; top: -9px; left: 12px; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; padding: 2px 7px; border-radius: var(--r-chip); background: var(--ink); }
+  .node .badge { position: absolute; top: -9px; right: 12px; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; padding: 2px 7px; border-radius: var(--r-tag); background: var(--ink); color: var(--cx); border: 1px solid rgba(var(--rgb), 0.45); }
+  .node .st { display: none; position: absolute; top: -9px; left: 12px; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; padding: 2px 7px; border-radius: var(--r-tag); background: var(--ink); }
   body.status .node .st { display: block; }
   /* numbered steps of a persona's (or any list item's) path */
   .node .pn { position: absolute; left: -11px; top: 50%; margin-top: -12px; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 800; color: var(--on-accent); background: rgb(var(--prgb, var(--accent-rgb))); box-shadow: 0 0 0 3px var(--bg), 0 4px 14px rgba(var(--prgb, var(--accent-rgb)), 0.55); animation: pop .4s ease backwards; z-index: 2; }
@@ -2161,10 +2162,11 @@ const BDCore = (() => {
       },
     },
   };
+  // the shape changes the diagram only (areas, boxes, their icons and tags); menus, panels and buttons stay as they are
   const SHAPES = {
-    rounded: { "r-zone": "22px", "r-node": "14px", "r-ui": "14px", "r-sm": "10px", "r-chip": "99px", "r-panel": "20px" },
-    square: { "r-zone": "4px", "r-node": "3px", "r-ui": "6px", "r-sm": "3px", "r-chip": "3px", "r-panel": "6px" },
-    pill: { "r-zone": "30px", "r-node": "999px", "r-ui": "999px", "r-sm": "999px", "r-chip": "99px", "r-panel": "26px" },
+    rounded: { "r-zone": "22px", "r-node": "14px", "r-ic": "10px", "r-tag": "99px" },
+    square: { "r-zone": "4px", "r-node": "3px", "r-ic": "3px", "r-tag": "3px" },
+    pill: { "r-zone": "30px", "r-node": "999px", "r-ic": "999px", "r-tag": "99px" },
   };
 
   /* ------------------------------------------------------------ defaults */
@@ -4249,7 +4251,12 @@ const BDEditor = (() => {
     }
     BD.rerender();
   }
-  function mounted() { decorate(); updateCounts(); }
+  let shownIndex = -1;
+  function mounted() {
+    // another diagram of the file was opened from the switcher: show its settings, not the previous diagram's
+    if (ed.active && BD.index !== shownIndex) { shownIndex = BD.index; pick = null; connectFrom = null; sel = { kind: "diagram" }; render(); return; }
+    decorate(); updateCounts();
+  }
 
   /* ------------------------------------------------------------ share: download a copy under a name you choose */
   // readOnly: the ⋯ menu's "Download a read-only copy" (only the file name to confirm); otherwise the editor's Share…
@@ -4369,6 +4376,7 @@ const BDEditor = (() => {
   /* ------------------------------------------------------------ panels */
   function render() {
     if (!pane || !ed.active) return;
+    shownIndex = BD.index;
     bar.querySelectorAll("[data-p]").forEach(b => b.classList.toggle("on", b.dataset.p === sel.kind || (sel.kind === "step" && b.dataset.p === "tour") || (sel.kind === "lens" && b.dataset.p === "tabs") || (sel.kind === "persona" && b.dataset.p === "personas")));
     const fn = { diagram: pDiagram, zone: pZone, node: pNode, tabs: pTabs, lens: pLens, tour: pTour, step: pStep, personas: pPersonas, persona: pPersona, check: pCheck }[sel.kind] || pDiagram;
     const scroll = pane.querySelector(".ed-body")?.scrollTop || 0;
@@ -4394,7 +4402,7 @@ const BDEditor = (() => {
         ["preset", "Theme", "select", { options: Object.keys(T).map(k => [k, k[0].toUpperCase() + k.slice(1) + (T[k].mode === "light" && k !== "light" ? " (light)" : "")]), def: "midnight" }],
         ["primary", "Main colour", "color", { def: resolved.primary, clear: true }],
         ["secondary", "Second colour", "color", { def: resolved.secondary, clear: true }],
-        ["shape", "Shape", "seg", { options: [["rounded", "Rounded"], ["square", "Square"], ["pill", "Pill"]], def: "rounded" }],
+        ["shape", "Shape", "seg", { options: [["rounded", "Rounded"], ["square", "Square"], ["pill", "Pill"]], def: "rounded", hint: "Areas and boxes; menus and panels stay the same." }],
       ], th, "theme"))) +
       section("Branding" + (multi ? " <small>(all diagrams)</small>" : ""), `
         <div class="fld"><label>Logo</label><div class="logof"><span class="lg">${logoPreview()}</span>

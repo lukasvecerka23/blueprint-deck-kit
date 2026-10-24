@@ -106,7 +106,7 @@ Up to 4 pillars look best.
   (neutral), `forest` (green), `ember` (dark red); light `light`, `paper` (warm).
 - `primary` / `secondary`: the brand colours (buttons, highlights, the logo tile, progress). Lighter and darker shades are
   derived automatically and adjusted for light or dark presets. `accent` / `accentAlt` are accepted as older names.
-- `shape`: `rounded` | `square` | `pill`.
+- `shape`: `rounded` | `square` | `pill`: the corners of areas, boxes, their icons and tags. Menus, panels and buttons keep the same rounding.
 - `vars`: overrides any CSS variable (`bg`, `ink`, `glass`, `node-a`, `node-b`, `muted`, `body`, `font`, `r-node` …).
 
 ## status

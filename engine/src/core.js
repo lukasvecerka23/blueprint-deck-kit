@@ -80,10 +80,11 @@ const BDCore = (() => {
       },
     },
   };
+  // the shape changes the diagram only (areas, boxes, their icons and tags); menus, panels and buttons stay as they are
   const SHAPES = {
-    rounded: { "r-zone": "22px", "r-node": "14px", "r-ui": "14px", "r-sm": "10px", "r-chip": "99px", "r-panel": "20px" },
-    square: { "r-zone": "4px", "r-node": "3px", "r-ui": "6px", "r-sm": "3px", "r-chip": "3px", "r-panel": "6px" },
-    pill: { "r-zone": "30px", "r-node": "999px", "r-ui": "999px", "r-sm": "999px", "r-chip": "99px", "r-panel": "26px" },
+    rounded: { "r-zone": "22px", "r-node": "14px", "r-ic": "10px", "r-tag": "99px" },
+    square: { "r-zone": "4px", "r-node": "3px", "r-ic": "3px", "r-tag": "3px" },
+    pill: { "r-zone": "30px", "r-node": "999px", "r-ic": "999px", "r-tag": "99px" },
   };
 
   /* ------------------------------------------------------------ defaults */
