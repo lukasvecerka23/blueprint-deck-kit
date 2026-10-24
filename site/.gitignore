@@ -18,3 +18,4 @@ npm-debug.log*
 .env
 /public/blueprint-deck-skill.tar.gz
 /public/version.json
+/public/releases/

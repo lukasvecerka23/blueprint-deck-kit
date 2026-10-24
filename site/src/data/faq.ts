@@ -56,6 +56,15 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
     home: true,
   },
   {
+    q: "Is it safe to open a deck someone sent me?",
+    a: "Decks made with the kit can't connect anywhere: a Content Security Policy in every file blocks all network requests, so a deck can't track you or send data. Formatting in the text is limited to simple tags, and the engine strips scripts and event handlers before showing anything. Still, it's an HTML file: treat one from a stranger like any web page from them.",
+  },
+  {
+    q: "Will an email filter block the HTML file?",
+    a: "It can. Many mail systems (Outlook / Microsoft 365 especially) block .html attachments in general, because they are a common phishing trick. Share a link instead: host the deck on any static host, or put it in SharePoint, OneDrive, Google Drive or Teams. A zipped file or a PDF (press P) also works.",
+    home: true,
+  },
+  {
     q: "Who owns the diagrams I make?",
     a: "You do. The content of your diagrams is yours, and you can share, sell or keep them private. Only the engine inside each file is open source (MIT); its short licence notice stays in the file.",
   },

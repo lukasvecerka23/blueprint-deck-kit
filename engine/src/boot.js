@@ -204,7 +204,7 @@ const BD = (() => {
   function renderSwitcher(brand, lg) {
     const list = entries(), d = list[curIndex], meta = DATA.meta || {};
     brand.classList.add("switch");
-    brand.innerHTML = `<div class="logo${lg.img ? " img" : ""}">${lg.html}</div><div class="txt"><div class="bt">${meta.title || ""}</div><div class="bs">${escH(d.title)}</div></div><span class="chev">▾</span>`;
+    brand.innerHTML = `<div class="logo${lg.img ? " img" : ""}">${lg.html}</div><div class="txt"><div class="bt">${escH(BDCore.stripTags(meta.title || ""))}</div><div class="bs">${escH(d.title)}</div></div><span class="chev">▾</span>`;
     brand.title = "Switch diagram (1–" + Math.min(9, list.length) + ")";
     let menu = $("sw-menu");
     if (!menu) { menu = document.createElement("div"); menu.id = "sw-menu"; document.body.appendChild(menu); }

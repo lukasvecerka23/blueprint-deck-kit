@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="generator" content="Blueprint Deck Kit 2.1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="icon" href="data:,">
 <title>Blueprint Deck</title>
 <!--
@@ -1128,6 +1129,54 @@ const BDCore = (() => {
     return w * size * (bold ? 1.04 : 1);
   }
 
+  /* ------------------------------------------------------------ safe content
+     Text fields may contain a little inline HTML. Everything else is removed before rendering, so a diagram made from
+     untrusted documents can't run code in the viewer's browser: no <script>, no event handlers, no javascript: links,
+     no tags beyond simple formatting. Icons and logos given as SVG keep their drawing but lose scripts and handlers. */
+  const RICH = new Set(["b", "strong", "i", "em", "u", "s", "br", "code", "small", "sub", "sup", "mark", "span", "a"]);
+  const DANGEROUS = /<(script|style|iframe|object|embed|template|noscript|textarea|title|svg|math|form)\b[\s\S]*?<\/\1\s*>/gi;
+  function cleanHtml(s, c) {
+    if (s.indexOf("<") < 0) return s;
+    return s.replace(DANGEROUS, () => (c.n++, "")).replace(/<\/?([a-zA-Z][a-zA-Z0-9-]*)\b([^>]*)>/g, (m, tag, attrs) => {
+      const t = tag.toLowerCase();
+      if (!RICH.has(t)) { c.n++; return ""; }
+      if (m[1] === "/") return `</${t}>`;
+      if (/\son\w+\s*=/i.test(attrs)) c.n++;
+      if (t === "a") {
+        const h = attrs.match(/\bhref\s*=\s*(?:"([^"]*)"|'([^']*)')/i), url = h ? (h[1] ?? h[2]).trim() : "";
+        if (/^(https?:|mailto:)/i.test(url)) return `<a href="${url.replace(/"/g, "&quot;")}" target="_blank" rel="noopener noreferrer">`;
+        if (url) c.n++;
+        return "<a>";
+      }
+      return t === "br" ? "<br>" : `<${t}>`;
+    });
+  }
+  function cleanSvg(s, c) {
+    return s.replace(/<(script|foreignObject|style|iframe)\b[\s\S]*?<\/\1\s*>/gi, () => (c.n++, ""))
+      .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, () => (c.n++, ""))
+      .replace(/\s(?:xlink:)?href\s*=\s*("\s*javascript:[^"]*"|'\s*javascript:[^']*')/gi, () => (c.n++, ""))
+      .replace(/<\/?a\b[^>]*>/gi, () => (c.n++, ""));
+  }
+  // walks the whole diagram: icons and logos as SVG, everything else as text with simple formatting
+  function sanitize(spec, rep) {
+    const c = { n: 0 }, images = [];
+    const walk = (v, key, inIcons) => {
+      if (typeof v === "string") {
+        if (inIcons || ((key === "icon" || key === "logo") && /^\s*</.test(v))) return cleanSvg(v, c);
+        if ((key === "icon" || key === "logo") && /^(https?:)?\/\//i.test(v)) { images.push(v); return v; }
+        if (/^\s*(javascript|vbscript|data:text\/html)/i.test(v)) { c.n++; return ""; }
+        return cleanHtml(v, c);
+      }
+      if (Array.isArray(v)) return v.map(x => walk(x, key, inIcons));
+      if (v && typeof v === "object") { for (const k of Object.keys(v)) v[k] = walk(v[k], k, inIcons || (key === null && k === "icons")); return v; }
+      return v;
+    };
+    for (const k of Object.keys(spec)) spec[k] = walk(spec[k], k, k === "icons");
+    if (spec.meta && spec.meta.url && !/^(https?:|mailto:)/i.test(spec.meta.url)) { c.n++; delete spec.meta.url; }
+    if (c.n) rep.warn(`removed ${c.n} unsafe part(s) of the content (scripts, event handlers, javascript: links or unsupported tags). Text may use only <b> <i> <em> <strong> <u> <s> <br> <code> <small> <sub> <sup> <mark> <span> and <a href="https://…">`);
+    if (images.length) rep.warn(`images must be inside the file (data: URIs): the file makes no network requests, so ${images.slice(0, 2).join(", ")}${images.length > 2 ? " …" : ""} won't show`);
+  }
+
   /* ------------------------------------------------------------ several diagrams in one file */
   // data is either one diagram, or { meta, theme, settings, icons, diagrams: [ {id, title, sub, ...diagram} ] }
   function diagramsOf(data) {
@@ -1386,7 +1435,7 @@ const BDCore = (() => {
       if (!/^[A-Za-z0-9_-]+$/.test(it.id)) rep.err(`${kind} id '${it.id}' may only use letters, digits, '-' and '_'`);
     }
     const zones = Object.fromEntries(spec.zones.map(z => [z.id, z])), nodes = Object.fromEntries(spec.nodes.filter(n => n.id).map(n => [n.id, n]));
-    const iconOk = i => !i || knownIcons.has(i) || /^(data:|<svg|https?:)/.test(i);
+    const iconOk = i => !i || knownIcons.has(i) || /^(data:|<svg|https?:)/.test(i); // remote images are reported by sanitize()
     for (const z of spec.zones) {
       if (!isHex(z.color)) rep.err(`zone '${z.id}' needs a 6-digit hex color, got '${z.color}'`);
       if (!z.title) rep.err(`zone '${z.id}' has no title`);
@@ -1532,6 +1581,7 @@ const BDCore = (() => {
     if (!isObj(spec)) { rep.err("the diagram data must be an object"); return { spec: null, ...rep }; }
     for (const k of ["meta", "zones", "nodes"]) if (!spec[k]) rep.err(`missing top-level key '${k}'`);
     if (rep.errors.length) return { spec: null, ...rep };
+    sanitize(spec, rep);
     let type = spec.meta.type || "architecture";
     if (!TYPE_LABELS[type]) { rep.warn(`meta.type '${type}' is not one of ${Object.keys(TYPE_LABELS).join(", ")}; using 'custom' wording`); type = "custom"; }
     let vp = spec.meta.viewpoint || "mixed";
@@ -2874,7 +2924,7 @@ const BD = (() => {
   function renderSwitcher(brand, lg) {
     const list = entries(), d = list[curIndex], meta = DATA.meta || {};
     brand.classList.add("switch");
-    brand.innerHTML = `<div class="logo${lg.img ? " img" : ""}">${lg.html}</div><div class="txt"><div class="bt">${meta.title || ""}</div><div class="bs">${escH(d.title)}</div></div><span class="chev">▾</span>`;
+    brand.innerHTML = `<div class="logo${lg.img ? " img" : ""}">${lg.html}</div><div class="txt"><div class="bt">${escH(BDCore.stripTags(meta.title || ""))}</div><div class="bs">${escH(d.title)}</div></div><span class="chev">▾</span>`;
     brand.title = "Switch diagram (1–" + Math.min(9, list.length) + ")";
     let menu = $("sw-menu");
     if (!menu) { menu = document.createElement("div"); menu.id = "sw-menu"; document.body.appendChild(menu); }

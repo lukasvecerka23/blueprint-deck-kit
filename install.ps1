@@ -4,13 +4,15 @@
 #   & ([scriptblock]::Create((irm https://blueprint-deck.lukasvecerka.dev/install.ps1))) -Agent codex
 #   .\install.ps1                     (from a clone of the repository: installs that copy)
 #
-# Parameters: -Agent claude|codex|agents|all, -Dir <skills folder>, -Project, -Ref <branch or tag>, -Uninstall
+# Parameters: -Agent claude|codex|agents|all, -Dir <skills folder>, -Project, -Version <x.y.z> (an older release),
+#             -Ref <branch or tag> (from GitHub; needs access while the repository is private), -Uninstall
 # It only copies files: no Node, no Python, nothing else is installed.
 param(
   [ValidateSet("", "claude", "codex", "agents", "all")][string]$Agent = "",
   [string]$Dir = "",
   [switch]$Project,
-  [string]$Ref = $(if ($env:BLUEPRINT_DECK_REF) { $env:BLUEPRINT_DECK_REF } else { "main" }),
+  [string]$Ref = $(if ($env:BLUEPRINT_DECK_REF) { $env:BLUEPRINT_DECK_REF } else { "" }),
+  [string]$Version = "",
   [switch]$Uninstall
 )
 $ErrorActionPreference = "Stop"
@@ -49,14 +51,17 @@ if ($here -and (Test-Path (Join-Path $here "skill\$Name\SKILL.md"))) {
   $tmp = Join-Path ([IO.Path]::GetTempPath()) ("blueprint-deck-" + [guid]::NewGuid())
   New-Item -ItemType Directory -Path $tmp | Out-Null
   $zip = Join-Path $tmp "kit.zip"
-  # the website's copy of the skill first (the latest release); GitHub as the fallback, or for a specific -Ref
-  $fromSite = $false
-  if ($Ref -eq "main") {
-    try { Invoke-WebRequest -UseBasicParsing -Uri "$Site/blueprint-deck-skill.zip" -OutFile $zip; $fromSite = $true; Write-Host "Downloaded the skill from $Site" } catch { }
-  }
-  if (-not $fromSite) {
+  # releases come from the website (the latest published one, or -Version); -Ref downloads a branch or tag from GitHub
+  if ($Ref) {
     Write-Host "Downloading $Repo ($Ref) from GitHub..."
     Invoke-WebRequest -UseBasicParsing -Uri "https://codeload.github.com/$Repo/zip/$Ref" -OutFile $zip
+  } elseif ($Version) {
+    $v = $Version.TrimStart("v")
+    try { Invoke-WebRequest -UseBasicParsing -Uri "$Site/releases/$v/blueprint-deck-skill.zip" -OutFile $zip }
+    catch { throw "There is no release $v. Versions: $Site/changelog/" }
+    Write-Host "Downloaded Blueprint Deck Kit $v"
+  } else {
+    Invoke-WebRequest -UseBasicParsing -Uri "$Site/blueprint-deck-skill.zip" -OutFile $zip
   }
   Expand-Archive -Path $zip -DestinationPath $tmp
   $src = Get-ChildItem -Path $tmp -Directory -Recurse -Filter $Name | Where-Object { Test-Path (Join-Path $_.FullName "SKILL.md") } | Select-Object -First 1 -ExpandProperty FullName

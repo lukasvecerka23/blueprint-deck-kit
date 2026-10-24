@@ -3,13 +3,15 @@
 #
 #   curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh
 #   curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex
+#   curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --version 2.0.0   (an older release)
 #   ./install.sh                      (from a clone of the repository: installs that copy)
 #
 # Options:
 #   --agent claude|codex|agents|all   where to install (default: every agent found on this computer)
 #   --dir <path>                      install into this skills folder instead
 #   --project                         install into the current project (./.claude/skills, ./.codex/skills, ./.agents/skills)
-#   --ref <branch or tag>             version to download (default: main)
+#   --version <x.y.z>                 install that release (default: the latest published one)
+#   --ref <branch or tag>             install from GitHub instead (needs access while the repository is private)
 #   --uninstall                       remove the skill again
 #
 # It only copies files (about 1 MB): no Node, no Python, nothing else is installed.
@@ -17,7 +19,8 @@ set -eu
 
 REPO="lukasvecerka23/blueprint-deck-kit"
 NAME="blueprint-deck"
-REF="${BLUEPRINT_DECK_REF:-main}"
+REF="${BLUEPRINT_DECK_REF:-}"
+VERSION=""
 SITE="${BLUEPRINT_DECK_SITE:-https://blueprint-deck.lukasvecerka.dev}"
 AGENT=""
 DIR=""
@@ -30,6 +33,7 @@ while [ $# -gt 0 ]; do
     --dir) DIR="$2"; shift 2 ;;
     --project) PROJECT=1; shift ;;
     --ref) REF="$2"; shift 2 ;;
+    --version) VERSION="${2#v}"; shift 2 ;;
     --uninstall) UNINSTALL=1; shift ;;
     -h|--help) sed -n '2,17p' "$0" 2>/dev/null || echo "see https://github.com/$REPO"; exit 0 ;;
     *) echo "unknown option: $1" >&2; exit 2 ;;
@@ -78,12 +82,16 @@ if [ -n "$HERE" ] && [ -f "$HERE/skill/$NAME/SKILL.md" ]; then
 else
   TMP="$(mktemp -d)"
   fetch() { if command -v curl >/dev/null 2>&1; then curl -fsSL "$1" -o "$2"; elif command -v wget >/dev/null 2>&1; then wget -qO "$2" "$1"; else say "needs curl or wget" >&2; exit 1; fi; }
-  # the website's copy of the skill first (the latest release); GitHub as the fallback, or for a specific --ref
-  if [ "$REF" = "main" ] && fetch "$SITE/blueprint-deck-skill.tar.gz" "$TMP/kit.tgz" 2>/dev/null; then
-    say "Downloaded the skill from $SITE"
-  else
+  # releases come from the website (the latest published one, or --version); --ref downloads a branch or tag from GitHub
+  if [ -n "$REF" ]; then
     say "Downloading $REPO ($REF) from GitHub…"
     fetch "https://codeload.github.com/$REPO/tar.gz/$REF" "$TMP/kit.tgz"
+  elif [ -n "$VERSION" ]; then
+    fetch "$SITE/releases/$VERSION/blueprint-deck-skill.tar.gz" "$TMP/kit.tgz" 2>/dev/null \
+      || { say "There is no release $VERSION. Versions: $SITE/changelog/" >&2; exit 1; }
+    say "Downloaded Blueprint Deck Kit $VERSION"
+  else
+    fetch "$SITE/blueprint-deck-skill.tar.gz" "$TMP/kit.tgz"
   fi
   tar -xzf "$TMP/kit.tgz" -C "$TMP"
   SRC="$(find "$TMP" -maxdepth 3 -type d -name "$NAME" -exec test -f "{}/SKILL.md" \; -print | head -n 1)"

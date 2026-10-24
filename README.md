@@ -93,7 +93,7 @@ Paste the prompt into your agent, in the folder with your docs (a repository, or
 
 - **The skill:** run the install command again. It tells you which version it replaced and links to
   [what's new](https://blueprint-deck.lukasvecerka.dev/changelog/). The skill also mentions it when a newer version
-  is out.
+  is out. An older release: add `--version 2.0.0` (PowerShell: `-Version 2.0.0`).
 - **Your diagrams** keep working as they are: each file carries its own engine. To give a file the new features,
   ask your agent to "upgrade diagrams/index.html to the newest engine"; your content stays as it is. The editor
   (E → Diagram) shows which engine a file has.
@@ -122,6 +122,13 @@ Open them from [`examples/`](examples/) or the [gallery](https://blueprint-deck.
 - `blueprint-deck`: this kit explaining itself
 - `saas-onboarding`: a customer journey (fictional), light theme
 - `postgresql`: how PostgreSQL works, a technical view built from the official docs
+
+## Security
+
+Every deck blocks all network requests (a Content Security Policy in the file), and the engine strips scripts and
+event handlers from the content before showing it, so a deck built from documents you don't control can't run code in
+your viewers' browsers. Mail filters may still block `.html` attachments in general: share a link or a PDF instead.
+Details in [SECURITY.md](SECURITY.md).
 
 ## Requirements
 

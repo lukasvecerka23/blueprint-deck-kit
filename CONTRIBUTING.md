@@ -48,16 +48,44 @@ Ground rules for the engine:
   mistakes an agent is likely to make, and a line in the style guide if it changes how diagrams should be written.
 - Keep old data working: rename with an alias rather than breaking existing files.
 
-## Releasing
+## Releasing and publishing
 
-The version lives in one place: `VERSION` in `engine/src/core.js` (`dev/assemble.mjs` writes it into the engine,
-`skill/blueprint-deck/VERSION` and, through the site build, `version.json` on the website).
+The website and the skill have **separate release cycles**:
 
+- **The website** (pages, docs, FAQ) deploys from `main` on every push (Cloudflare Pages).
+- **The skill** that users install is a **release**: a git tag `vX.Y.Z`. The website only serves the release named in
+  `site/release.json` (`{ "latest": "2.1.0" }`): the install script, the skill archives, `version.json` (which the
+  skill's update check reads), the empty engine, the examples and the configurator all come from that tag, not from
+  `main`. Every tagged version stays downloadable at `/releases/<version>/`.
+
+So unreleased engine or skill work on `main` never reaches users, and you decide when a release goes out.
+
+The version lives in one place: `VERSION` in `engine/src/core.js` (`dev/assemble.mjs` copies it into the engine and
+`skill/blueprint-deck/VERSION`).
+
+**1. Make a release**
 1. Bump `VERSION` (minor for features, major if old diagrams would need an upgrade) and add a `## x.y.z (date)`
    section at the top of `CHANGELOG.md`.
-2. `node dev/assemble.mjs && node dev/assemble.mjs --upgrade examples/*/index.html`, commit, push.
-3. `git tag vx.y.z && git push --tags`: the Release workflow checks everything and publishes a GitHub release with
-   the notes and the skill archives. The website (and so the install command and the update check) serves `main`.
+2. `node dev/assemble.mjs && node dev/assemble.mjs --upgrade examples/*/index.html`, commit, push to `main`.
+   Nothing changes for users yet.
+3. `git tag vX.Y.Z && git push origin vX.Y.Z`. The Release workflow checks that the tag matches `VERSION` and that
+   everything is built, then creates a GitHub release with the changelog notes and the skill archives.
+
+**2. Publish it** (when you're ready; can be right after the release)
+1. Set `"latest": "X.Y.Z"` in `site/release.json`, commit, push to `main`.
+2. Cloudflare rebuilds the site: the install command, `version.json` and downloads now give `X.Y.Z`, and users who run
+   the skill are told that a new version is out.
+
+To roll back, set `latest` to an older version and push. The site build fails (on purpose) if `latest` names a
+version that has no tag.
+
+**Installing other versions**
+- A published release: `curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --version 2.0.0`
+  (PowerShell: `-Version 2.0.0`).
+- Unreleased work: from a clone, `./install.sh`; or from GitHub, `--ref main` (needs access while the repo is private).
+
+**When the repository is public** the installer can download from GitHub releases instead of the website; until then
+GitHub only serves private repositories to people with access, so the website hosts the downloads.
 
 ## Working on the skill
 

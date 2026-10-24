@@ -12,6 +12,10 @@ engine, ask your agent to upgrade it (or `node tools/insert.mjs --upgrade <file>
   The editor's Share… also offers an editable copy. Agents: `tools/insert.mjs --read-only` or `workflow.read_only_copy`.
 - **Update check.** The skill tells you when a newer version is out, the installer shows the version it replaced and
   what's new, and the editor shows which engine a file has.
+- **Security**: every file carries a Content Security Policy (no network requests at all), and the engine removes
+  scripts, event handlers and unsupported tags from the content before showing it.
+- **Versions**: the website publishes a chosen release (`site/release.json`), every release stays installable with
+  `--version`, and the changelog lists them.
 - **Licence notices** in the installed skill and in every diagram file.
 - **Editor bar** fits laptop screens: one Save button, a short status, wraps instead of hiding buttons.
 - **Shape** (rounded, square, pill) changes only the diagram, not menus and panels.

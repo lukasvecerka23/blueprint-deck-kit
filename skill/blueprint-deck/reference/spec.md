@@ -14,8 +14,11 @@ boxes, validates the data and renders it when the file opens; there is no build 
 in the console (`[diagram-errors]`, `[diagram-warnings]`), in `window.__diagramIssues`, in the editor's Check tab,
 and by `node tools/check.mjs <file>` if Node is available.
 
-Text fields may contain inline HTML (`<b>`, `<i>`, `<br>`). Escape a literal `<` as `&lt;`; write `</` as `<\/`
-(the editor and the tools do this when they save). Coordinates are world pixels; the camera scales the world to the screen.
+Text fields may contain simple inline HTML: `<b>` `<strong>` `<i>` `<em>` `<u>` `<s>` `<br>` `<code>` `<small>` `<sub>`
+`<sup>` `<mark>` `<span>` and `<a href="https://…">`. Anything else (scripts, event handlers, `javascript:` links,
+other tags) is removed before rendering and reported as a warning. Escape a literal `<` as `&lt;`; write `</` as `<\/`
+(the editor and the tools do this when they save). Images (logos, icons) must be inside the file as `data:` URIs or
+SVG markup: every file blocks network requests (Content Security Policy). Coordinates are world pixels; the camera scales the world to the screen.
 
 ## Top level
 
