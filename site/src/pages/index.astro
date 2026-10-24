@@ -46,10 +46,10 @@ const homeFaq = FAQ.filter(f => f.home);
 ---
 <Base>
   <!-- ============================================================ hero -->
-  <section class="relative overflow-hidden border-b">
-    <div class="pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[900px] -translate-x-1/2 rounded-full bg-brand/15 blur-3xl"></div>
+  <section class="relative overflow-hidden">
+    <div class="hero-glow" aria-hidden="true"><span></span><span></span></div>
     <div class="relative mx-auto max-w-7xl px-4 pt-16 pb-12 sm:px-6 sm:pt-24">
-      <div class="mx-auto max-w-3xl text-center">
+      <div class="mx-auto max-w-3xl text-center" data-reveal>
         <div class="mb-6 flex flex-wrap items-center justify-center gap-2">
           <span class="badge gap-1.5 rounded-full px-3 py-1 text-xs font-semibold" data-variant="secondary">
             <Icon name="heart" class="size-3.5 text-warm" /> 100% free · open source
@@ -79,7 +79,7 @@ const homeFaq = FAQ.filter(f => f.home);
       </div>
 
       <!-- live demo -->
-      <div class="mx-auto mt-14 max-w-6xl">
+      <div class="demo-stage mx-auto mt-14 max-w-6xl">
         <div class="browser-frame overflow-hidden rounded-xl border bg-card">
           <div class="flex items-center gap-3 border-b bg-muted/50 px-4 py-2.5">
             <div class="flex gap-1.5" aria-hidden="true">
@@ -106,15 +106,15 @@ const homeFaq = FAQ.filter(f => f.home);
   </section>
 
   <!-- ============================================================ how it works -->
-  <section id="how" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28">
-    <div class="max-w-2xl">
+  <section id="how" class="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
+    <div class="max-w-2xl" data-reveal>
       <p class="text-sm font-medium text-brand">How it works</p>
       <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">From docs to deck in four steps</h2>
       <p class="mt-4 text-muted-foreground">The agent writes only the content (a JSON block). The engine is fixed, so every deck looks and behaves the same, and anyone can fix a text later without the agent.</p>
     </div>
     <ol class="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {steps.map((s, i) => (
-        <li class="card relative flex flex-col gap-4 p-6">
+        <li class="card glow-card relative flex flex-col gap-4 p-6" data-reveal style={`--i:${i}`}>
           <span class="flex size-8 items-center justify-center rounded-full border bg-brand-soft font-mono text-sm font-semibold text-brand">{i + 1}</span>
           <div>
             <h3 class="font-semibold">{s.title}</h3>
@@ -131,9 +131,9 @@ const homeFaq = FAQ.filter(f => f.home);
   </section>
 
   <!-- ============================================================ features -->
-  <section id="features" class="border-y bg-muted/30">
-    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28">
-      <div class="max-w-2xl">
+  <section id="features">
+    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
+      <div class="max-w-2xl" data-reveal>
         <p class="text-sm font-medium text-brand">Features</p>
         <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">A presentation, a map and a document in one file</h2>
         <p class="mt-4 text-muted-foreground">Built from real presentation rounds: each feature exists because a presenter or a reviewer asked for it.</p>
@@ -141,9 +141,9 @@ const homeFaq = FAQ.filter(f => f.home);
           {kinds.map(k => <li class="badge" data-variant="secondary">{k}</li>)}
         </ul>
       </div>
-      <div class="mt-12 grid gap-px overflow-hidden rounded-xl border bg-border sm:grid-cols-2 lg:grid-cols-3">
-        {features.map(f => (
-          <div class="bg-background p-6">
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {features.map((f, i) => (
+          <div class="card glow-card gap-0 p-6" data-reveal style={`--i:${i % 3}`}>
             <span class="flex size-9 items-center justify-center rounded-lg border bg-brand-soft text-brand"><Icon name={f.icon} class="size-[18px]" /></span>
             <h3 class="mt-4 font-semibold">{f.title}</h3>
             <p class="mt-1.5 text-sm leading-relaxed text-muted-foreground">{f.text}</p>
@@ -154,9 +154,9 @@ const homeFaq = FAQ.filter(f => f.home);
   </section>
 
   <!-- ============================================================ install -->
-  <section id="install" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28">
-    <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
-      <div>
+  <section id="install" class="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
+    <div class="grid items-start gap-12 lg:grid-cols-[1fr_1.4fr]">
+      <div data-reveal>
         <p class="text-sm font-medium text-brand">Install</p>
         <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">One command, then ask your agent</h2>
         <p class="mt-4 text-muted-foreground">The skill is a folder: <code class="font-mono text-sm">SKILL.md</code>, the engine, the format reference and the style guide. The installer copies it into your agents' skills folders and does nothing else.</p>
@@ -167,17 +167,17 @@ const homeFaq = FAQ.filter(f => f.home);
         </ul>
         <a href="/docs/" class="btn mt-8" data-variant="outline">Read the getting started guide <Icon name="arrow-right" /></a>
       </div>
-      <div class="card p-5 sm:p-6">
+      <div class="card glow-card p-5 sm:p-6" data-reveal style="--i:1">
         <InstallTabs />
       </div>
     </div>
   </section>
 
   <!-- ============================================================ examples -->
-  <section id="examples" class="border-y bg-muted/30">
-    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28">
-      <div class="flex flex-wrap items-end justify-between gap-4">
-        <div class="max-w-2xl">
+  <section id="examples">
+    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
+      <div class="flex flex-wrap items-end justify-between gap-4" data-reveal>
+        <div class="max-w-3xl">
           <p class="text-sm font-medium text-brand">Examples</p>
           <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">See what an agent makes of real docs and code</h2>
         </div>
@@ -188,9 +188,9 @@ const homeFaq = FAQ.filter(f => f.home);
           const ready = exampleExists(e.slug);
           const Tag = ready ? "a" : "div";
           return (
-          <Tag href={ready ? exampleHref(e.slug) : undefined} class:list={["group card overflow-hidden p-0 gap-0 transition-shadow", ready ? "hover:shadow-md" : "opacity-70"]}>
+          <Tag href={ready ? exampleHref(e.slug) : undefined} class:list={["group card glow-card overflow-hidden p-0 gap-0", !ready && "opacity-70"]} data-reveal style={`--i:${i}`}>
             <div class="aspect-[2/1] overflow-hidden border-b">
-              <div class="h-full w-full transition-transform duration-300 group-hover:scale-[1.03]">
+              <div class="h-full w-full transition-transform duration-500 ease-out group-hover:scale-[1.06]">
                 <ExamplePreview accent={e.accent} accent2={e.accent2} theme={e.theme} seed={i + 1} slug={e.slug} alt={`${e.title}: overview`} />
               </div>
             </div>
@@ -206,16 +206,18 @@ const homeFaq = FAQ.filter(f => f.home);
   </section>
 
   <!-- ============================================================ faq -->
-  <section id="faq" class="mx-auto max-w-3xl px-4 py-20 sm:px-6 sm:py-28">
-    <p class="text-sm font-medium text-brand">FAQ</p>
-    <h2 class="mt-2 mb-8 text-3xl font-semibold tracking-tight sm:text-4xl">Questions</h2>
-    <FaqList items={homeFaq} />
+  <section id="faq" class="mx-auto max-w-3xl px-4 py-14 sm:px-6 sm:py-20">
+    <div data-reveal>
+      <p class="text-sm font-medium text-brand">FAQ</p>
+      <h2 class="mt-2 mb-8 text-3xl font-semibold tracking-tight sm:text-4xl">Questions</h2>
+      <FaqList items={homeFaq} />
+    </div>
     <p class="mt-8 text-sm text-muted-foreground">More in the <a href="/docs/faq/" class="font-medium text-foreground underline underline-offset-4">docs FAQ</a>.</p>
   </section>
 
   <!-- ============================================================ cta -->
-  <section class="px-4 pb-20 sm:px-6 sm:pb-28">
-    <div class="relative mx-auto max-w-5xl overflow-hidden rounded-2xl border bg-card px-6 py-14 text-center sm:px-12">
+  <section class="px-4 pt-6 pb-20 sm:px-6 sm:pb-28">
+    <div class="cta-card relative mx-auto max-w-5xl overflow-hidden rounded-2xl border bg-card px-6 py-14 text-center sm:px-12" data-reveal>
       <div class="relative">
         <h2 class="text-3xl font-semibold tracking-tight text-balance">Describe your diagram in two minutes</h2>
         <p class="mx-auto mt-3 max-w-xl text-muted-foreground">The configurator turns your answers into a prompt for your agent. It runs in your browser; nothing is sent anywhere.</p>
@@ -230,3 +232,22 @@ const homeFaq = FAQ.filter(f => f.home);
     </div>
   </section>
 </Base>
+
+<script>
+  // scroll reveal (the CSS hides [data-reveal] only when html has .reveal, i.e. with JS and without reduced motion)
+  const items = document.querySelectorAll<HTMLElement>("[data-reveal]");
+  if (document.documentElement.classList.contains("reveal") && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(entries => {
+      for (const e of entries) if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    items.forEach(el => io.observe(el));
+  } else items.forEach(el => el.classList.add("in"));
+  // the cards' glow follows the pointer
+  document.querySelectorAll<HTMLElement>(".glow-card").forEach(card => {
+    card.addEventListener("pointermove", ev => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", `${ev.clientX - r.left}px`);
+      card.style.setProperty("--my", `${ev.clientY - r.top}px`);
+    });
+  });
+</script>

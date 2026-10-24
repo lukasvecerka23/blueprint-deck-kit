@@ -3,7 +3,7 @@ import Logo from "./Logo.astro";
 import { SITE } from "../data/site";
 const year = new Date().getFullYear();
 ---
-<footer class="border-t">
+<footer class="fade-rule">
   <div class="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
     <div class="space-y-3">
       <a href="/" class="flex items-center gap-2.5 font-semibold"><Logo class="size-6" /> Blueprint Deck Kit</a>
@@ -37,7 +37,7 @@ const year = new Date().getFullYear();
       </ul>
     </div>
   </div>
-  <div class="border-t">
+  <div class="fade-rule">
     <div class="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
       <p>© {year} Made by <a class="font-medium text-foreground hover:underline" href={SITE.authorUrl}>{SITE.author}</a>, with <a class="font-medium text-foreground hover:underline" href={SITE.coAuthorUrl} rel="noopener">{SITE.coAuthor}</a>. Released under the MIT licence.</p>
       <p>Open source: <a class="hover:text-foreground underline underline-offset-4" href={SITE.repo}>github.com/lukasvecerka23/blueprint-deck-kit</a></p>

@@ -58,6 +58,10 @@ const ogImage = new URL(image, Astro.site);
       })} />
     )}
     <script is:inline>
+      // scroll reveal on the landing page: only with JS and when the user hasn't asked for reduced motion
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("reveal");
+    </script>
+    <script is:inline>
       // theme before first paint: the saved choice, else the system setting
       (() => {
         const root = document.documentElement;

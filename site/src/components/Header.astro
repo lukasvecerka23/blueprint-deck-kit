@@ -10,7 +10,7 @@ const links = [
   { href: "/configurator/", label: "Configurator", active: false },
 ];
 ---
-<header class="sticky top-0 z-50 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/65">
+<header id="site-header" class="sticky top-0 z-50 border-b border-transparent transition-colors duration-300 data-[scrolled]:border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/65">
   <div class="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4 sm:px-6">
     <a href="/" class="flex items-center gap-2.5 font-semibold tracking-tight" aria-label={`${SITE.name}, home`}>
       <Logo class="size-7" />
@@ -44,3 +44,8 @@ const links = [
     </div>
   </div>
 </header>
+<script>
+  const header = document.getElementById("site-header");
+  const onScroll = () => header?.toggleAttribute("data-scrolled", scrollY > 8);
+  addEventListener("scroll", onScroll, { passive: true }); onScroll();
+</script>
