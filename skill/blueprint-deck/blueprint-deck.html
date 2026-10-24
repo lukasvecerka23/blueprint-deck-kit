@@ -2848,7 +2848,7 @@ const BD = (() => {
     m.querySelectorAll("button").forEach(b => {
       b.onmouseenter = () => (b.style.background = "rgba(var(--fg-rgb),.06)");
       b.onmouseleave = () => (b.style.background = "transparent");
-      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share(), pdf: () => current.printDeck(), link: copyLink })[b.dataset.a](); };
+      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share({ readOnly: true }), pdf: () => current.printDeck(), link: copyLink })[b.dataset.a](); };
     });
     document.body.appendChild(m);
     setTimeout(() => addEventListener("click", function off(ev) { if (!m.contains(ev.target)) { m.remove(); removeEventListener("click", off); } }), 0);
@@ -3145,25 +3145,26 @@ const BDEditor = (() => {
   function mounted() { decorate(); updateCounts(); }
 
   /* ------------------------------------------------------------ share: download a copy under a name you choose */
-  function share() {
+  // readOnly: the ⋯ menu's "Download a read-only copy" (only the file name to confirm); otherwise the editor's Share…
+  function share({ readOnly = false } = {}) {
     document.querySelector(".ed-modal")?.remove();
     const m = document.createElement("div");
     m.className = "ed-modal";
     m.innerHTML = `<div class="ed-modal-card glass" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
-      <h3 id="shareTitle">Download a copy to share</h3>
+      <h3 id="shareTitle">${readOnly ? "Download a read-only copy" : "Download a copy to share"}</h3>
       <div class="fld"><label for="shareName">File name</label><input type="text" id="shareName" value="${escA(BD.suggestName())}" spellcheck="false"></div>
-      <div class="fld"><label>Copy</label>
+      ${readOnly ? `<p class="ed-note">The same diagram, tour and PDF export, but no editor: it can't be changed in the browser. Your own file stays editable.</p>` : `<div class="fld"><label>Copy</label>
         <label class="opt"><input type="radio" name="shareMode" value="ro" checked><span><b>Read-only</b> (recommended for sending)<small>The same diagram, tour and PDF export, but no editor: the file can't be changed in the browser.</small></span></label>
         <label class="opt"><input type="radio" name="shareMode" value="rw"><span><b>Editable</b><small>A copy with the editor, like this file.</small></span></label>
       </div>
-      <p class="ed-note">Your own file stays editable. When the diagram changes, download a new copy.</p>
+      <p class="ed-note">Your own file stays editable. When the diagram changes, download a new copy.</p>`}
       <div class="ed-modal-acts"><button type="button" class="mini" data-x="cancel">Cancel</button><button type="button" class="mini primary" data-x="go">Download</button></div>
     </div>`;
     document.body.appendChild(m);
     const name = m.querySelector("#shareName");
     name.focus(); name.setSelectionRange(0, name.value.replace(/\.html?$/i, "").length);
     const close = () => m.remove();
-    const go = () => { const readOnly = m.querySelector("[name=shareMode]:checked").value === "ro"; if (BD.exportCopy({ name: name.value, readOnly })) close(); };
+    const go = () => { const ro = readOnly || m.querySelector("[name=shareMode]:checked").value === "ro"; if (BD.exportCopy({ name: name.value, readOnly: ro })) close(); };
     m.querySelector("[data-x=cancel]").onclick = close;
     m.querySelector("[data-x=go]").onclick = go;
     m.onclick = e => { if (e.target === m) close(); };

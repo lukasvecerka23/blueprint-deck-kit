@@ -181,7 +181,7 @@ const BD = (() => {
     m.querySelectorAll("button").forEach(b => {
       b.onmouseenter = () => (b.style.background = "rgba(var(--fg-rgb),.06)");
       b.onmouseleave = () => (b.style.background = "transparent");
-      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share(), pdf: () => current.printDeck(), link: copyLink })[b.dataset.a](); };
+      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share({ readOnly: true }), pdf: () => current.printDeck(), link: copyLink })[b.dataset.a](); };
     });
     document.body.appendChild(m);
     setTimeout(() => addEventListener("click", function off(ev) { if (!m.contains(ev.target)) { m.remove(); removeEventListener("click", off); } }), 0);
