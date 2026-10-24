@@ -2,7 +2,8 @@
 
 ## 2.0.0 (unreleased)
 
-First public version, renamed from the internal "diagram-kit".
+First public version, renamed from the internal "diagram-kit". Thanks to Pavel Sládek for the early feedback and
+ideas behind many of these changes.
 
 - **One file is the diagram.** The diagram data is a JSON block at the top of the HTML file; the engine lays it out,
   validates it and renders it when the file opens. No build step, no Python, no Node needed to make or use a diagram.

@@ -207,12 +207,18 @@ The first lens is the overview and normally has no `nodes`.
     "text": "Pains and how the product serves them, 1–3 sentences.", "color": "#60a5fa",
     "path": ["c-ops", "console", "llm-gw", "keys", "metrics"],     // ordered: their way through the map
     "nodes": ["dashboards"],                                       // optional: also highlighted, not numbered
-    "edges": ["ops"] } ]                                           // optional: also light these edge groups
+    "edges": ["ops"],                                              // optional: also light these edge groups
+    "zone": "users" } ]                                            // optional: also a box on the map, in this zone
 ```
 Personas become a **Personas** tab (unless `settings.personas.tab` is false) that opens the list `personas` in the
 side panel; a tour step can show it too with `"list": "personas"`. `icon` replaces the tag in the list.
 Picking one highlights its path: the boxes are numbered 1, 2, 3 … in order, the connections between consecutive
-steps light up, and the panel lists the steps. Use `path` when the order means something (how they use it), `nodes`
+steps light up, and the panel lists the steps.
+
+With `zone`, the persona is **also a box on the map** in that zone (before the zone's other boxes), with a connection
+to the first step of its path; that connection only shows when the persona is picked or hovered. Clicking the box opens
+the Personas panel with that persona picked. The box uses the persona's `id` (default `persona-<n>`), `title`, `sub`,
+`icon` (default `user`) and `color`. The box shows `boxSub` if given (a short subtitle that fits a box), else `sub`; set `badge` for a badge on the box. Use `path` when the order means something (how they use it), `nodes`
 for what they rely on without an order.
 
 ## lists

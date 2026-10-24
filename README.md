@@ -120,6 +120,11 @@ Open them from [`examples/`](examples/) or the [gallery](https://blueprint-deck.
 - Optional: a browser tool in your agent (e.g. Playwright MCP) so it can look at the result itself, and Node 18+ for
   `check.mjs`.
 
+## Authors
+
+Made by [Lukas Vecerka](https://github.com/lukasvecerka23), with
+[Pavel Sládek](https://www.linkedin.com/in/sladek/), who gave the first feedback and many of the ideas that shaped it.
+
 ## Contributing
 
 Issues and pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md) for how the engine is built and tested.

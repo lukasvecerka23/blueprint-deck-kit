@@ -108,7 +108,7 @@ const BDCore = (() => {
       components: "Components", clickOne: "Click one to highlight it on the map", showAll: "Show all",
       tour: "Guided tour", startTour: "Start the guided tour", explore: "Explore the map",
       back: "← Back", next: "Next →", finish: "Finish", fullRoadmap: "Full roadmap",
-      tourHint: "Click any highlighted box for details", legend: "Legend", personas: "Personas", path: "Path",
+      tourHint: "Click any highlighted box for details", legend: "Legend", personas: "Personas", persona: "Persona", path: "Path",
       personasSub: "Click one to see its path", edit: "Edit", export: "PDF",
     },
   };
@@ -276,10 +276,26 @@ const BDCore = (() => {
     if (!Array.isArray(P) || !P.length) return;
     spec.lists ||= {};
     const L10N = spec.settings.labels;
+    // a persona with a "zone" is also a box on the map (e.g. next to the applications); its path starts at that box
+    const zoneIds = new Set(spec.zones.map(z => z.id)), boxIds = new Set(spec.nodes.map(n => n.id));
+    const onMap = P.map((p, i) => {
+      if (!p.zone) return null;
+      const id = p.id || "persona-" + (i + 1);
+      if (!zoneIds.has(p.zone)) { rep.err(`persona '${stripTags(p.title)}': unknown zone '${p.zone}'`); return null; }
+      if (boxIds.has(id)) { rep.err(`persona id '${id}' is also the id of a box; give the persona its own id`); return null; }
+      const node = { id, zone: p.zone, title: p.title, sub: p.boxSub ?? p.sub, icon: p.icon || "user", what: p.text || p.sub || "", persona: true, kind: L10N.persona };
+      for (const k of ["color", "x", "y", "w", "h", "size", "span", "badge", "status", "sources"]) if (p[k] !== undefined) node[k] = p[k];
+      // persona boxes come first in their zone, in the order of the personas
+      const first = spec.nodes.findIndex(n => n.zone === p.zone && !n.persona);
+      spec.nodes.splice(first < 0 ? spec.nodes.length : first, 0, node);
+      boxIds.add(id);
+      if (p.path && p.path.length) spec.edges.push({ from: id, to: p.path[0], groups: ["personas"], persona: true });
+      return id;
+    });
     spec.lists.personas = {
       title: L10N.personas, sub: L10N.personasSub, icon: "users", color: spec.theme.vars.accent || "#3b82f6",
       eyebrow: spec.personasEyebrow || "", intro: spec.personasIntro || "", personas: true,
-      items: P.map(p => ({ tag: p.tag, title: p.title, sub: p.sub, text: p.text, color: p.color, icon: p.icon, nodes: p.nodes || [], path: p.path, edges: p.edges, id: p.id })),
+      items: P.map((p, i) => ({ tag: p.tag, title: p.title, sub: p.sub, text: p.text, color: p.color, icon: p.icon, nodes: p.nodes || [], path: p.path, edges: p.edges, id: p.id, personaNode: onMap[i] || undefined })),
     };
     if (spec.settings.personas.tab !== false && !spec.lenses.some(l => l.list === "personas"))
       spec.lenses.push({ id: "personas", title: L10N.personas, color: spec.theme.vars["accent-light"] || "#93b4ff", list: "personas", fit: "all", auto: true });
@@ -408,7 +424,7 @@ const BDCore = (() => {
       if (!z) { rep.err(`node '${n.id}' is in unknown zone '${n.zone}'`); continue; }
       if (!iconOk(n.icon)) rep.warn(`node '${n.id}': unknown icon '${n.icon}' (shows a cog); see reference/icons.md`);
       if (!n.title) rep.err(`node '${n.id}' has no title`);
-      if (!n.what) rep.warn(`node '${n.id}' has no 'what' text: its panel will be nearly empty`);
+      if (!n.what && !n.persona) rep.warn(`node '${n.id}' has no 'what' text: its panel will be nearly empty`);
       if (n.status && !statusIds.has(n.status)) rep.err(`node '${n.id}': status '${n.status}' is not one of ${[...statusIds].join(", ") || "status.values (none defined)"}`);
       if (!(z.x - 1 <= n.x && n.x + n.w <= z.x + z.w + 1 && z.y - 1 <= n.y && n.y + n.h <= z.y + z.h + 1)) rep.warn(`node '${n.id}' sticks out of its zone '${z.id}'`);
       if (n.y < z.y + 44) rep.warn(`node '${n.id}' overlaps the header of zone '${z.id}' (start it at least 50px below the zone top)`);

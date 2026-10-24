@@ -124,6 +124,11 @@ const BDEditor = (() => {
 
   /* ------------------------------------------------------------ selection */
   function select(t) {
+    // a persona's box on the map is edited in the persona form
+    if (t.kind === "node" && !nodeRaw(t.id) && !pick && !connectFrom) {
+      const i = (own().personas || []).findIndex((p, k) => (p.id || "persona-" + (k + 1)) === t.id);
+      if (i >= 0) t = { kind: "persona", i };
+    }
     if (pick && t.kind === "node") { togglePick(t.id); return; }
     if (connectFrom && t.kind === "node") { connect(connectFrom, t.id); return; }
     if (t.kind === "canvas") { if (pick || connectFrom) return; t = { kind: "diagram" }; }
@@ -511,7 +516,8 @@ const BDEditor = (() => {
     const x = () => (own().personas || [])[sel.i];
     if (!x()) return select({ kind: "personas" });
     const p = paint(head("Persona", escA(plain(x().title)), `<button type="button" class="mini" id="back">← Personas</button><button type="button" class="mini danger" id="del">Delete</button>`) +
-      section("Persona", fields([["tag", "Tag", "text", { ph: "e.g. A1" }], ["title", "Name"], ["sub", "What they want"], ["text", "Text", "area"], ["color", "Colour", "color"]], x, "p" + sel.i)) +
+      section("Persona", fields([["tag", "Tag", "text", { ph: "e.g. A1" }], ["title", "Name"], ["sub", "What they want"], ["text", "Text", "area"], ["color", "Colour", "color"], ["icon", "Icon", "icon"]], x, "p" + sel.i)) +
+      section("On the map", fields([["zone", "Also show as a box in", "select", { options: [["", "Only in the Personas tab"], ...(own().zones || []).map(z => [z.id, plain(z.title)])], hint: "Put personas next to the applications they use. Clicking the box shows their path." }], ["boxSub", "Short subtitle on the box", "text", { ph: "e.g. Runs the platform" }]], x, "p" + sel.i)) +
       section("Path through the map", chips(x().path, "path") + pickBtn("persona", sel.i, "path") + `<small>Click boxes in order; each one gets a number on the map.</small>`) +
       section("Also highlight", chips(x().nodes, "nodes") + pickBtn("persona", sel.i, "nodes")));
     wire(p, x, "p" + sel.i);

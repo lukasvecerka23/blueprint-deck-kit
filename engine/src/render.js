@@ -263,6 +263,7 @@ function createDiagram(SPEC, host = {}, opts = {}) {
     lensBar.style.maxWidth = Math.max(240, room) + "px";
     lensBar.style.overflowX = lensBar.scrollWidth > lensBar.clientWidth + 1 ? "auto" : "";
   }
+  const scaleFor = box => { const a = freeArea(), pad = phone() ? 12 : S.camera.padding; return Math.min((a.w - pad * 2) / box.w, (a.h - pad * 2) / box.h, S.camera.maxZoom); };
   function fit(box, animate = true, maxScale = S.camera.maxZoom) {
     lastBox = box;
     sizeTabs();
@@ -342,7 +343,8 @@ function createDiagram(SPEC, host = {}, opts = {}) {
   const state = { lens: LENSES[0].id, panel: null, tour: -1, focus: null, listItem: null };
   const MAIN_FLOW = S.edges.mainFlow;
   // in the overview, edges can be all faintly visible, only the main flow, or none (hover still reveals a box's edges)
-  const hiddenInOverview = e => S.edges.overview === "none" || (S.edges.overview === "main" && !(MAIN_FLOW && e.groups.includes(MAIN_FLOW)));
+  // persona connections only show when the persona is picked (or hovered)
+  const hiddenInOverview = e => e.persona || S.edges.overview === "none" || (S.edges.overview === "main" && !(MAIN_FLOW && e.groups.includes(MAIN_FLOW)));
 
   function clearPath() { world.querySelectorAll(".node .pn").forEach(x => x.remove()); EDGES.forEach(e => e.el && e.el.classList.remove("path")); }
   function setFocus(nodeSet, edgeFilter, selected) {
@@ -452,6 +454,7 @@ function createDiagram(SPEC, host = {}, opts = {}) {
   function setLens(id, animate = true) {
     // an unknown tab id (e.g. from an old deep link) falls back to the overview
     state.lens = LENSES.some(l => l.id === id) ? id : LENSES[0].id;
+    state.offscreenOk = null;
     LENSES.forEach(l => l.btn.classList.toggle("active", l.id === state.lens));
     closePanel(true);
     restoreFocus();
@@ -569,12 +572,18 @@ function createDiagram(SPEC, host = {}, opts = {}) {
     if (btn && btn.scrollIntoView) btn.scrollIntoView({ block: "nearest", behavior: "smooth" });
     state.listItem = { list: id, i };
     const path = it.path || null;
-    const set = new Set([...(it.withInside ? INSIDE : []), ...(it.nodes || []), ...(path || [])]);
+    // a persona that is also a box on the map: its path starts at that box
+    const ePath = path && it.personaNode ? [it.personaNode, ...path] : path;
+    const set = new Set([...(it.withInside ? INSIDE : []), ...(it.nodes || []), ...(path || []), ...(it.personaNode ? [it.personaNode] : [])]);
     const g = it.edges || Li.edges;
-    const filt = e => endIn(set, e.from) && endIn(set, e.to) && ((path && onPath(e, path)) || (g ? inCtx(e, g) : !path));
-    setFocus(set, filt);
+    const filt = e => endIn(set, e.from) && endIn(set, e.to) && ((ePath && onPath(e, ePath)) || (g ? inCtx(e, g) : !path));
+    setFocus(set, filt, it.personaNode);
     if (path) showPath(path, rgbOf(it.color || Li.color));
-    fit(boxOf([...set]));
+    // a persona box far away from its path would zoom the map out too far: then frame the path only
+    let fb = boxOf([...set]);
+    state.offscreenOk = null;
+    if (it.personaNode && path && scaleFor(fb) < 0.5) { fb = boxOf([...set].filter(x => x !== it.personaNode)); state.offscreenOk = it.personaNode; }
+    fit(fb);
   }
   function wireList(root, id) {
     root.querySelectorAll("[data-item]").forEach(b => b.onclick = () => selectItem(root, id, +b.dataset.item));
@@ -603,6 +612,16 @@ function createDiagram(SPEC, host = {}, opts = {}) {
     ? `<h4>${L10N.sources}</h4><div class="src">${src.map(s => `<code>${esc(s)}</code>`).join(" ")}</div>` : "";
   function openNode(id) {
     const n = nodeById[id], z = zoneById[n.zone];
+    // a persona's box opens the Personas panel with that persona picked
+    const pi = n.persona && LISTS.personas ? LISTS.personas.items.findIndex(x => x.personaNode === id) : -1;
+    if (pi >= 0) {
+      if (state.tour >= 0 && sideTour()) { endTour(); LENSES.forEach(l => l.btn.classList.toggle("active", l.list === "personas")); }
+      const lens = LENSES.find(l => l.list === "personas");
+      if (lens && state.lens !== lens.id && state.tour < 0) { state.lens = lens.id; LENSES.forEach(l => l.btn.classList.toggle("active", l.id === lens.id)); }
+      openList("personas");
+      selectItem(panel, "personas", pi);
+      return;
+    }
     state.panel = id;
     const rel = EDGES.filter(e => e.el && (e.from === id || e.to === id || touches(e, id)));
     const ctxRel = rel.filter(e => inCtx(e));
@@ -891,7 +910,7 @@ function createDiagram(SPEC, host = {}, opts = {}) {
     const sheet = tourEl.classList.contains("open") && tourEl.classList.contains("sheet");
     if (!sheet && !ovOpen) NODES.filter(n => !focusSet || focusSet.has(n.id)).forEach(n => {
       const r = n.el.getBoundingClientRect();
-      if (r.right < 0 || r.left > innerWidth || r.bottom < 0 || r.top > innerHeight) { if (focusSet) add({ node: n.id }, "highlighted but off screen"); return; }
+      if (r.right < 0 || r.left > innerWidth || r.bottom < 0 || r.top > innerHeight) { if (focusSet && n.id !== state.offscreenOk) add({ node: n.id }, "highlighted but off screen"); return; }
       const box = { x: r.left, y: r.top, w: r.width, h: r.height };
       hud.forEach(h => { if (hit(box, { x: h.r.left, y: h.r.top, w: h.r.width, h: h.r.height })) add({ node: n.id }, `covered by the ${h.name}`); });
     });

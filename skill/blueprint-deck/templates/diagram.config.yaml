@@ -79,6 +79,7 @@ diagrams:
     personas:
       enabled: true                    # from the sources' users/roles/actors; each gets a path through the map
       names: []                        # optional: exactly these, e.g. ["Platform owner", "Application builder"]
+      on_map: false                    # true: also show them as boxes on the map, next to the applications they use
 
     views:                             # tabs along the top; the overview is always first
       presets: [main-flow, governance, operations, deployment]   # any of: main-flow, governance, operations, deployment, data, security, cost, roadmap (or write your own in custom)

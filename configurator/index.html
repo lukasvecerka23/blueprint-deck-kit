@@ -395,7 +395,7 @@ function defaultDiagram(id = "platform", name = "Platform") {
     sources: { include: [], exclude: [], priority: [], derive_status_from: [] },
     map: { detail: "medium", external: true, customer_owned: true, frame_label: "", technology: "from-viewpoint", must_show: [], leave_out: [],
       status: { enabled: true, meaning: "scope", values: [] }, notes: "" },
-    personas: { enabled: true, names: [] },
+    personas: { enabled: true, names: [], on_map: false },
     views: { presets: ["main-flow", "governance", "operations", "deployment"], custom: [] },
     tour: { enabled: true, steps: "12-18", story: "problem-solution", use_case: "", opening: "problem", closing: "why-this",
       include: ["roadmap", "options", "open-questions"], notes: "" },
@@ -793,6 +793,7 @@ const DIAGRAM_SECTIONS = [
   { id: "personas", title: "Personas", sub: "each gets a path through the map", fields: [
     { p: "personas.enabled", l: "Personas", t: "switch", w: true, h: "Taken from the users, roles and actors in the sources (never invented). Each gets a numbered path through the map." },
     { p: "personas.names", l: "Exactly these", lx: "optional, one per line", t: "list", ph: "Platform owner\nApplication builder", show: "personas.enabled" },
+    { p: "personas.on_map", l: "Also show them on the map", t: "switch", w: true, h: "As boxes next to the applications they use. Clicking one shows its path, like picking it in the Personas tab.", show: "personas.enabled" },
   ] },
   { id: "views", title: "Tabs", sub: "views along the top; the overview is always first", fields: [
     { p: "views.presets", l: "Preset tabs", t: "chips", o: VIEW_PRESETS.map(([v, h]) => [v, v, h]), w: true,

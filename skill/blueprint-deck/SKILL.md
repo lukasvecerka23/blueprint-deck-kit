@@ -99,7 +99,7 @@ Config → JSON mapping:
 | map.status.enabled: false | no `status` at all |
 | map.status (meaning, values) | `status`: scope → MVP / Next / Later, build → Running / Planned, custom → one value per string in `values` (`{ "id": "<slug>", "label": "<string>" }`); plus node.status |
 | map.must_show / leave_out | boxes that must exist / must not; report anything in must_show that the sources don't support |
-| personas.enabled / names | `personas` with `path` (style guide: Personas); `names` = exactly these personas |
+| personas.enabled / names / on_map | `personas` with `path` (style guide: Personas); `names` = exactly these personas; `on_map: true` → each persona gets a `zone` (a box on the map) |
 | views.presets / custom | `lenses`, one per preset or custom line (+ `lists` for questions with alternatives) |
 | tour.steps / story / use_case / opening / closing | number of `tour` steps (the config wins over the style guide's 12–22) and their order |
 | tour.include | `roadmap` → `{ "roadmap": true }`; `options` → a step with `overlay` (+ `blocks`); `open-questions` → a step or sheet listing them |

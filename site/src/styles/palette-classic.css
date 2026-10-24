@@ -7,6 +7,10 @@
   --brand-2: oklch(0.6 0.2 292);           /* violet, for gradients */
   --code-bg: oklch(0.985 0.002 260);
   --grid-line: oklch(0.55 0.05 262 / 0.07);
+  /* main buttons in the brand blue (#3b82f6, the "Guided tour" blue of the diagrams) */
+  --primary: oklch(0.623 0.188 259.8);
+  --primary-foreground: oklch(0.99 0 0);
+  --ring: oklch(0.623 0.188 259.8 / 0.5);
 }
 .dark {
   --brand: oklch(0.7 0.16 258);
@@ -14,6 +18,9 @@
   --brand-2: oklch(0.72 0.16 292);
   --code-bg: oklch(0.19 0.006 265);
   --grid-line: oklch(0.8 0.05 262 / 0.06);
+  --primary: oklch(0.623 0.188 259.8);
+  --primary-foreground: oklch(0.99 0 0);
+  --ring: oklch(0.7 0.16 258 / 0.5);
 }
 
 

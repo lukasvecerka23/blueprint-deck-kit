@@ -138,7 +138,13 @@ and edges, so thin lines stay visible. External zones read best in grey (`#94a3b
   consecutive steps should be connected by an edge where the sources say they talk to each other.
 - `text`: their goal and their main pain, and which parts serve them (1–3 sentences). Mark unvalidated personas as
   hypotheses in the text when the sources say so.
-- Don't also draw personas as boxes on the map unless the config asks for it; the Personas tab is the place for them.
+- When the config sets `personas.on_map`, give each persona a `zone`: the area with the applications or channels they
+  use (often a "Who uses it" or "Applications" area on the left), so the path visibly starts at the person. Make that
+  zone tall enough for the extra boxes, or use `layout.columns: 2`. Best is a column of its own to the **left** of
+  the zones where their paths start (people → their apps → the system): the connection from a persona's box then
+  runs sideways. A personas zone directly above or below the apps makes those connections run through the other
+  persona boxes. Persona titles are often long: give that column ~300 px, and set `boxSub` to a short subtitle. Otherwise keep personas off the map (the Personas
+  tab is enough) and never draw them as ordinary boxes.
 - No roles in the sources (common for technical diagrams of a piece of software): no personas. Never make them up;
   say so in the report.
 

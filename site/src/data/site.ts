@@ -4,6 +4,9 @@ export const SITE = {
   url: "https://blueprint-deck.lukasvecerka.dev",
   repo: "https://github.com/lukasvecerka23/blueprint-deck-kit",
   author: "Lukas Vecerka",
+  authorUrl: "https://github.com/lukasvecerka23",
+  coAuthor: "Pavel Sládek",
+  coAuthorUrl: "https://www.linkedin.com/in/sladek/",
   description:
     "An agent skill that turns your repository's docs into an interactive presentation diagram: one offline HTML file with a pan-and-zoom map, guided tour, personas, tabs, a built-in editor and PDF export.",
 };
