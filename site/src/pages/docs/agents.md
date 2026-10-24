@@ -56,8 +56,13 @@ also written into the config so a later update keeps them.
 
 ## Claude Code
 
-Install with `curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent claude` (or the
-default command, which finds Claude Code by itself). The skill lands in `~/.claude/skills/blueprint-deck`; use
+Install for Claude Code only (the default command also finds Claude Code by itself):
+
+```bash
+curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent claude
+```
+
+The skill lands in `~/.claude/skills/blueprint-deck`; use
 `--project` to put it into the repository's `.claude/skills/` so the whole team gets it.
 
 Start a new session in your project folder (a codebase or a folder of docs), then either paste the prompt from the [configurator](/configurator/) or use
@@ -73,8 +78,13 @@ the platform for the board meeting".
 
 ## Codex
 
-Install with `curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex`; the skill
-lands in `~/.codex/skills/blueprint-deck`. Start a new Codex session in your project folder and paste the prompt from the
+Install for Codex only:
+
+```bash
+curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex
+```
+
+The skill lands in `~/.codex/skills/blueprint-deck`. Start a new Codex session in your project folder and paste the prompt from the
 configurator, or ask:
 
 ```text
@@ -109,7 +119,12 @@ Run the install command again: it replaces the skill and says which version it r
 curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --version 2.1.0
 ```
 
-(PowerShell: `& ([scriptblock]::Create((irm https://blueprint-deck.lukasvecerka.dev/install.ps1))) -Version 2.1.0`.)
+In PowerShell:
+
+```powershell
+& ([scriptblock]::Create((irm https://blueprint-deck.lukasvecerka.dev/install.ps1))) -Version 2.1.0
+```
+
 Every release and its files are on [GitHub Releases](https://github.com/lukasvecerka23/blueprint-deck-kit/releases). When the skill runs, it asks GitHub for the latest
 release and tells you when a newer version is out; it never updates anything by itself.
 

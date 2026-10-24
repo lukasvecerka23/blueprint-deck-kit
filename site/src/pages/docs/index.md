@@ -39,9 +39,18 @@ and copies the `blueprint-deck` skill folder into the skills folder of every age
 | `--ref <branch or tag>` | `-Ref …` | the skill as it is on a branch, e.g. unreleased work on `main` |
 | `--uninstall` | `-Uninstall` | remove the skill again |
 
-Pass options to the piped script with `sh -s --`, for example
-`curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex`; in PowerShell run it as
-`& ([scriptblock]::Create((irm https://blueprint-deck.lukasvecerka.dev/install.ps1))) -Agent codex`.
+Pass options to the piped script with `sh -s --`, for example to install for Codex only:
+
+```bash
+curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex
+```
+
+In PowerShell, run the script as a script block to pass options:
+
+```powershell
+& ([scriptblock]::Create((irm https://blueprint-deck.lukasvecerka.dev/install.ps1))) -Agent codex
+```
+
 Prefer to do it by hand? [Download the skill as a zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
 and unzip it into your agent's skills folder, so that you get `…/skills/blueprint-deck/SKILL.md`.
 

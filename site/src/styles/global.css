@@ -30,6 +30,8 @@
   border-radius: calc(var(--radius) + 2px);
   padding: 1rem 1.1rem;
   overflow-x: auto;
+  white-space: pre-wrap;        /* long commands wrap instead of hiding behind a scrollbar; copy still gets one line */
+  overflow-wrap: anywhere;
   font-size: 0.8125rem;
   line-height: 1.65;
 }
@@ -56,6 +58,7 @@
 .prose :not(pre) > code {
   @apply rounded-md border bg-muted px-1.5 py-px font-mono text-[0.8125em];
   overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone; /* a wrapped chip stays a full chip on each line */
 }
 .prose pre { @apply my-5; }
 .prose table { @apply my-6 w-full text-sm border-collapse block overflow-x-auto; }
