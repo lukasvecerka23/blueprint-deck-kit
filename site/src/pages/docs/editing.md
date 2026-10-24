@@ -54,6 +54,11 @@ opens; choose *Save as PDF*. Background graphics should be on (they are by defau
 
 ## Sharing
 
+- **Send a read-only copy.** In the file, open **⋯ → Download a copy to share** (or **Share…** in the editor bar),
+  name it, and pick **Read-only**. The copy has the same diagram, tour, tabs and PDF export, but no editor at all:
+  the editing code isn't in the file, so it can't be switched back on in the browser. Your own file stays editable;
+  after changes, download a new copy. (Anyone can still open an HTML file in a text editor, so this stops casual
+  edits, not determined ones.) Agents make one with `node tools/insert.mjs --read-only index.html`.
 - **Send the file.** Email it, put it in a shared drive, attach it to a ticket. It opens offline by double-click and
   makes no network requests.
 - **Host it.** Upload the file to any static host for a link that also works on phones: Cloudflare Pages, GitHub

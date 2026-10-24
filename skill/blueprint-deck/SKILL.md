@@ -109,6 +109,7 @@ Config → JSON mapping:
 | behaviour.edges_filter_by_view / edge_labels / overview_edges | settings.edges.filterByContext / labels / overview |
 | behaviour.particles (main-flow/focus-only/off) | settings.edges.particles (main/focus/off) + settings.edges.mainFlow |
 | behaviour.legend / editor / keyboard | settings.legend (`off` → false) / settings.editor / settings.keyboard |
+| workflow.read_only_copy | after step 5, also write the read-only copy (step 4) |
 
 Every box and area gets `sources` (file + section). Nothing without a source (`sources.invent: never`). If sources
 disagree about a status, add a status value such as `{"id": "open", "label": "Undecided"}`.
@@ -137,6 +138,11 @@ New file:
    With Node 18+ you can instead write the JSON to a file and run `node SKILL_DIR/tools/insert.mjs data.json <output>`
    (it copies the engine and escapes for you); `--extract <file>` gives you an existing file's JSON, `--upgrade <file>`
    puts the newest engine into it.
+
+Read-only copy (when `workflow.read_only_copy` is true, or the user asks for "a copy to send"): with Node,
+`node SKILL_DIR/tools/insert.mjs --read-only <output> [name.html]` writes a copy without the editor (default name:
+the title, e.g. `private-ai-platform.html`). Without Node, tell the user to open the file and use
+⋯ → **Download a copy to share** → Read-only. The editable `<output>` stays the master; make a new copy after changes.
 
 Existing file (change, update, upgrade): the data block is at the top. Read the file only up to the line containing
 `BD-ENGINE` (first lines of the file) and edit the JSON there. Never change anything below the `BD-ENGINE` line.

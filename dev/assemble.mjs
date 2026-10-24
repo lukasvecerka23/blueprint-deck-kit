@@ -12,10 +12,11 @@ const VERSION = src("core.js").match(/VERSION = "([^"]+)"/)[1];
 const core = src("icons.js") + "\n" + src("core.js").replace(/^if \(typeof module.*$/m, "");
 const js = [
   "/*BD-CORE-START*/", core, "/*BD-CORE-END*/",
-  src("render.js"), src("boot.js"), src("editor.js"),
+  // the editor sits between markers, so a read-only copy can leave it out (boot.js: readOnlyHtml, tools/insert.mjs --read-only)
+  src("render.js"), src("boot.js"), "/*BD-EDITOR-START*/", src("editor.js"), "/*BD-EDITOR-END*/",
   "if (BD) BD.start();",
 ].join("\n").replace(/<\/script/gi, "<\\/script").replace(/<!--/g, "<\\!--");
-const css = src("engine.css") + "\n" + src("editor.css");
+const css = src("engine.css") + "\n/*BD-EDITOR-CSS-START*/\n" + src("editor.css") + "\n/*BD-EDITOR-CSS-END*/";
 const OPEN = '<script type="application/json" id="bd-data">';
 
 export function page(dataJson) {

@@ -45,6 +45,7 @@ workflow:
   confirm_structure: true              # the agent proposes the areas (and personas) and waits for your OK
   pause_after_extract: false           # stop after writing the content + report, before checking the result
   output: "index.html"                 # relative to this file's folder
+  read_only_copy: false                # true: also write a copy to send, without the editor (named after the title)
 
 # ---------------------------------------------------------------- one entry per diagram (one entry = one diagram, no switcher)
 diagrams:

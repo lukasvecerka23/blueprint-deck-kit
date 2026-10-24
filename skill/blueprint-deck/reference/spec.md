@@ -74,7 +74,7 @@ Up to 4 pillars look best.
 {
   "hero": true,                     // show the start screen
   "legend": "collapsed",            // collapsed (small pill, opens on click) | open | false
-  "editor": true,                   // E opens the editor; false locks the file (the ⋯ menu then only exports)
+  "editor": true,                   // E opens the editor; false switches it off (a read-only copy also leaves its code out)
   "keyboard": true,                 // ← → Space Esc F + - P (PDF) E (edit) 1–9 (switch diagram)
   "tour":   { "position": "auto" }, // auto (right sidebar on landscape screens, else bottom) | right | bottom
   "camera": { "zoomToFocus": true, "maxZoom": 1.25, "nodeZoom": 1.15, "zoneZoom": 1.3, "padding": 24 },

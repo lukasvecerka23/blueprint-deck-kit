@@ -22,3 +22,6 @@ ideas behind many of these changes.
 - **Configurator** rebuilt: shared settings plus a full set of options per diagram, live theme preview, a prompt that
   carries the whole config.
 - Optional `tools/check.mjs` validates a file from the command line (Node 18+).
+- **Read-only copies to send**: ⋯ → Download a copy to share (name it, pick read-only); the copy has no editor code.
+  `tools/insert.mjs --read-only` and `workflow.read_only_copy` do the same for agents.
+- **Personas on the map**: a persona with a `zone` is also a box; clicking it shows its path.

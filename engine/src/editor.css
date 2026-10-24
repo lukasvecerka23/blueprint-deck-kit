@@ -1,6 +1,19 @@
   /* ---------- editor (E) ---------- */
   body.editing #panel, body.editing #tour, body.editing #legend, body.editing #hero { display: none !important; }
   body:not(.editing) #ed-bar, body:not(.editing) #ed-panel, body:not(.editing) .ed-icons { display: none !important; }
+  /* share dialog (also opened from the ⋯ menu, outside editing) */
+  .ed-modal { position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; padding: 16px; background: rgba(var(--bg-rgb), 0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+  .ed-modal-card { width: min(460px, 100%); padding: 20px 22px; border-radius: var(--r-panel); background: var(--glass-strong); }
+  .ed-modal-card h3 { margin: 0 0 14px; font-size: 18px; }
+  .ed-modal-card input[type=text] { width: 100%; font: inherit; font-size: 14px; color: var(--text); background: rgba(var(--fg-rgb), 0.04); border: 1px solid var(--stroke-strong); border-radius: var(--r-sm); padding: 9px 11px; outline: none; }
+  .ed-modal-card input[type=text]:focus { border-color: rgba(var(--accent-rgb), 0.7); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.2); }
+  .ed-modal-card .opt { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--stroke); border-radius: var(--r-sm); cursor: pointer; font-size: 13.5px; color: var(--body); }
+  .ed-modal-card .opt:has(input:checked) { border-color: rgba(var(--accent-rgb), 0.6); background: rgba(var(--accent-rgb), 0.08); }
+  .ed-modal-card .opt input { margin-top: 3px; accent-color: var(--accent); }
+  .ed-modal-card .opt b { color: var(--fg); font-weight: 600; }
+  .ed-modal-card .opt small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; line-height: 1.4; }
+  .ed-modal-card .fld { gap: 7px; }
+  .ed-modal-acts { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
   body.editing .node { cursor: grab; }
   body.editing .node:hover { transform: none; }
   body.ed-picking .node { cursor: copy; }

@@ -76,11 +76,13 @@ const BDEditor = (() => {
       <span class="ed-sep"></span>
       <button data-a="undo" title="Undo (Ctrl+Z)">↶</button><button data-a="redo" title="Redo (Ctrl+Shift+Z)">↷</button>
       <span class="ed-sep"></span>
+      <button data-a="share" title="Download a copy to send: read-only or editable">Share…</button>
       <button data-a="done" class="ed-done">Done</button>`;
     bar.querySelectorAll("[data-p]").forEach(b => b.onclick = () => { pick = null; connectFrom = null; select({ kind: b.dataset.p }); });
     bar.querySelector("[data-a=undo]").onclick = () => stepHistory(undo, redo);
     bar.querySelector("[data-a=redo]").onclick = () => stepHistory(redo, undo);
     bar.querySelector("[data-a=done]").onclick = () => toggle(false);
+    bar.querySelector("[data-a=share]").onclick = () => share();
     pane = document.createElement("aside");
     pane.id = "ed-panel"; pane.className = "glass";
     document.body.append(bar, pane);
@@ -121,6 +123,32 @@ const BDEditor = (() => {
     BD.rerender();
   }
   function mounted() { decorate(); updateCounts(); }
+
+  /* ------------------------------------------------------------ share: download a copy under a name you choose */
+  function share() {
+    document.querySelector(".ed-modal")?.remove();
+    const m = document.createElement("div");
+    m.className = "ed-modal";
+    m.innerHTML = `<div class="ed-modal-card glass" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+      <h3 id="shareTitle">Download a copy to share</h3>
+      <div class="fld"><label for="shareName">File name</label><input type="text" id="shareName" value="${escA(BD.suggestName())}" spellcheck="false"></div>
+      <div class="fld"><label>Copy</label>
+        <label class="opt"><input type="radio" name="shareMode" value="ro" checked><span><b>Read-only</b> (recommended for sending)<small>The same diagram, tour and PDF export, but no editor: the file can't be changed in the browser.</small></span></label>
+        <label class="opt"><input type="radio" name="shareMode" value="rw"><span><b>Editable</b><small>A copy with the editor, like this file.</small></span></label>
+      </div>
+      <p class="ed-note">Your own file stays editable. When the diagram changes, download a new copy.</p>
+      <div class="ed-modal-acts"><button type="button" class="mini" data-x="cancel">Cancel</button><button type="button" class="mini primary" data-x="go">Download</button></div>
+    </div>`;
+    document.body.appendChild(m);
+    const name = m.querySelector("#shareName");
+    name.focus(); name.setSelectionRange(0, name.value.replace(/\.html?$/i, "").length);
+    const close = () => m.remove();
+    const go = async () => { const readOnly = m.querySelector("[name=shareMode]:checked").value === "ro"; if (await BD.exportCopy({ name: name.value, readOnly })) close(); };
+    m.querySelector("[data-x=cancel]").onclick = close;
+    m.querySelector("[data-x=go]").onclick = go;
+    m.onclick = e => { if (e.target === m) close(); };
+    m.addEventListener("keydown", e => { if (e.key === "Escape") { e.stopPropagation(); close(); } if (e.key === "Enter" && e.target === name) go(); });
+  }
 
   /* ------------------------------------------------------------ selection */
   function select(t) {
@@ -659,5 +687,5 @@ const BDEditor = (() => {
     }
   }, true);
 
-  return Object.assign(ed, { toggle, select, mounted, render });
+  return Object.assign(ed, { toggle, select, mounted, render, share });
 })();

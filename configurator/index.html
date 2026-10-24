@@ -383,7 +383,7 @@ function defaultShared() {
     sources: { include: ["docs/**/*.md", "README.md"], exclude: [], priority: [], derive_status_from: [], on_conflict: "report", cite_sources: true, invent: "never" },
     behaviour: { hero: true, tour_position: "auto", zoom_to_focus: true, edges_filter_by_view: true, edge_labels: "focus", particles: "main-flow",
       overview_edges: "all", legend: "collapsed", editor: true, keyboard: true },
-    workflow: { confirm_structure: true, pause_after_extract: false, output: "index.html" },
+    workflow: { confirm_structure: true, pause_after_extract: false, output: "index.html", read_only_copy: false },
     diagrams: [],
     comments: "",
   };
@@ -751,6 +751,7 @@ const SHARED_LATE = [
   { id: "workflow", n: 6, title: "Workflow", sub: "How the agent works with you", fields: [
     { p: "workflow.confirm_structure", l: "Propose the structure first", t: "switch", h: "The agent shows the areas, personas, tabs and the tour outline, and waits for your OK." },
     { p: "workflow.pause_after_extract", l: "Pause after extracting", t: "switch", h: "Stop after writing the content and the report, before checking the result." },
+    { p: "workflow.read_only_copy", l: "Also make a read-only copy", t: "switch", h: "A second file to send, without the editor, named after the title. You can also make one any time in the browser: ⋯ → Download a copy to share." },
     { p: "workflow.output", l: "Output file", t: "text", ph: "index.html", h: "Relative to the config file's folder (diagrams/)." },
   ] },
   { id: "notes", n: 7, title: "Anything else", sub: "Notes for the agent about the whole file", fields: [

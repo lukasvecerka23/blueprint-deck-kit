@@ -81,6 +81,8 @@ Paste the prompt into your agent, in your repository. The agent:
   in other browsers they are kept in the browser until you download the updated file.
 - **Bigger changes: ask the agent.** "Make it more technical", "add a persona for the auditor", "step 7 should also
   show the registry", "shorten the tour to 10 steps". When your docs change: "update the diagram".
+- **Send a read-only copy:** ⋯ → **Download a copy to share** → Read-only gives you a file without the editor,
+  under a name you choose; your own file stays editable.
 - **Share** the file by email or chat, or upload it to any static host (Cloudflare Pages, Netlify, GitHub Pages, your
   intranet) for a link that also works on phones. Deep links open a view directly: `index.html#tour=5`,
   `#lens=governance`, `#node=gateway`, `#list=personas&item=2`.

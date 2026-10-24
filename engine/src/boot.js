@@ -107,12 +107,41 @@ const BD = (() => {
     try { await saving; dirty = false; local.clear(); status(); return true; }
     catch (e) { fileState = "needs-permission"; status(); toast("Saving to the file failed: " + escH(e.message), [], 5000); return false; }
   }
-  function download() {
+  function download(name = fileName(), html = serialize(DATA)) {
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([serialize(DATA)], { type: "text/html" }));
-    a.download = fileName();
+    a.href = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+    a.download = name;
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+
+  /* ------------------------------------------------------------ copies to send: editable, or read-only (no editor at all) */
+  const slug = s => BDCore.stripTags(s || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+  const suggestName = () => (slug((DATA.meta || {}).title) || fileName().replace(/\.html?$/i, "")) + ".html";
+  // the read-only copy: editing switched off and the editor's code and styles cut out of the file
+  function readOnlyHtml() {
+    const d = JSON.parse(JSON.stringify(DATA));
+    d.settings = { ...(d.settings || {}), editor: false };
+    if (Array.isArray(d.diagrams)) d.diagrams.forEach(x => { if (x.settings && "editor" in x.settings) x.settings.editor = false; });
+    return serialize(d)
+      .replace(/\/\*BD-EDITOR-START\*\/[\s\S]*?\/\*BD-EDITOR-END\*\//, "")
+      .replace(/\/\*BD-EDITOR-CSS-START\*\/[\s\S]*?\/\*BD-EDITOR-CSS-END\*\//, "");
+  }
+  async function exportCopy({ name, readOnly }) {
+    name = (name || suggestName()).trim();
+    if (!/\.html?$/i.test(name)) name += ".html";
+    const html = readOnly ? readOnlyHtml() : serialize(DATA);
+    if (FS) {
+      try {
+        const h = await window.showSaveFilePicker({ suggestedName: name, types: [{ description: "Blueprint Deck (HTML)", accept: { "text/html": [".html", ".htm"] } }] });
+        const w = await h.createWritable(); await w.write(html); await w.close();
+        toast(`Saved ${escH(h.name)}${readOnly ? " (read-only)" : ""}`, [], 3500);
+        return true;
+      } catch (e) { if (e.name === "AbortError") return false; /* fall back to a download */ }
+    }
+    download(name, html);
+    toast(`Downloaded ${escH(name)}${readOnly ? " (read-only)" : ""}`, [], 3500);
+    return true;
   }
   let saveTimer = 0;
   // every edit: kept in this browser at once, and written into the file shortly after (when allowed)
@@ -152,11 +181,12 @@ const BD = (() => {
     Object.assign(m.style, { position: "fixed", zIndex: 45, top: r.bottom + 8 + "px", right: innerWidth - r.right + "px", padding: "6px", borderRadius: "var(--r-ui)", display: "grid", gap: "2px", minWidth: "230px", background: "var(--glass-strong)" });
     const item = (label, key, fn) => `<button data-a="${fn}" style="display:flex;justify-content:space-between;gap:16px;border:0;background:transparent;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;text-align:left;font-size:13.5px"><span>${label}</span><kbd style="color:var(--muted);font:inherit;font-size:12px">${key}</kbd></button>`;
     const S = current && current.spec.settings;
-    m.innerHTML = (S && S.editor === false ? "" : item("Edit this diagram", "E", "edit")) + item("Export a PDF deck", "P", "pdf") + item("Copy a link to this view", "", "link");
+    const canEdit = hasEditor() && !(S && S.editor === false);
+    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a copy to share…", "", "share") : "") + item("Export a PDF deck", "P", "pdf") + item("Copy a link to this view", "", "link");
     m.querySelectorAll("button").forEach(b => {
       b.onmouseenter = () => (b.style.background = "rgba(var(--fg-rgb),.06)");
       b.onmouseleave = () => (b.style.background = "transparent");
-      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), pdf: () => current.printDeck(), link: copyLink })[b.dataset.a](); };
+      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share(), pdf: () => current.printDeck(), link: copyLink })[b.dataset.a](); };
     });
     document.body.appendChild(m);
     setTimeout(() => addEventListener("click", function off(ev) { if (!m.contains(ev.target)) { m.remove(); removeEventListener("click", off); } }), 0);
@@ -288,7 +318,9 @@ const BD = (() => {
       m.querySelector("#startEmpty").onclick = () => { DATA = starter(); persist(); mount(0, { hero: false }); BDEditor.toggle(true); };
       return;
     }
-    const stored = local.read();
+    // a read-only copy never picks up edits kept in this browser
+    const locked = !hasEditor() || (DATA.settings || {}).editor === false;
+    const stored = locked ? null : local.read();
     if (stored && stored.data) {
       if (canon(stored.data) === canon(DATA)) local.clear();
       else if (stored.base === BASE) {
@@ -310,7 +342,7 @@ const BD = (() => {
     get data() { return DATA; }, set data(d) { DATA = d; },
     get current() { return current; }, get index() { return curIndex; }, get report() { return report; },
     multi, entries, mount, show, rerender, persist, status, onStatus: f => statusListeners.push(f),
-    connectFile, resumeFile, writeFile, download, serialize, toast, closeToast, fs: FS, get fileState() { return fileState; }, get hasHandle() { return !!handle; },
+    connectFile, resumeFile, writeFile, download, serialize, exportCopy, suggestName, readOnlyHtml, toast, closeToast, fs: FS, get fileState() { return fileState; }, get hasHandle() { return !!handle; },
     ICON_NAMES, start, fileName,
   };
 })();

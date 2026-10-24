@@ -1731,9 +1731,23 @@
   .pg-ov { padding: 14mm 16mm; } .pg-ov h1 { margin: 2mm 0; font-size: 22pt; } .pg-ov .lead { font-size: 10.5pt; color: var(--muted); margin: 0; }
   .pg-ov .tiers, .pg-ov .rm-cols, .pg-ov .crit { margin-top: 5mm; gap: 3mm; } .pg-ov .tier { padding: 4mm; }
 
+/*BD-EDITOR-CSS-START*/
   /* ---------- editor (E) ---------- */
   body.editing #panel, body.editing #tour, body.editing #legend, body.editing #hero { display: none !important; }
   body:not(.editing) #ed-bar, body:not(.editing) #ed-panel, body:not(.editing) .ed-icons { display: none !important; }
+  /* share dialog (also opened from the ⋯ menu, outside editing) */
+  .ed-modal { position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; padding: 16px; background: rgba(var(--bg-rgb), 0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+  .ed-modal-card { width: min(460px, 100%); padding: 20px 22px; border-radius: var(--r-panel); background: var(--glass-strong); }
+  .ed-modal-card h3 { margin: 0 0 14px; font-size: 18px; }
+  .ed-modal-card input[type=text] { width: 100%; font: inherit; font-size: 14px; color: var(--text); background: rgba(var(--fg-rgb), 0.04); border: 1px solid var(--stroke-strong); border-radius: var(--r-sm); padding: 9px 11px; outline: none; }
+  .ed-modal-card input[type=text]:focus { border-color: rgba(var(--accent-rgb), 0.7); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.2); }
+  .ed-modal-card .opt { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--stroke); border-radius: var(--r-sm); cursor: pointer; font-size: 13.5px; color: var(--body); }
+  .ed-modal-card .opt:has(input:checked) { border-color: rgba(var(--accent-rgb), 0.6); background: rgba(var(--accent-rgb), 0.08); }
+  .ed-modal-card .opt input { margin-top: 3px; accent-color: var(--accent); }
+  .ed-modal-card .opt b { color: var(--fg); font-weight: 600; }
+  .ed-modal-card .opt small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; line-height: 1.4; }
+  .ed-modal-card .fld { gap: 7px; }
+  .ed-modal-acts { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
   body.editing .node { cursor: grab; }
   body.editing .node:hover { transform: none; }
   body.ed-picking .node { cursor: copy; }
@@ -1840,6 +1854,7 @@
     #ed-bar { left: 8px; right: 8px; top: 8px; bottom: auto; max-width: none; }
   }
 
+/*BD-EDITOR-CSS-END*/
 </style>
 <style id="dyn-css"></style>
 </head>
@@ -4044,12 +4059,41 @@ const BD = (() => {
     try { await saving; dirty = false; local.clear(); status(); return true; }
     catch (e) { fileState = "needs-permission"; status(); toast("Saving to the file failed: " + escH(e.message), [], 5000); return false; }
   }
-  function download() {
+  function download(name = fileName(), html = serialize(DATA)) {
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([serialize(DATA)], { type: "text/html" }));
-    a.download = fileName();
+    a.href = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+    a.download = name;
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+
+  /* ------------------------------------------------------------ copies to send: editable, or read-only (no editor at all) */
+  const slug = s => BDCore.stripTags(s || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+  const suggestName = () => (slug((DATA.meta || {}).title) || fileName().replace(/\.html?$/i, "")) + ".html";
+  // the read-only copy: editing switched off and the editor's code and styles cut out of the file
+  function readOnlyHtml() {
+    const d = JSON.parse(JSON.stringify(DATA));
+    d.settings = { ...(d.settings || {}), editor: false };
+    if (Array.isArray(d.diagrams)) d.diagrams.forEach(x => { if (x.settings && "editor" in x.settings) x.settings.editor = false; });
+    return serialize(d)
+      .replace(/\/\*BD-EDITOR-START\*\/[\s\S]*?\/\*BD-EDITOR-END\*\//, "")
+      .replace(/\/\*BD-EDITOR-CSS-START\*\/[\s\S]*?\/\*BD-EDITOR-CSS-END\*\//, "");
+  }
+  async function exportCopy({ name, readOnly }) {
+    name = (name || suggestName()).trim();
+    if (!/\.html?$/i.test(name)) name += ".html";
+    const html = readOnly ? readOnlyHtml() : serialize(DATA);
+    if (FS) {
+      try {
+        const h = await window.showSaveFilePicker({ suggestedName: name, types: [{ description: "Blueprint Deck (HTML)", accept: { "text/html": [".html", ".htm"] } }] });
+        const w = await h.createWritable(); await w.write(html); await w.close();
+        toast(`Saved ${escH(h.name)}${readOnly ? " (read-only)" : ""}`, [], 3500);
+        return true;
+      } catch (e) { if (e.name === "AbortError") return false; /* fall back to a download */ }
+    }
+    download(name, html);
+    toast(`Downloaded ${escH(name)}${readOnly ? " (read-only)" : ""}`, [], 3500);
+    return true;
   }
   let saveTimer = 0;
   // every edit: kept in this browser at once, and written into the file shortly after (when allowed)
@@ -4089,11 +4133,12 @@ const BD = (() => {
     Object.assign(m.style, { position: "fixed", zIndex: 45, top: r.bottom + 8 + "px", right: innerWidth - r.right + "px", padding: "6px", borderRadius: "var(--r-ui)", display: "grid", gap: "2px", minWidth: "230px", background: "var(--glass-strong)" });
     const item = (label, key, fn) => `<button data-a="${fn}" style="display:flex;justify-content:space-between;gap:16px;border:0;background:transparent;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;text-align:left;font-size:13.5px"><span>${label}</span><kbd style="color:var(--muted);font:inherit;font-size:12px">${key}</kbd></button>`;
     const S = current && current.spec.settings;
-    m.innerHTML = (S && S.editor === false ? "" : item("Edit this diagram", "E", "edit")) + item("Export a PDF deck", "P", "pdf") + item("Copy a link to this view", "", "link");
+    const canEdit = hasEditor() && !(S && S.editor === false);
+    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a copy to share…", "", "share") : "") + item("Export a PDF deck", "P", "pdf") + item("Copy a link to this view", "", "link");
     m.querySelectorAll("button").forEach(b => {
       b.onmouseenter = () => (b.style.background = "rgba(var(--fg-rgb),.06)");
       b.onmouseleave = () => (b.style.background = "transparent");
-      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), pdf: () => current.printDeck(), link: copyLink })[b.dataset.a](); };
+      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share(), pdf: () => current.printDeck(), link: copyLink })[b.dataset.a](); };
     });
     document.body.appendChild(m);
     setTimeout(() => addEventListener("click", function off(ev) { if (!m.contains(ev.target)) { m.remove(); removeEventListener("click", off); } }), 0);
@@ -4225,7 +4270,9 @@ const BD = (() => {
       m.querySelector("#startEmpty").onclick = () => { DATA = starter(); persist(); mount(0, { hero: false }); BDEditor.toggle(true); };
       return;
     }
-    const stored = local.read();
+    // a read-only copy never picks up edits kept in this browser
+    const locked = !hasEditor() || (DATA.settings || {}).editor === false;
+    const stored = locked ? null : local.read();
     if (stored && stored.data) {
       if (canon(stored.data) === canon(DATA)) local.clear();
       else if (stored.base === BASE) {
@@ -4247,11 +4294,12 @@ const BD = (() => {
     get data() { return DATA; }, set data(d) { DATA = d; },
     get current() { return current; }, get index() { return curIndex; }, get report() { return report; },
     multi, entries, mount, show, rerender, persist, status, onStatus: f => statusListeners.push(f),
-    connectFile, resumeFile, writeFile, download, serialize, toast, closeToast, fs: FS, get fileState() { return fileState; }, get hasHandle() { return !!handle; },
+    connectFile, resumeFile, writeFile, download, serialize, exportCopy, suggestName, readOnlyHtml, toast, closeToast, fs: FS, get fileState() { return fileState; }, get hasHandle() { return !!handle; },
     ICON_NAMES, start, fileName,
   };
 })();
 
+/*BD-EDITOR-START*/
 /* Blueprint Deck editor (press E): change texts, colours, theme and logo, move boxes, connect them, edit tabs, the tour
    and personas, without an agent and without a rebuild. Every change is saved at once (see boot.js: file or browser). */
 const BDEditor = (() => {
@@ -4330,11 +4378,13 @@ const BDEditor = (() => {
       <span class="ed-sep"></span>
       <button data-a="undo" title="Undo (Ctrl+Z)">↶</button><button data-a="redo" title="Redo (Ctrl+Shift+Z)">↷</button>
       <span class="ed-sep"></span>
+      <button data-a="share" title="Download a copy to send: read-only or editable">Share…</button>
       <button data-a="done" class="ed-done">Done</button>`;
     bar.querySelectorAll("[data-p]").forEach(b => b.onclick = () => { pick = null; connectFrom = null; select({ kind: b.dataset.p }); });
     bar.querySelector("[data-a=undo]").onclick = () => stepHistory(undo, redo);
     bar.querySelector("[data-a=redo]").onclick = () => stepHistory(redo, undo);
     bar.querySelector("[data-a=done]").onclick = () => toggle(false);
+    bar.querySelector("[data-a=share]").onclick = () => share();
     pane = document.createElement("aside");
     pane.id = "ed-panel"; pane.className = "glass";
     document.body.append(bar, pane);
@@ -4375,6 +4425,32 @@ const BDEditor = (() => {
     BD.rerender();
   }
   function mounted() { decorate(); updateCounts(); }
+
+  /* ------------------------------------------------------------ share: download a copy under a name you choose */
+  function share() {
+    document.querySelector(".ed-modal")?.remove();
+    const m = document.createElement("div");
+    m.className = "ed-modal";
+    m.innerHTML = `<div class="ed-modal-card glass" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+      <h3 id="shareTitle">Download a copy to share</h3>
+      <div class="fld"><label for="shareName">File name</label><input type="text" id="shareName" value="${escA(BD.suggestName())}" spellcheck="false"></div>
+      <div class="fld"><label>Copy</label>
+        <label class="opt"><input type="radio" name="shareMode" value="ro" checked><span><b>Read-only</b> (recommended for sending)<small>The same diagram, tour and PDF export, but no editor: the file can't be changed in the browser.</small></span></label>
+        <label class="opt"><input type="radio" name="shareMode" value="rw"><span><b>Editable</b><small>A copy with the editor, like this file.</small></span></label>
+      </div>
+      <p class="ed-note">Your own file stays editable. When the diagram changes, download a new copy.</p>
+      <div class="ed-modal-acts"><button type="button" class="mini" data-x="cancel">Cancel</button><button type="button" class="mini primary" data-x="go">Download</button></div>
+    </div>`;
+    document.body.appendChild(m);
+    const name = m.querySelector("#shareName");
+    name.focus(); name.setSelectionRange(0, name.value.replace(/\.html?$/i, "").length);
+    const close = () => m.remove();
+    const go = async () => { const readOnly = m.querySelector("[name=shareMode]:checked").value === "ro"; if (await BD.exportCopy({ name: name.value, readOnly })) close(); };
+    m.querySelector("[data-x=cancel]").onclick = close;
+    m.querySelector("[data-x=go]").onclick = go;
+    m.onclick = e => { if (e.target === m) close(); };
+    m.addEventListener("keydown", e => { if (e.key === "Escape") { e.stopPropagation(); close(); } if (e.key === "Enter" && e.target === name) go(); });
+  }
 
   /* ------------------------------------------------------------ selection */
   function select(t) {
@@ -4913,9 +4989,10 @@ const BDEditor = (() => {
     }
   }, true);
 
-  return Object.assign(ed, { toggle, select, mounted, render });
+  return Object.assign(ed, { toggle, select, mounted, render, share });
 })();
 
+/*BD-EDITOR-END*/
 if (BD) BD.start();
 </script>
 </body>
