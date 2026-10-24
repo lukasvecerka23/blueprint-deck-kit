@@ -24,14 +24,14 @@ const id = Astro.props.id ?? "install";
     <Command code={INSTALL.sh} />
     <p class="text-sm text-muted-foreground">Installs the skill for every agent it finds on your computer
       (<code class="font-mono text-xs">~/.claude/skills</code>, <code class="font-mono text-xs">~/.codex/skills</code>, <code class="font-mono text-xs">~/.agents/skills</code>).
-      Add <code class="font-mono text-xs">--project</code> to install into the current repository instead, <code class="font-mono text-xs">--uninstall</code> to remove it.
+      Add <code class="font-mono text-xs">--project</code> to install into the current project instead, <code class="font-mono text-xs">--uninstall</code> to remove it.
       It only copies files; nothing else is installed. <a class="underline underline-offset-4 hover:text-foreground" href="/install.sh">Read the script</a>.</p>
   </div>
 
   <div role="tabpanel" id={`${id}-panel-windows`} aria-labelledby={`${id}-tab-windows`} tabindex="-1" class="space-y-3" hidden>
     <Command code={INSTALL.ps} prompt="PS>" />
-    <p class="text-sm text-muted-foreground">Run in PowerShell. Same behaviour as the shell script: every agent found, or pass
-      <code class="font-mono text-xs">-Agent claude|codex|agents|all</code>, <code class="font-mono text-xs">-Project</code> or <code class="font-mono text-xs">-Uninstall</code>.
+    <p class="text-sm text-muted-foreground">Run in PowerShell. Same behaviour as the shell script: every agent found, or pass{" "}
+      <code class="font-mono text-xs">-Agent claude|codex|agents|all</code>, <code class="font-mono text-xs">-Project</code> or <code class="font-mono text-xs">-Uninstall</code>.{" "}
       <a class="underline underline-offset-4 hover:text-foreground" href="/install.ps1">Read the script</a>.</p>
   </div>
 
@@ -52,7 +52,7 @@ const id = Astro.props.id ?? "install";
   <div role="tabpanel" id={`${id}-panel-other`} aria-labelledby={`${id}-tab-other`} tabindex="-1" class="space-y-3" hidden>
     <Command code={INSTALL.shAgent("agents")} />
     <Command code={`curl -fsSL ${SITE.url}/install.sh | sh -s -- --dir <your agent's skills folder>`} />
-    <p class="text-sm text-muted-foreground">Same script. <code class="font-mono text-xs">--agent agents</code> installs into the shared <code class="font-mono text-xs">~/.agents/skills</code> folder;
+    <p class="text-sm text-muted-foreground">Same script. <code class="font-mono text-xs">--agent agents</code> installs into the shared <code class="font-mono text-xs">~/.agents/skills</code> folder;{" "}
       <code class="font-mono text-xs">--dir</code> puts it anywhere. Agents without skill support can follow <code class="font-mono text-xs">blueprint-deck/SKILL.md</code> as instructions: tell them to read it first.</p>
   </div>
 
@@ -63,9 +63,9 @@ const id = Astro.props.id ?? "install";
         <a class="underline underline-offset-4 hover:text-foreground" href={`${SITE.repo}/releases`}>all versions</a></span>
     </div>
     <Command code="unzip blueprint-deck-skill.zip -d ~/.claude/skills" />
-    <p class="text-sm text-muted-foreground">Unzip into your agent's skills folder, e.g. <code class="font-mono text-xs">~/.claude/skills/</code>, <code class="font-mono text-xs">~/.codex/skills/</code>,
+    <p class="text-sm text-muted-foreground">Unzip into your agent's skills folder, e.g. <code class="font-mono text-xs">~/.claude/skills/</code>, <code class="font-mono text-xs">~/.codex/skills/</code>,{" "}
       <code class="font-mono text-xs">~/.agents/skills/</code>, or <code class="font-mono text-xs">.claude/skills/</code> inside a repository. The result is <code class="font-mono text-xs">…/skills/blueprint-deck/SKILL.md</code>.</p>
   </div>
 </div>
 <p class="mt-4 text-sm text-muted-foreground">Installs the latest release. A specific version: add <code class="font-mono text-xs">-s -- --version 2.1.0</code>
-  (PowerShell: <code class="font-mono text-xs">-Version 2.1.0</code>) · <a class="underline underline-offset-4 hover:text-foreground" href={`${SITE.repo}/releases`}>all versions</a></p>
+  {" "}(PowerShell: <code class="font-mono text-xs">-Version 2.1.0</code>) · <a class="underline underline-offset-4 hover:text-foreground" href={`${SITE.repo}/releases`}>all versions</a></p>

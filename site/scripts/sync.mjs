@@ -5,8 +5,8 @@
 //   ../configurator/                            -> public/configurator/
 //   ../examples/                                -> public/examples/
 //   ../skill/blueprint-deck/blueprint-deck.html -> public/engine/blueprint-deck.html
-//   ../install.sh, ../install.ps1               -> public/install.sh, public/install.ps1 (the short install URLs)
-//   _redirects                                  -> the skill downloads go to the latest GitHub release
+//   _redirects                                  -> /install.sh and /install.ps1 go to the scripts on GitHub (one source);
+//                                                  the skill downloads go to the latest GitHub release
 //
 // The skill itself is never hosted here: releases live on GitHub (see CONTRIBUTING.md → Releasing). The install scripts
 // download the latest published release (or --version) from there.
@@ -45,13 +45,15 @@ mkdirSync(PUBLIC, { recursive: true });
 copyDir("configurator", "configurator");
 copyDir("examples", "examples");
 copyFile("skill/blueprint-deck/blueprint-deck.html", "engine/blueprint-deck.html");
-copyFile("install.sh", "install.sh");
-copyFile("install.ps1", "install.ps1");
-// leftovers from when the site hosted the releases
-for (const f of ["releases", "version.json", "blueprint-deck-skill.zip", "blueprint-deck-skill.tar.gz"]) rmSync(join(PUBLIC, f), { recursive: true, force: true });
+// leftovers from earlier setups: the site used to copy the install scripts and host the releases
+for (const f of ["install.sh", "install.ps1", "releases", "version.json", "blueprint-deck-skill.zip", "blueprint-deck-skill.tar.gz"]) rmSync(join(PUBLIC, f), { recursive: true, force: true });
 
-// Cloudflare Pages redirects: the skill downloads and the version list live on GitHub
+// Cloudflare Pages redirects: the short install URLs, the skill downloads and the version list all live on GitHub
+// (curl -L and PowerShell's irm follow redirects)
+const RAW = "https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main";
 writeFileSync(join(PUBLIC, "_redirects"), [
+  `/install.sh ${RAW}/install.sh 302`,
+  `/install.ps1 ${RAW}/install.ps1 302`,
   `/blueprint-deck-skill.zip ${GITHUB}/releases/latest/download/blueprint-deck-skill.zip 302`,
   `/blueprint-deck-skill.tar.gz ${GITHUB}/releases/latest/download/blueprint-deck-skill.tar.gz 302`,
   `/releases ${GITHUB}/releases 302`,

@@ -11,8 +11,8 @@ const { Content, headings } = await render(entry);
 <Docs title="Changelog" description="What changed in each version of Blueprint Deck Kit, and how to update."
   headings={headings} ownTitle source="CHANGELOG.md">
   <section class="not-prose mb-10 rounded-xl border p-6">
-    <h2 class="text-lg font-semibold" id="all-versions">All versions</h2>
-    <p class="mt-1 text-sm text-muted-foreground">The install command gives you the latest release. Every release, with its files, is on
+    <p class="text-lg font-semibold" id="all-versions">All versions</p>
+    <p class="mt-1 text-sm text-muted-foreground">The install command gives you the latest release. Every release, with its files, is on{" "}
       <a class="underline underline-offset-4 hover:text-foreground" href={`${SITE.repo}/releases`}>GitHub Releases</a>. To install a specific one:</p>
     <div class="mt-4"><Command code={`${INSTALL.sh} -s -- --version 2.1.0`} /></div>
   </section>

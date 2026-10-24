@@ -14,7 +14,7 @@
 }
 
 @layer base {
-  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; background: var(--background); }
   body { @apply bg-background text-foreground; font-feature-settings: "cv11", "ss01"; }
   :target { scroll-margin-top: 5rem; }
   [id] { scroll-margin-top: 5rem; }

@@ -26,21 +26,24 @@ Windows (PowerShell):
 irm https://blueprint-deck.lukasvecerka.dev/install.ps1 | iex
 ```
 
-The installer copies the `blueprint-deck` skill folder into the skills folder of every agent it finds
-(`~/.claude/skills`, `~/.codex/skills`, `~/.agents/skills`). It installs nothing else.
+The installer downloads the latest [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) from GitHub
+and copies the `blueprint-deck` skill folder into the skills folder of every agent it finds (`~/.claude/skills`,
+`~/.codex/skills`, `~/.agents/skills`). It installs nothing else. Run it again to update.
 
 | option (sh) | option (PowerShell) | what it does |
 |---|---|---|
 | `--agent claude\|codex\|agents\|all` | `-Agent …` | install for one agent only (or all) |
-| `--project` | `-Project` | install into the current repository (`./.claude/skills`, …) |
+| `--project` | `-Project` | install into the current project (`./.claude/skills`, …) |
 | `--dir <path>` | `-Dir <path>` | install into any skills folder |
-| `--ref <branch or tag>` | `-Ref …` | a specific version (default: `main`) |
+| `--version <x.y.z>` | `-Version <x.y.z>` | a specific release (default: the latest) |
+| `--ref <branch or tag>` | `-Ref …` | the skill as it is on a branch, e.g. unreleased work on `main` |
 | `--uninstall` | `-Uninstall` | remove the skill again |
 
 Pass options to the piped script with `sh -s --`, for example
-`curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex`.
-Prefer to do it by hand? [Download the skill as a zip](/blueprint-deck-skill.zip) and unzip it into your agent's
-skills folder, so that you get `…/skills/blueprint-deck/SKILL.md`.
+`curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex`; in PowerShell run it as
+`& ([scriptblock]::Create((irm https://blueprint-deck.lukasvecerka.dev/install.ps1))) -Agent codex`.
+Prefer to do it by hand? [Download the skill as a zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
+and unzip it into your agent's skills folder, so that you get `…/skills/blueprint-deck/SKILL.md`.
 
 ## 2. Describe your diagram
 
