@@ -5,7 +5,7 @@ Versions: a new minor version (2.1, 2.2 …) adds features and keeps every older
 engine, ask your agent to upgrade it (or `node tools/insert.mjs --upgrade <file>`). All releases and their files:
 https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
-## Unreleased
+## 2.2.0 (2026-10-24)
 
 - **Diagrams from code.** The style guide has a "From code" section: services, contracts, clients and deployment
   files become the map, every connection needs evidence in the code, docs and code conflicts are reported. The

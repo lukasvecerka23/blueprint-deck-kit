@@ -48,7 +48,6 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
   {
     q: "Does it only work with a code repository?",
     a: "No. Point it at any folder with documentation: a repository, a folder of Markdown, text or PDF files, an export from Confluence or Notion, even web pages by URL. Run your agent in that folder and list the files (or URLs) as sources in the config.",
-    home: true,
   },
   {
     q: "Can it build a diagram from code?",

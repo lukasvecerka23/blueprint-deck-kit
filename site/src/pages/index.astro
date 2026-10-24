@@ -27,21 +27,21 @@ const steps = [
   },
   {
     title: "Present, edit, share",
-    text: "Open the file and present it. Press E to fix things, ask the agent for bigger changes, then share the file or host it.",
+    text: "Open the file and present it. Press E to fix things, ask the agent for bigger changes, then share the file, host it, or send a read-only copy.",
     keys: ["←", "→", "E", "P"],
   },
 ];
 
 const features = [
   { icon: "presentation", title: "A guided tour", text: "Present it like slides with ← →. Each step zooms to the part of the map it talks about; roadmaps and option sheets fit right in." },
-  { icon: "users", title: "Tabs and persona paths", text: "Each tab highlights one question, like the request path or governance. Pick a persona and see its numbered path through the map." },
-  { icon: "pencil", title: "Edit it in the browser", text: "Press E to change texts, colours, logo, boxes, tabs and the tour. No agent, no rebuild." },
-  { icon: "file-check", title: "One file, opens anywhere", text: "A single offline HTML file: email it, host it, open it on a phone. Several diagrams in one file, and P for a PDF deck." },
+  { icon: "users", title: "Tabs and persona paths", text: "Each tab highlights one question, like the request path or governance. Personas can stand on the map next to the apps they use; click one to see its numbered path." },
+  { icon: "pencil", title: "Edit it, send it read-only", text: "Press E to change texts, colours, boxes, tabs and the tour, with no agent and no rebuild. Send a read-only copy when people shouldn't change it." },
+  { icon: "file-check", title: "One file, opens anywhere", text: "A single offline HTML file: email it, host it, open it on a phone. It makes no network requests, so it's safe to open. Several diagrams in one file, and P for a PDF deck." },
   { icon: "palette", title: "Your brand, your audience", text: "Light and dark themes, your colours and logo. A product view for executives or a technical view for engineers." },
-  { icon: "file-search", title: "Sourced, by any agent", text: "Works with Claude Code, Codex and other agents. Every box cites its source, and a report lists conflicts and gaps in your docs." },
+  { icon: "file-search", title: "From docs or code, by any agent", text: "Works with Claude Code, Codex and other agents. It reads your docs or your codebase; every box links to its source, and a report lists conflicts and gaps." },
 ];
 
-const kinds = ["Architecture blueprints", "Product blueprints", "Data flows", "Processes", "Customer journeys", "Ecosystems", "Org maps"];
+const kinds = ["Architecture blueprints", "Product blueprints", "Service maps", "Data flows", "Processes", "Customer journeys", "Ecosystems", "Org maps"];
 const homeFaq = FAQ.filter(f => f.home);
 ---
 <Base>
