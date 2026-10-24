@@ -127,18 +127,11 @@ const BD = (() => {
       .replace(/\/\*BD-EDITOR-START\*\/[\s\S]*?\/\*BD-EDITOR-END\*\//, "")
       .replace(/\/\*BD-EDITOR-CSS-START\*\/[\s\S]*?\/\*BD-EDITOR-CSS-END\*\//, "");
   }
-  async function exportCopy({ name, readOnly }) {
+  function exportCopy({ name, readOnly }) {
     name = (name || suggestName()).trim();
     if (!/\.html?$/i.test(name)) name += ".html";
     const html = readOnly ? readOnlyHtml() : serialize(DATA);
-    if (FS) {
-      try {
-        const h = await window.showSaveFilePicker({ suggestedName: name, types: [{ description: "Blueprint Deck (HTML)", accept: { "text/html": [".html", ".htm"] } }] });
-        const w = await h.createWritable(); await w.write(html); await w.close();
-        toast(`Saved ${escH(h.name)}${readOnly ? " (read-only)" : ""}`, [], 3500);
-        return true;
-      } catch (e) { if (e.name === "AbortError") return false; /* fall back to a download */ }
-    }
+    // a plain download under the name from the dialog (no second "Save as" dialog from the system)
     download(name, html);
     toast(`Downloaded ${escH(name)}${readOnly ? " (read-only)" : ""}`, [], 3500);
     return true;

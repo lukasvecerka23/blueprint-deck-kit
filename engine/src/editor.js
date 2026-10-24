@@ -143,7 +143,7 @@ const BDEditor = (() => {
     const name = m.querySelector("#shareName");
     name.focus(); name.setSelectionRange(0, name.value.replace(/\.html?$/i, "").length);
     const close = () => m.remove();
-    const go = async () => { const readOnly = m.querySelector("[name=shareMode]:checked").value === "ro"; if (await BD.exportCopy({ name: name.value, readOnly })) close(); };
+    const go = () => { const readOnly = m.querySelector("[name=shareMode]:checked").value === "ro"; if (BD.exportCopy({ name: name.value, readOnly })) close(); };
     m.querySelector("[data-x=cancel]").onclick = close;
     m.querySelector("[data-x=go]").onclick = go;
     m.onclick = e => { if (e.target === m) close(); };
