@@ -35,6 +35,25 @@ const ogImage = new URL(image, Astro.site);
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta property="og:image:alt" content="Blueprint Deck Kit: turn your docs into a deck people will love" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {Astro.url.pathname === "/" && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        name: SITE.name,
+        description: SITE.description,
+        url: SITE.url,
+        applicationCategory: "DeveloperApplication",
+        operatingSystem: "macOS, Linux, Windows",
+        license: "https://opensource.org/licenses/MIT",
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        author: [
+          { "@type": "Person", name: SITE.author, url: SITE.authorUrl },
+          { "@type": "Person", name: SITE.coAuthor, url: SITE.coAuthorUrl },
+        ],
+      })} />
+    )}
     <script is:inline>
       // theme before first paint: the saved choice, else the system setting
       (() => {
