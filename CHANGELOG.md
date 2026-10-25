@@ -5,6 +5,15 @@ Versions: a new minor version (2.1, 2.2 …) adds features and keeps every older
 engine, ask your agent to upgrade it (or `node tools/insert.mjs --upgrade <file>`). All releases and their files:
 https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
+## 2.3.1 (2026-10-25)
+
+Ready for the Claude plugin directory.
+
+- The full Lucide icon set is now in two files, `reference/lucide-a-l.json` and `reference/lucide-m-z.json` (each under
+  the directory's 256 KiB limit); look an icon up by its first letter.
+- The skill's update notice points to the update instructions instead of a download-and-run command.
+- The plugin has its own README: what it does, how to install it, and what it runs, reads and sends.
+
 ## 2.3.0 (2026-10-25)
 
 Install it from inside the agent or app you already use.
@@ -26,8 +35,6 @@ Install it from inside the agent or app you already use.
 - **Stricter apps:** the skill's `VERSION` and `LICENSE` are now `VERSION.txt` and `LICENSE.md`, and the frontmatter is
   quoted, because the Gemini app refuses files without an extension and parses YAML strictly. The installers read the
   old `VERSION` of earlier installs.
-- `reference/lucide-all.json` is now `lucide-a-l.json` and `lucide-m-z.json` (smaller files for the Claude plugin
-  directory); the skill's update notice no longer contains a download-and-run command.
 - The skill's "newer version" notice names the right way to update for each kind of install.
 - New example: `meetbuddy`, a macOS meeting recorder read from its code, with a product and a technical diagram.
 
