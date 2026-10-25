@@ -43,7 +43,9 @@ file in the browser (press E); those edits are in the data block, so always re-r
    "Blueprint Deck Kit X is available (you have Y): run
    `curl -fsSL https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.sh | sh`
    (Windows: `irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex`);
-   what's new: https://github.com/lukasvecerka23/blueprint-deck-kit/releases".
+   what's new: https://github.com/lukasvecerka23/blueprint-deck-kit/releases". If `SKILL_DIR` is inside
+   `~/.claude/plugins/` (installed as a Claude Code plugin), say instead: "run
+   `claude plugin update blueprint-deck@blueprint-deck-kit`, or turn on auto-update under /plugin → Marketplaces".
    Never stop or install anything yourself because of this.
 2. When you work on an existing diagram, read its engine version from the top of the file
    (`<meta name="generator" content="Blueprint Deck Kit X">`). If it's older than `SKILL_DIR/VERSION`, mention once

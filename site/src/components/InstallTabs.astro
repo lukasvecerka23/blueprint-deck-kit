@@ -37,16 +37,21 @@ const id = Astro.props.id ?? "install";
   </div>
 
   <div role="tabpanel" id={`${id}-panel-claude`} aria-labelledby={`${id}-tab-claude`} tabindex="-1" class="space-y-3" hidden>
+    <p class="text-sm text-muted-foreground">Inside Claude Code, as a plugin (no script; updates come through Claude Code):</p>
+    <Command code={INSTALL.claudePlugin} prompt=">" />
+    <p class="text-sm text-muted-foreground">Then type <code class="font-mono text-xs">/blueprint-deck:blueprint-deck</code> or paste the prompt from the configurator.
+      Or with the script, into <code class="font-mono text-xs">~/.claude/skills/blueprint-deck</code> (the command is then <code class="font-mono text-xs">/blueprint-deck</code>):</p>
     <Command code={INSTALL.shAgent("claude")} />
     <Command code={INSTALL.psAgent("claude")} prompt="PS>" />
-    <p class="text-sm text-muted-foreground">Installs into <code class="font-mono text-xs">~/.claude/skills/blueprint-deck</code>. Start a new Claude Code session in your project folder
-      and paste the prompt from the configurator, or type <code class="font-mono text-xs">/blueprint-deck</code>.</p>
   </div>
 
   <div role="tabpanel" id={`${id}-panel-codex`} aria-labelledby={`${id}-tab-codex`} tabindex="-1" class="space-y-3" hidden>
+    <p class="text-sm text-muted-foreground">Inside Codex, with its built-in skill installer (no script):</p>
+    <Command code={INSTALL.codexSkill} prompt=">" />
+    <p class="text-sm text-muted-foreground">Or with the script:</p>
     <Command code={INSTALL.shAgent("codex")} />
     <Command code={INSTALL.psAgent("codex")} prompt="PS>" />
-    <p class="text-sm text-muted-foreground">Installs into <code class="font-mono text-xs">~/.codex/skills/blueprint-deck</code>. Start a new Codex session in your project folder and paste
+    <p class="text-sm text-muted-foreground">Either way it lands in <code class="font-mono text-xs">~/.codex/skills/blueprint-deck</code>. Start a new Codex session in your project folder and paste
       the prompt from the configurator, or ask: "Use the blueprint-deck skill to make a diagram of these docs".</p>
   </div>
 

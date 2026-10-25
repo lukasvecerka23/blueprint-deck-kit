@@ -1,0 +1,14 @@
+{
+  "name": "blueprint-deck-kit",
+  "owner": { "name": "Lukas Vecerka", "url": "https://lukasvecerka.dev" },
+  "description": "Blueprint Deck Kit: interactive presentation diagrams from your docs or code.",
+  "plugins": [
+    {
+      "name": "blueprint-deck",
+      "source": "./skill/blueprint-deck",
+      "description": "Turn your docs or code into an interactive presentation diagram: one offline HTML file with a map, guided tour, tabs and personas.",
+      "category": "productivity",
+      "tags": ["diagram", "architecture", "presentation"]
+    }
+  ]
+}

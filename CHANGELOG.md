@@ -7,6 +7,10 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
 ## Unreleased
 
+- **Claude Code plugin.** Install from inside Claude Code without the script:
+  `/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit`; updates come through Claude Code.
+  The repository is its own plugin marketplace.
+- **Codex without the script:** its built-in skill installer installs the skill straight from GitHub.
 - **The installer asks which agents.** When it finds more than one (e.g. Claude Code and Codex), it asks where to
   install; Enter installs for all of them. `--agent` picks one directly, `--yes` skips the question, and CI or a
   non-interactive shell never asks. The install commands use the scripts on `main`, so this works without a release.

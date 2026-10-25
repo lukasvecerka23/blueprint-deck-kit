@@ -49,6 +49,10 @@ if (args[0] === "--upgrade") {
   for (const f of ["LICENSE", "THIRD_PARTY_NOTICES.md"]) fs.copyFileSync(path.join(root, f), path.join(root, "skill/blueprint-deck", f));
   // the installed skill knows its version (install.sh, the update check in SKILL.md)
   fs.writeFileSync(path.join(root, "skill/blueprint-deck/VERSION"), VERSION + "\n");
+  // the Claude Code plugin manifest carries the same version (Claude Code updates plugins when it changes)
+  const pluginJson = path.join(root, "skill/blueprint-deck/.claude-plugin/plugin.json");
+  const plugin = JSON.parse(fs.readFileSync(pluginJson, "utf8"));
+  if (plugin.version !== VERSION) { plugin.version = VERSION; fs.writeFileSync(pluginJson, JSON.stringify(plugin, null, 2) + "\n"); }
   const out = path.join(root, "skill/blueprint-deck/blueprint-deck.html");
   fs.writeFileSync(out, page('{ "blueprintDeck": "empty" }'));
   console.log(`engine ${VERSION} → ${path.relative(root, out)} (${Math.round(fs.statSync(out).size / 1024)} KB)`);

@@ -56,7 +56,19 @@ also written into the config so a later update keeps them.
 
 ## Claude Code
 
-Install for Claude Code only (the default command also finds Claude Code by itself):
+The easiest way is the plugin, installed from inside Claude Code (no script; Claude Code 2.1.275 or later):
+
+```text
+/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
+```
+
+On older versions: `/plugin marketplace add lukasvecerka23/blueprint-deck-kit`, then
+`/plugin install blueprint-deck@blueprint-deck-kit`. Plugin skills carry the plugin's name, so the command is
+`/blueprint-deck:blueprint-deck`. To get updates automatically, turn on auto-update for the `blueprint-deck-kit`
+marketplace under `/plugin` → Marketplaces, or run `claude plugin update blueprint-deck@blueprint-deck-kit`.
+Install it one way only (plugin or script), otherwise Claude Code lists the skill twice.
+
+Or with the script, for Claude Code only (the default command also finds Claude Code by itself):
 
 ```bash
 curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent claude
@@ -78,7 +90,14 @@ the platform for the board meeting".
 
 ## Codex
 
-Install for Codex only:
+Inside Codex, ask its built-in skill installer (no script):
+
+```text
+$skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/skill/blueprint-deck
+```
+
+It installs the skill as it is on `main`. To update, delete `~/.codex/skills/blueprint-deck` and install again, or use
+the script, which replaces it. With the script, for Codex only:
 
 ```bash
 curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex

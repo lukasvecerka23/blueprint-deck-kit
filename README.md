@@ -54,6 +54,19 @@ The script copies the skill into the skills folder of the agents it finds (`~/.c
 project), `--version 2.1.0` (a specific release), `--uninstall`; with PowerShell `-Agent`, `-Version` … (run it as
 `& ([scriptblock]::Create((irm <url>))) -Version 2.1.0`).
 
+**Without the script**, from inside your agent:
+
+- **Claude Code** (as a plugin; updates through `/plugin`, with optional auto-update):
+  ```
+  /plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
+  ```
+  On Claude Code older than 2.1.275, run `/plugin marketplace add lukasvecerka23/blueprint-deck-kit` and then
+  `/plugin install blueprint-deck@blueprint-deck-kit`. The command is then `/blueprint-deck:blueprint-deck`.
+- **Codex** (its built-in skill installer; to update, delete `~/.codex/skills/blueprint-deck` and install again):
+  ```
+  $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/skill/blueprint-deck
+  ```
+
 - **From a clone** (e.g. to try unreleased changes on `main`): `./install.sh` installs that checkout.
 - **By hand:** download `blueprint-deck-skill.zip` from a [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases)
   and unzip it into your agent's skills folder.

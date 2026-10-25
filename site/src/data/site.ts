@@ -17,6 +17,8 @@ export const INSTALL = {
   ps: `irm ${SITE.url}/install.ps1 | iex`,
   shAgent: (a: string) => `curl -fsSL ${SITE.url}/install.sh | sh -s -- --agent ${a}`,
   psAgent: (a: string) => `& ([scriptblock]::Create((irm ${SITE.url}/install.ps1))) -Agent ${a}`,
+  claudePlugin: "/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit",
+  codexSkill: "$skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/skill/blueprint-deck",
 };
 
 export const DOCS_NAV = [
