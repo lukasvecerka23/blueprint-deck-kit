@@ -43,6 +43,13 @@ const features = [
 
 const kinds = ["Architecture blueprints", "Product blueprints", "Service maps", "Data flows", "Processes", "Customer journeys", "Ecosystems", "Org maps"];
 const homeFaq = FAQ.filter(f => f.home);
+
+// the star count, read once at build time (no request from visitors' browsers); shown from 25 stars up
+let stars = 0;
+try {
+  const r = await fetch("https://api.github.com/repos/lukasvecerka23/blueprint-deck-kit", { headers: { Accept: "application/vnd.github+json" }, signal: AbortSignal.timeout(5000) });
+  if (r.ok) stars = (await r.json()).stargazers_count ?? 0;
+} catch { /* offline build: no count */ }
 ---
 <Base>
   <!-- ============================================================ hero -->
@@ -68,6 +75,8 @@ const homeFaq = FAQ.filter(f => f.home);
         <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
           <a href="/configurator/" class="btn" data-size="lg">Configure your deck <Icon name="arrow-right" /></a>
           <a href="#install" class="btn" data-size="lg" data-variant="outline"><Icon name="terminal" /> Install the skill</a>
+          <a href={SITE.repo} class="btn" data-size="lg" data-variant="ghost"><Icon name="github" /> Star on GitHub
+            {stars >= 25 && <span class="badge ml-0.5 font-mono" data-variant="secondary">★ {stars}</span>}</a>
         </div>
         <div class="mx-auto mt-8 max-w-2xl text-center">
           <InstallTabs id="hero-install" variant="hero" />

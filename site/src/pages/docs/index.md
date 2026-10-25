@@ -23,11 +23,13 @@ Install it where you work:
   ```
 
   Then type `/blueprint-deck`. More (older versions, updates) on the [Agents](/docs/agents/) page.
-- **Codex**: add this repository as a plugin marketplace, then install Blueprint Deck from the Plugins Directory:
+- **Codex**, with its built-in skill installer, from inside Codex:
 
   ```text
-  codex plugin marketplace add lukasvecerka23/blueprint-deck-kit
+  $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck
   ```
+
+  Or as a plugin, with updates ([how](/docs/agents/#codex)).
 
 - **Gemini CLI**, with its own skill installer:
 
@@ -38,7 +40,7 @@ Install it where you work:
 - **Chat apps** (Claude, ChatGPT, Gemini): download
   [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
   and upload it as a skill ([how, per app](/docs/agents/#chat-apps-claude-chatgpt-gemini)).
-- **Other agents, or several at once**: the install script below.
+- **Any other agent, or several at once**: the install script below.
 
 ### The install script
 

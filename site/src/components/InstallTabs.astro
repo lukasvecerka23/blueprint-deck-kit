@@ -14,7 +14,7 @@ const tabs = [
   { id: "codex", label: "Codex" },
   { id: "gemini", label: "Gemini CLI" },
   { id: "apps", label: "Chat apps" },
-  { id: "other", label: "Other agents" },
+  { id: "other", label: "Install script" },
   ...(hero ? [] : [{ id: "manual", label: "Manual" }]),
 ];
 const hint = "text-sm text-muted-foreground";
@@ -44,16 +44,16 @@ const link = "underline underline-offset-4 hover:text-foreground";
 
   <!-- Codex: our repository is a plugin marketplace (Codex shares its plugins with the ChatGPT desktop app) -->
   <div role="tabpanel" id={`${id}-panel-codex`} aria-labelledby={`${id}-tab-codex`} tabindex="-1" class="space-y-3" hidden>
-    <Command code={INSTALL.codexMarketplace} />
+    <Command code={INSTALL.codexSkill} prompt=">" />
     {hero ? (
-      <p class={hint}>Adds this repository as a plugin marketplace; then install Blueprint Deck from the Plugins Directory and ask for a deck.</p>
+      <p class={hint}>Run it inside Codex: its skill installer installs Blueprint Deck in one go. Then start a new session and ask for a deck.</p>
     ) : (
       <>
-        <p class={hint}>Adds this repository as a plugin marketplace; then install Blueprint Deck from the Plugins Directory. Updates:{" "}
-          <code class={code}>codex plugin marketplace upgrade</code>. Without plugins, Codex's own skill installer works too:</p>
-        <Command code={INSTALL.codexSkill} prompt=">" />
-        <p class={hint}>It puts the skill into <code class={code}>~/.codex/skills/blueprint-deck</code> but doesn't update it later; the script under{" "}
-          <span class="font-medium text-foreground">Other agents</span> does.</p>
+        <p class={hint}>Run it inside Codex: its built-in skill installer puts the skill into <code class={code}>~/.codex/skills/blueprint-deck</code>.
+          It doesn't update it later; to update, run the <span class="font-medium text-foreground">Install script</span>, which replaces it.
+          Or use the plugin, which updates through Codex and also appears in the ChatGPT desktop app: add the marketplace</p>
+        <Command code={INSTALL.codexMarketplace} />
+        <p class={hint}>then install Blueprint Deck from the Plugins Directory. Updates: <code class={code}>codex plugin marketplace upgrade</code>.</p>
       </>
     )}
   </div>
@@ -94,7 +94,7 @@ const link = "underline underline-offset-4 hover:text-foreground";
     )}
   </div>
 
-  <!-- Other agents, or several at once: the install script -->
+  <!-- the install script: any agent, several at once, Windows, specific versions -->
   <div role="tabpanel" id={`${id}-panel-other`} aria-labelledby={`${id}-tab-other`} tabindex="-1" class="space-y-3" hidden>
     <Command code={INSTALL.sh} />
     <Command code={INSTALL.ps} prompt="PS>" />

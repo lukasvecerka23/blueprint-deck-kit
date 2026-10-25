@@ -93,30 +93,28 @@ the platform for the board meeting".
 
 ## Codex
 
-This repository is a plugin marketplace for Codex. Add it once, then install Blueprint Deck from the Plugins
-Directory:
-
-```bash
-codex plugin marketplace add lukasvecerka23/blueprint-deck-kit
-```
-
-Updates come through the marketplace (`codex plugin marketplace upgrade`). Codex shares its plugins with the ChatGPT
-desktop app, so the plugin shows up there too (see [Chat apps](#chat-apps-claude-chatgpt-gemini)).
-
-Without plugins, Codex's own skill installer installs the skill straight from GitHub:
+Inside Codex, its built-in skill installer installs Blueprint Deck in one step:
 
 ```text
 $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck
 ```
 
-It installs the skill as it is on `main` and doesn't update it later. The script does both, for Codex only:
+It installs the skill as it is on `main` into `~/.codex/skills/blueprint-deck` and doesn't update it later. To
+update, run the install script, which replaces it:
 
 ```bash
 curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex
 ```
 
-The skill lands in `~/.codex/skills/blueprint-deck`. Start a new Codex session in your project folder and paste the prompt from the
-configurator, or ask:
+**As a plugin, with updates:** this repository is also a plugin marketplace. Add it once, then install Blueprint Deck
+from the Plugins Directory; updates come through `codex plugin marketplace upgrade`. Codex shares its plugins with the
+ChatGPT desktop app, so the plugin shows up there too (see [Chat apps](#chat-apps-claude-chatgpt-gemini)).
+
+```bash
+codex plugin marketplace add lukasvecerka23/blueprint-deck-kit
+```
+
+Start a new Codex session in your project folder and paste the prompt from the configurator, or ask:
 
 ```text
 Use the blueprint-deck skill to make a diagram of this repo from diagrams/diagram.config.yaml.
@@ -162,7 +160,7 @@ Differences from a coding agent: it only sees what you attach, not a whole repos
 documents better than a large codebase. To change a deck later, attach the HTML file again and say what to change, or
 press **E** in the file. To update the skill, delete it and upload the newer zip.
 
-## Other agents
+## Other agents (the install script)
 
 Agents that support Agent Skills find the skill in their skills folder: `--agent agents` installs into the shared
 `~/.agents/skills`, and `--dir <path>` into any folder. For an agent without skill support, put the folder somewhere

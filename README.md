@@ -52,15 +52,13 @@ Then type `/blueprint-deck`. On Claude Code older than 2.1.275, run
 `/plugin marketplace add lukasvecerka23/blueprint-deck-kit` and then `/plugin install blueprint-deck@blueprint-deck-kit`.
 Updates: turn on auto-update under `/plugin` → Marketplaces, or run `claude plugin update blueprint-deck@blueprint-deck-kit`.
 
-**Codex**: add this repository as a plugin marketplace, then install Blueprint Deck from the Plugins Directory:
-```
-codex plugin marketplace add lukasvecerka23/blueprint-deck-kit
-```
-Without plugins, Codex's own skill installer works too (it doesn't update the skill later; the install script below
-does):
+**Codex**: with its built-in skill installer, from inside Codex:
 ```
 $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck
 ```
+It doesn't update the skill later (the install script below does). Or install it as a plugin, which updates through
+Codex and also appears in the ChatGPT desktop app: `codex plugin marketplace add lukasvecerka23/blueprint-deck-kit`,
+then install Blueprint Deck from the Plugins Directory.
 
 **Gemini CLI**: with its own skill installer:
 ```
@@ -77,7 +75,7 @@ and upload it unchanged.
 
 Then attach your docs to a chat and ask for a Blueprint Deck.
 
-**Other agents, or several at once**: the install script. It installs the latest
+**Install script**: for any other agent, several at once, Windows or a specific version. It installs the latest
 [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) for the agents it finds (`~/.claude/skills`,
 `~/.codex/skills`, `~/.gemini/skills`, `~/.agents/skills`) and asks which when there are several.
 
