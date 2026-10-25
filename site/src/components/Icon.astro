@@ -1,6 +1,8 @@
 ---
-// Lucide icons, read at build time from the copy the skill ships (plugins/blueprint-deck/skills/blueprint-deck/reference/lucide-all.json).
-import lucide from "../../../plugins/blueprint-deck/skills/blueprint-deck/reference/lucide-all.json";
+// Lucide icons, read at build time from the copy the skill ships (plugins/blueprint-deck/skills/blueprint-deck/reference/lucide-*.json).
+import lucideAL from "../../../plugins/blueprint-deck/skills/blueprint-deck/reference/lucide-a-l.json";
+import lucideMZ from "../../../plugins/blueprint-deck/skills/blueprint-deck/reference/lucide-m-z.json";
+const lucide = { ...lucideAL, ...lucideMZ };
 
 interface Props { name: string; class?: string; size?: number; "stroke-width"?: number }
 const { name, class: cls = "size-4", size = 24, "stroke-width": sw = 2 } = Astro.props;

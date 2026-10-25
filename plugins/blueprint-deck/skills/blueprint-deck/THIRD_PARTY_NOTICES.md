@@ -5,7 +5,7 @@ Blueprint Deck Kit includes the following third-party work. Every generated diag
 ## Lucide icons
 
 A selection of icons from [Lucide](https://lucide.dev) is embedded in the engine (`engine/src/icons.js`, generated
-from `dev/icon-list.txt`) and the full set is in `plugins/blueprint-deck/skills/blueprint-deck/reference/lucide-all.json`.
+from `dev/icon-list.txt`) and the full set is in `plugins/blueprint-deck/skills/blueprint-deck/reference/lucide-a-l.json` and `lucide-m-z.json`.
 
 ISC License. Copyright (c) Lucide Icons and Contributors. Some icons are derived from
 [Feather](https://feathericons.com), MIT License, Copyright (c) 2013-present Cole Bemis.

@@ -6,6 +6,6 @@ Every diagram includes these 373 [Lucide](https://lucide.dev) icons (Lucide 1.61
 
 Short names from earlier versions still work: `app` → `app-window`, `chat` → `message-circle`, `check` → `shield-check`, `contract` → `file-text`, `alert` → `triangle-alert`, `bars` → `chart-bar`, `pkg` → `package`, `dash` → `layout-dashboard`, `pulse` → `activity`, `flask` → `flask-conical`, `flow` → `workflow`, `chain` → `link`, `chart` → `chart-line`, `helm` → `ship-wheel`, `db` → `database`, `bucket` → `archive`, `sync` → `refresh-cw`, `airgap` → `wifi-off`, `swap` → `arrow-right-left`, `person` → `user`, `phone` → `smartphone`, `git` → `git-branch`, `cart` → `shopping-cart`, `card` → `credit-card`, `grid` → `layout-grid`, `stream` → `audio-waveform`, `mobile` → `smartphone`, `money` → `banknote`, `queue` → `rows-3`, `terminal` → `square-terminal`, `filter` → `funnel`, `home` → `house`.
 
-**Any other Lucide icon** (about 1903 in total, see lucide.dev/icons): copy its markup from `reference/lucide-all.json` into the
+**Any other Lucide icon** (about 1903 in total, see lucide.dev/icons): copy its markup from `reference/lucide-a-l.json` or `reference/lucide-m-z.json` (by the name's first letter) into the
 diagram's `icons` map, e.g. `"icons": { "ferris-wheel": "<path d=…/>" }`, then use `"icon": "ferris-wheel"`.
 Brand logos are not part of Lucide; add them the same way (an inner SVG on a 24×24 grid) or as an image (`"icon": "data:image/svg+xml;base64,…"`).

@@ -1,6 +1,7 @@
 // Dev only: regenerates engine/src/icons.js from the Lucide package (npm pack lucide-static) and dev/icon-list.txt.
 //   node dev/make-icons.mjs path/to/lucide-static/package
-// Also writes plugins/blueprint-deck/skills/blueprint-deck/reference/lucide-all.json (every Lucide icon, for icons a diagram adds itself).
+// Also writes plugins/blueprint-deck/skills/blueprint-deck/reference/lucide-a-l.json and lucide-m-z.json (every Lucide icon,
+// for icons a diagram adds itself; in two files because the Claude plugin directory reviews files over 256 KiB by hand).
 import fs from "node:fs";
 import path from "node:path";
 
@@ -38,7 +39,10 @@ fs.mkdirSync(path.join(root, "engine/src"), { recursive: true });
 fs.writeFileSync(path.join(root, "engine/src/icons.js"), out);
 const all = Object.fromEntries(Object.entries(nodes).map(([k, v]) => [k, inner(v)]));
 fs.mkdirSync(path.join(root, "plugins/blueprint-deck/skills/blueprint-deck/reference"), { recursive: true });
-fs.writeFileSync(path.join(root, "plugins/blueprint-deck/skills/blueprint-deck/reference/lucide-all.json"), JSON.stringify(all));
+for (const [file, test] of [["lucide-a-l.json", k => k[0] <= "l"], ["lucide-m-z.json", k => k[0] > "l"]]) {
+  const part = Object.fromEntries(Object.entries(all).filter(([k]) => test(k)).sort(([x], [y]) => (x < y ? -1 : 1)));
+  fs.writeFileSync(path.join(root, "plugins/blueprint-deck/skills/blueprint-deck/reference", file), JSON.stringify(part));
+}
 const md = `# Icons
 
 Every diagram includes these ${names.length} [Lucide](https://lucide.dev) icons (Lucide ${version}, ISC License). Use the name in \`icon\`.
@@ -47,7 +51,7 @@ ${names.map(n => "`" + n + "`").join(" · ")}
 
 Short names from earlier versions still work: ${Object.entries(ALIASES).map(([a, t]) => "`" + a + "` → `" + t + "`").join(", ")}.
 
-**Any other Lucide icon** (about ${Object.keys(nodes).length} in total, see lucide.dev/icons): copy its markup from \`reference/lucide-all.json\` into the
+**Any other Lucide icon** (about ${Object.keys(nodes).length} in total, see lucide.dev/icons): copy its markup from \`reference/lucide-a-l.json\` or \`reference/lucide-m-z.json\` (by the name's first letter) into the
 diagram's \`icons\` map, e.g. \`"icons": { "ferris-wheel": "<path d=…/>" }\`, then use \`"icon": "ferris-wheel"\`.
 Brand logos are not part of Lucide; add them the same way (an inner SVG on a 24×24 grid) or as an image (\`"icon": "data:image/svg+xml;base64,…"\`).
 `;

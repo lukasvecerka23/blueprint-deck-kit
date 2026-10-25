@@ -17,7 +17,7 @@ plugin); in the repository it lives at
 | `blueprint-deck.html` | the engine with an empty data block; copied for every new diagram |
 | `reference/spec.md` | the JSON format ([Diagram format](/docs/format/)) |
 | `reference/style-guide.md` | content, structure, viewpoint, layout and tour rules ([Style guide](/docs/style-guide/)) |
-| `reference/icons.md`, `reference/lucide-all.json` | the icon names, and every Lucide icon for extras |
+| `reference/icons.md`, `reference/lucide-a-l.json`, `reference/lucide-m-z.json` | the icon names, and every Lucide icon for extras |
 | `templates/diagram.config.yaml` | the annotated config ([Configuring](/docs/configuring/)) |
 | `templates/example.json` | a finished example |
 | `tools/check.mjs` | an optional command-line check (needs Node 18+, nothing to install) |

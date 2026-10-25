@@ -26,6 +26,8 @@ Install it from inside the agent or app you already use.
 - **Stricter apps:** the skill's `VERSION` and `LICENSE` are now `VERSION.txt` and `LICENSE.md`, and the frontmatter is
   quoted, because the Gemini app refuses files without an extension and parses YAML strictly. The installers read the
   old `VERSION` of earlier installs.
+- `reference/lucide-all.json` is now `lucide-a-l.json` and `lucide-m-z.json` (smaller files for the Claude plugin
+  directory); the skill's update notice no longer contains a download-and-run command.
 - The skill's "newer version" notice names the right way to update for each kind of install.
 - New example: `meetbuddy`, a macOS meeting recorder read from its code, with a product and a technical diagram.
 

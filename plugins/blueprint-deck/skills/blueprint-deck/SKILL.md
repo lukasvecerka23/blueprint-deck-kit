@@ -54,10 +54,9 @@ file in the browser (press E); those edits are in the data block, so always re-r
    - `SKILL_DIR` inside `~/.codex/plugins/` (Codex or ChatGPT desktop plugin): run `codex plugin marketplace upgrade`,
      or update it in the Plugins Directory
    - a chat app (claude.ai, Claude Desktop, ChatGPT on the web, Gemini; no project folder): delete the skill and upload the newer
-     `blueprint-deck-skill.zip` from the releases page
-   - anywhere else (Claude Code, Codex or Gemini CLI skills folder, other agents): run
-     `curl -fsSL https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.sh | sh`
-     (Windows: `irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex`)
+     zip from the releases page (`blueprint-deck-skill-gemini.zip` in Gemini)
+   - anywhere else (Claude Code, Codex or Gemini CLI skills folder, other agents): run the install script again, as
+     described at https://blueprint-deck.lukasvecerka.dev/docs/agents/#updating
    Never stop or install anything yourself because of this.
 2. When you work on an existing diagram, read its engine version from the top of the file
    (`<meta name="generator" content="Blueprint Deck Kit X">`). If it's older than the skill's version, mention once
