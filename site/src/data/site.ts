@@ -4,7 +4,7 @@ export const SITE = {
   url: "https://blueprint-deck.lukasvecerka.dev",
   repo: "https://github.com/lukasvecerka23/blueprint-deck-kit",
   sponsor: "https://github.com/sponsors/lukasvecerka23",
-  author: "Lukas Vecerka",
+  author: "Lukáš Večerka",
   authorUrl: "https://github.com/lukasvecerka23",
   coAuthor: "Pavel Sládek",
   coAuthorUrl: "https://www.linkedin.com/in/sladek/",

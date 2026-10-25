@@ -197,7 +197,7 @@ Blueprint Deck Kit is free and stays free. If it saves you time, you can
 
 ## Authors
 
-Made by [Lukas Vecerka](https://github.com/lukasvecerka23), with
+Made by [Lukáš Večerka](https://github.com/lukasvecerka23), with
 [Pavel Sládek](https://www.linkedin.com/in/sladek/), who gave the first feedback and many of the ideas that shaped it.
 
 ## Contributing

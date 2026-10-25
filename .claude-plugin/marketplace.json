@@ -1,6 +1,6 @@
 {
   "name": "blueprint-deck-kit",
-  "owner": { "name": "Lukas Vecerka", "url": "https://lukasvecerka.dev" },
+  "owner": { "name": "Lukáš Večerka", "url": "https://lukasvecerka.dev" },
   "description": "Blueprint Deck Kit: interactive presentation diagrams from your docs or code.",
   "plugins": [
     {
