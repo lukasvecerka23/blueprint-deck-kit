@@ -6,6 +6,12 @@ const PLAY = '<svg class="i" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></sv
 const rgbOf = h => { const c = BDCore.hexRgb(h) || [128, 128, 128]; return c.join(","); };
 // custom properties (--c, --rgb) need setProperty; Object.assign on style silently drops them
 const setStyle = (el, props) => Object.entries(props).forEach(([k, v]) => el.style.setProperty(k, typeof v === "number" ? v + "px" : v));
+// the credit ("Made with Blueprint Deck Kit", settings.credit): the kit's mark and name, on the start screen, in the
+// ⋯ menu and the PDF footer
+const BDK_SITE = "https://blueprint-deck.lukasvecerka.dev";
+// each copy gets its own gradient id: a copy that is hidden (the start screen while printing) can't lend it to others
+let bdkN = 0;
+const bdkCredit = () => { const n = ++bdkN; return `Made with <b class="bdk-name"><svg class="bdk-mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bdk-g${n}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#6d28d9"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="url(#bdk-g${n})"/><rect x="10" y="6" width="16" height="12.5" rx="2.6" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.5"/><rect x="6" y="10.5" width="18" height="15" rx="3" fill="#fff"/><path d="M10.6 16.2h8.6M10.6 16.2l4.3 5.2M19.2 16.2l-4.3 5.2" stroke="#4f46e5" stroke-width="1.4" stroke-linecap="round" fill="none"/><circle cx="10.6" cy="16.2" r="2" fill="#2563eb"/><circle cx="19.2" cy="16.2" r="2" fill="#2563eb"/><circle cx="14.9" cy="21.4" r="2" fill="#7c3aed"/></svg>Blueprint Deck Kit</b>`; };
 const esc = s => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 function iconHtml(name, custom) {
   const n = name || "cog";
@@ -855,7 +861,7 @@ function createDiagram(SPEC, host = {}, opts = {}) {
       <button class="btn" id="heroExplore">${L10N.explore}</button>
     </div>
     ${H.footnote ? `<div class="hero-foot">${H.footnote}</div>` : ""}
-    ${SPEC.settings.credit !== false ? `<div class="hero-credit"><a href="https://blueprint-deck.lukasvecerka.dev" target="_blank" rel="noopener">Made with Blueprint Deck Kit</a></div>` : ""}
+    ${SPEC.settings.credit !== false ? `<div class="hero-credit"><a href="${BDK_SITE}" target="_blank" rel="noopener">${bdkCredit()}</a></div>` : ""}
   </div>`;
   function hideHero() { hero.classList.add("gone"); lastWake = 0; wake(); }
   runAnim(false);
@@ -1009,7 +1015,7 @@ function createDiagram(SPEC, host = {}, opts = {}) {
     document.body.classList.toggle("print-bw", !!opts.bw);
     const PW = 1123, PH = 792, M = 44;
     const page = cls => { const p = document.createElement("div"); p.className = "pg " + (cls || ""); out.appendChild(p); return p; };
-    const credit = SPEC.settings.credit !== false ? `<span class="pg-credit">Made with Blueprint Deck Kit</span>` : "";
+    const credit = SPEC.settings.credit !== false ? `<span class="pg-credit">${bdkCredit()}</span>` : "";
     const foot = (p, txt) => p.insertAdjacentHTML("beforeend", `<div class="pg-foot">${BDCore.stripTags(META.title)}${txt ? " · " + txt : ""}${credit}</div>`);
     const mapInto = (p, box, area) => {
       const c = world.cloneNode(true);
