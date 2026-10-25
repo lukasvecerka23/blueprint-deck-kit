@@ -16,7 +16,8 @@ You write the JSON. That keeps every diagram consistent and lets people fix text
 - `SKILL_DIR/reference/style-guide.md`: content, structure, viewpoint, layout and tour rules (read it, it matters)
 - `SKILL_DIR/reference/icons.md`: the icon names
 - `SKILL_DIR/templates/diagram.config.yaml`: the annotated config; `SKILL_DIR/templates/example.json`: a finished example
-- `SKILL_DIR/tools/check.mjs`: optional command-line check (needs Node 18+, nothing to install)
+- `SKILL_DIR/tools/check.mjs`: optional command-line check (needs Node 18+, nothing to install). `tools/` is missing in
+  the Gemini app's copy of the skill: there, insert the JSON by hand (step 4) and check in the browser (E → Check)
 
 **In a chat app** (claude.ai, Claude Desktop, ChatGPT, Gemini; no project folder): the sources are the files the user attached
 or pasted (and URLs, if you can fetch them). With no config, ask the step-0 questions in the chat. Work in your

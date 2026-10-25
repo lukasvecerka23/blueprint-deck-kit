@@ -35,9 +35,9 @@ Install it where you work:
   gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --path plugins/blueprint-deck/skills/blueprint-deck
   ```
 
-- **Chat apps** (Claude, ChatGPT, Gemini): download
-  [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
-  and upload it as a skill ([how, per app](/docs/agents/#chat-apps-claude-chatgpt-gemini)).
+- **Chat apps**: upload [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip) as a skill in Claude or ChatGPT on the web,
+  [blueprint-deck-skill-gemini.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill-gemini.zip) in Gemini; the ChatGPT desktop app takes the Codex plugin
+  ([how, per app](/docs/agents/#chat-apps-claude-chatgpt-gemini)).
 - **Any other agent, or several at once**: the install script below.
 
 ### The install script

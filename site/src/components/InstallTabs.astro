@@ -10,6 +10,7 @@ interface Props { id?: string; variant?: "hero" | "full" }
 const { id = "install", variant = "full" } = Astro.props;
 const hero = variant === "hero";
 const zip = `${SITE.repo}/releases/latest/download/blueprint-deck-skill.zip`;
+const zipGemini = `${SITE.repo}/releases/latest/download/blueprint-deck-skill-gemini.zip`;
 const tabs = [
   { id: "claude", label: "Claude Code", brand: "claude" },
   { id: "codex", label: "Codex", brand: "openai" },
@@ -74,21 +75,24 @@ const link = "underline underline-offset-4 hover:text-foreground";
     )}
   </div>
 
-  <!-- the chat apps: Claude and Gemini take the zip; ChatGPT takes it on the web, the desktop app uses the plugin -->
+  <!-- the chat apps: Claude and ChatGPT (web) take the zip, Gemini a zip without tools/, the ChatGPT desktop app the Codex plugin -->
   <div role="tabpanel" id={`${id}-panel-apps`} aria-labelledby={`${id}-tab-apps`} tabindex="-1" class="space-y-3" hidden>
     <div class:list={["flex flex-wrap items-center gap-3", hero && "justify-center"]}>
       <a href={zip} class="btn" data-variant="outline"><Icon name="download" class="size-4" /> Download the skill (.zip)</a>
+      <a href={zipGemini} class="btn" data-variant="ghost"><BrandIcon name="gemini" class="size-3.5" /> For Gemini (.zip)</a>
       {!hero && <a class={`${hint} ${link}`} href={`${SITE.repo}/releases`}>all versions</a>}
     </div>
     {hero ? (
-      <p class={hint}>Upload it unchanged: <span class="font-medium text-foreground">Claude</span> and <span class="font-medium text-foreground">Gemini</span> under Customize → Skills,{" "}
-        <span class="font-medium text-foreground">ChatGPT</span> on the web under Plugins → Skills (the desktop app uses Codex's skills). Then attach your docs to a chat and ask for a Blueprint Deck.</p>
+      <p class={hint}>Upload it unchanged: <span class="font-medium text-foreground">Claude</span> under Customize → Skills, <span class="font-medium text-foreground">ChatGPT</span> on the web
+        under Plugins → Skills, <span class="font-medium text-foreground">Gemini</span> (its own zip) under Customize → Skills. The ChatGPT desktop app takes the plugin from the Codex tab.</p>
     ) : (
       <ul class={`${hint} list-disc space-y-1.5 pl-5`}>
-        <li><span class="font-medium text-foreground">Claude</span> (Desktop or claude.ai, paid plans): Customize → Skills → upload, turn it on. Code execution must be on.</li>
-        <li><span class="font-medium text-foreground">ChatGPT</span>: on the web (paid plans) Plugins → Skills → Create → Upload. The desktop app uses Codex's plugins:
-          install it as under <span class="font-medium text-foreground">Codex</span> and it shows up there too.</li>
-        <li><span class="font-medium text-foreground">Gemini</span> (web or Mac app, personal accounts): Customize → Skills → upload (some accounts show it under Settings → Skills).</li>
+        <li><span class="font-medium text-foreground">Claude</span> (web and desktop app, paid plans): Customize → Skills → upload the zip, turn it on. Code execution must be on.</li>
+        <li><span class="font-medium text-foreground">ChatGPT on the web</span> (paid plans): Plugins → Skills → Create → Upload the zip.</li>
+        <li><span class="font-medium text-foreground">ChatGPT desktop app</span>: no upload; it takes plugins. Install the Codex plugin (Codex tab), or in the app:
+          Plugins → add the marketplace <code class={code}>lukasvecerka23/blueprint-deck-kit</code>, then install Blueprint Deck.</li>
+        <li><span class="font-medium text-foreground">Gemini</span> (web and desktop app): Customize → Skills → upload the Gemini zip (the same skill without the optional
+          Node tools, which the Gemini app doesn't accept).</li>
         <li>Then attach your docs to a chat and ask for a Blueprint Deck. In a chat the skill only sees the files you attach, and you get the HTML file to download.{" "}
           <a class={link} href="/docs/agents/#chat-apps-claude-chatgpt-gemini">Details</a>.</li>
       </ul>

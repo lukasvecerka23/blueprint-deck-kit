@@ -67,13 +67,14 @@ $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tr
 gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --path plugins/blueprint-deck/skills/blueprint-deck
 ```
 
-**Chat apps** (no terminal): download
-[blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
-and upload it unchanged.
-- **Claude** (Desktop or claude.ai, paid plans): **Customize → Skills**, upload, turn it on (code execution must be on).
-- **ChatGPT** on the web (paid plans): **Plugins → Skills → Create → Upload**. The desktop app uses Codex's plugins:
-  install it as for Codex above and it shows up there too.
-- **Gemini** (web or Mac app, personal accounts): **Customize → Skills**, upload.
+**Chat apps** (no terminal):
+- **Claude** (web and desktop app, paid plans): **Customize → Skills**, upload
+  [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip) unchanged, turn it on (code execution must be on).
+- **ChatGPT on the web** (paid plans): **Plugins → Skills → Create → Upload**, the same zip.
+- **ChatGPT desktop app**: install the Codex plugin above (the app shares Codex's plugins), or in the app **Plugins** →
+  add the marketplace `lukasvecerka23/blueprint-deck-kit`.
+- **Gemini** (web and desktop app): **Customize → Skills**, upload
+  [blueprint-deck-skill-gemini.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill-gemini.zip) (without the optional Node tools, which Gemini doesn't accept).
 
 Then attach your docs to a chat and ask for a Blueprint Deck.
 
@@ -143,8 +144,8 @@ Paste the prompt into your agent, in your project folder: a code repository, or 
 
 - **The skill** mentions it when a newer version is out ([what's new](https://github.com/lukasvecerka23/blueprint-deck-kit/releases)).
   To update: Claude Code plugin: `claude plugin update blueprint-deck@blueprint-deck-kit` (or auto-update);
-  Codex/ChatGPT desktop plugin: `codex plugin marketplace upgrade`; Claude, ChatGPT or Gemini app: delete the skill and
-  upload the newer zip; install script (also for Codex): run it again, it says
+  Codex/ChatGPT desktop plugin: `codex plugin marketplace upgrade`; Claude, ChatGPT (web) or Gemini: delete the skill
+  and upload the newer zip; install script (also for Codex): run it again, it says
   which version it replaced. A specific release: add `--version 2.1.0` (PowerShell: `-Version 2.1.0`).
 - **Your diagrams** keep working as they are: each file carries its own engine. To give a file the new features,
   ask your agent to "upgrade diagrams/index.html to the newest engine"; your content stays as it is. The editor

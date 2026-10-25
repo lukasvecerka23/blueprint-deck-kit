@@ -135,24 +135,19 @@ Check with `/skills list` in a Gemini CLI session, then ask for a Blueprint Deck
 
 ## Chat apps: Claude, ChatGPT, Gemini
 
-The chat apps need no terminal: you upload the skill as a zip, once.
+The chat apps need no terminal. Most take the skill as a zip upload, once:
 
-1. Download [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
-   from the latest release. Don't unzip it: it already has the shape the apps expect (one `blueprint-deck/` folder
-   with `SKILL.md` inside).
-2. Add it to your app:
-   - **Claude** (claude.ai or Claude Desktop; paid plans): **Customize → Skills**, upload the zip, then turn the skill
-     on. Code execution must be on (Settings → Capabilities), because the skill works with files.
-   - **ChatGPT on the web** (paid plans): **Plugins → Skills → Create → Upload from your computer**. ChatGPT scans the
-     upload before you can use it.
-   - **ChatGPT desktop app**: it takes no skill uploads, but it uses Codex's plugins and skills. Install it as for
-     [Codex](#codex) and it shows up in the app too, or in the app: **Plugins** → add the marketplace
-     `lukasvecerka23/blueprint-deck-kit`, then install **Blueprint Deck**.
-   - **Gemini** (web or Mac app, personal Google accounts): **Customize → Skills** (some accounts show it under
-     Settings → Skills), upload the zip.
-3. Start a chat, attach your docs (Markdown, PDF, text) or paste links, and ask: "Make a Blueprint Deck of these docs
-   for our executives". The skill asks for what it can't tell from the files, then gives you the HTML file to
-   download.
+| app | how |
+|---|---|
+| **Claude** (web and desktop app; paid plans) | **Customize → Skills**, upload [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip), turn it on. Code execution must be on (Settings → Capabilities), because the skill works with files. |
+| **ChatGPT on the web** (paid plans) | **Plugins → Skills → Create → Upload from your computer**, the same zip. ChatGPT scans it before you can use it. |
+| **ChatGPT desktop app** | It takes plugins, not uploads: install the [Codex plugin](#codex) (the app shares Codex's plugins), or in the app **Plugins** → add the marketplace `lukasvecerka23/blueprint-deck-kit`, then install **Blueprint Deck**. |
+| **Gemini** (web and desktop app) | **Customize → Skills** (some accounts: Settings → Skills), upload [blueprint-deck-skill-gemini.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill-gemini.zip): the same skill without the optional Node tools, which the Gemini app doesn't accept. |
+
+Don't unzip the files: they already have the shape the apps expect (one `blueprint-deck/` folder with `SKILL.md`
+inside). Then start a chat, attach your docs (Markdown, PDF, text) or paste links, and ask: "Make a Blueprint Deck of
+these docs for our executives". The skill asks for what it can't tell from the files, then gives you the HTML file to
+download.
 
 Differences from a coding agent: it only sees what you attach, not a whole repository, so it suits a handful of
 documents better than a large codebase. To change a deck later, attach the HTML file again and say what to change, or
@@ -186,7 +181,7 @@ updates anything by itself). How to update depends on how you installed it:
 |---|---|
 | the Claude Code plugin | `claude plugin update blueprint-deck@blueprint-deck-kit`, or auto-update under `/plugin` → Marketplaces |
 | the Codex / ChatGPT desktop plugin | `codex plugin marketplace upgrade`, or update it in the Plugins Directory |
-| a zip upload (Claude, ChatGPT, Gemini apps) | delete the skill and upload the newer zip |
+| a zip upload (Claude, ChatGPT on the web, Gemini) | delete the skill and upload the newer zip |
 | the install script, Codex's skill installer or Gemini CLI | run the install script again: it replaces the skill and says which version it replaced |
 
 What changed is in the [changelog](/changelog/). To install a specific release with the script:

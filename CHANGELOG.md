@@ -15,8 +15,9 @@ Install it from inside the agent or app you already use.
   `codex plugin marketplace add lukasvecerka23/blueprint-deck-kit && codex plugin add blueprint-deck@blueprint-deck-kit`;
   updates with `codex plugin marketplace upgrade`. Codex's `$skill-installer` works too.
 - **Gemini CLI:** `gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --path plugins/blueprint-deck/skills/blueprint-deck`.
-- **Chat apps, no terminal:** upload the release zip as a skill in Claude (Desktop or claude.ai), ChatGPT on the web or
-  the Gemini app. The skill knows how to work in a chat: the attached files are the sources, and you get the HTML file
+- **Chat apps, no terminal:** upload the release zip as a skill in Claude (web and desktop) or ChatGPT on the web, and
+  `blueprint-deck-skill-gemini.zip` (without the optional Node tools) in the Gemini app; the ChatGPT desktop app takes
+  the Codex plugin. The skill knows how to work in a chat: the attached files are the sources, and you get the HTML file
   to download.
 - **The install script** asks which agents when it finds several (Enter = all; `--yes` skips the question), knows
   Gemini CLI (`--agent gemini`), and stays the way for any other agent, Windows or a specific version.

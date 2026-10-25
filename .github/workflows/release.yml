@@ -35,9 +35,12 @@ jobs:
           tar -czf out/blueprint-deck-skill.tar.gz -C plugins/blueprint-deck/skills blueprint-deck
           (cd plugins/blueprint-deck/skills && zip -qr ../../../out/blueprint-deck-skill.zip blueprint-deck)
           ! unzip -l out/blueprint-deck-skill.zip | grep -q "plugin.json"
+          # the Gemini app accepts only plain-text types it knows: the same skill without tools/ (.mjs)
+          (cd plugins/blueprint-deck/skills && zip -qr ../../../out/blueprint-deck-skill-gemini.zip blueprint-deck -x "blueprint-deck/tools/*")
+          ! unzip -l out/blueprint-deck-skill-gemini.zip | grep -q -E "/tools/|plugin.json"
           cp install.sh install.ps1 out/
           awk -v v="## $VERSION" '$0 ~ "^## " { p = index($0, v) == 1 } p' CHANGELOG.md | tail -n +2 > out/notes.md
       - name: GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" out/blueprint-deck-skill.zip out/blueprint-deck-skill.tar.gz out/install.sh out/install.ps1 --draft --title "Blueprint Deck Kit $VERSION" --notes-file out/notes.md
+        run: gh release create "$GITHUB_REF_NAME" out/blueprint-deck-skill.zip out/blueprint-deck-skill-gemini.zip out/blueprint-deck-skill.tar.gz out/install.sh out/install.ps1 --draft --title "Blueprint Deck Kit $VERSION" --notes-file out/notes.md
