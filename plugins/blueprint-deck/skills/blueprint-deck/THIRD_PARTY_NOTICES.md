@@ -23,3 +23,10 @@ PERFORMANCE OF THIS SOFTWARE.
 
 The configurator and the website use [Basecoat UI](https://basecoatui.com), MIT License. Its licence file is next to
 the vendored files in `configurator/vendor/`.
+
+## Website: agent brand marks
+
+The website's install tabs show the marks of Claude, OpenAI (Codex) and Google Gemini, taken from
+[Simple Icons](https://simpleicons.org) (CC0 1.0). The marks are trademarks of their owners and are used only to say
+which agents the skill works with; Blueprint Deck Kit is not affiliated with or endorsed by them. They are not part of
+the skill or the engine.
