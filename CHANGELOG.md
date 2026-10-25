@@ -5,25 +5,25 @@ Versions: a new minor version (2.1, 2.2 …) adds features and keeps every older
 engine, ask your agent to upgrade it (or `node tools/insert.mjs --upgrade <file>`). All releases and their files:
 https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
-## Unreleased
+## 2.3.0 (2026-10-25)
 
-- **Claude Code plugin.** Install from inside Claude Code without the script:
-  `/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit`; updates come through Claude Code.
-  The repository is its own plugin marketplace.
-- **Codex without the script:** its built-in skill installer installs the skill straight from GitHub.
-- **One plugin for Claude Code, Codex and the ChatGPT desktop app.** The skill moved to
-  `plugins/blueprint-deck/skills/blueprint-deck/`; the plugin has a manifest for Claude Code and one for Codex, and the
-  repository is a marketplace for both (`codex plugin marketplace add lukasvecerka23/blueprint-deck-kit`).
-- **Gemini CLI:** `gemini skills install …`, and the install script knows Gemini (`--agent gemini`, `~/.gemini/skills`).
-- **Install by agent.** The website and README now start from the agent you use (Claude Code plugin, Codex installer,
-  zip upload for the apps); the install script is the option for other agents or several at once. The skill's update
-  notice names the right way to update for each kind of install.
-- **Claude Desktop, claude.ai and ChatGPT:** upload the release zip as a skill, no terminal needed. The skill knows how
-  to work in a chat: the attached files are the sources, and the result is an HTML file to download.
-- **The installer asks which agents.** When it finds more than one (e.g. Claude Code and Codex), it asks where to
-  install; Enter installs for all of them. `--agent` picks one directly, `--yes` skips the question, and CI or a
-  non-interactive shell never asks. The install commands use the scripts on `main`, so this works without a release.
+Install it from inside the agent or app you already use.
 
+- **Claude Code plugin.** `/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit`, then
+  `/blueprint-deck`. The repository is its own plugin marketplace; updates come through Claude Code.
+- **Codex:** `$skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck`
+  installs it in one step. The same repository is also a plugin marketplace for Codex
+  (`codex plugin marketplace add lukasvecerka23/blueprint-deck-kit`), with updates; the ChatGPT desktop app uses
+  Codex's skills and plugins.
+- **Gemini CLI:** `gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --path plugins/blueprint-deck/skills/blueprint-deck`.
+- **Chat apps, no terminal:** upload the release zip as a skill in Claude (Desktop or claude.ai), ChatGPT on the web or
+  the Gemini app. The skill knows how to work in a chat: the attached files are the sources, and you get the HTML file
+  to download.
+- **The install script** asks which agents when it finds several (Enter = all; `--yes` skips the question), knows
+  Gemini CLI (`--agent gemini`), and stays the way for any other agent, Windows or a specific version.
+- **New layout:** the skill moved to `plugins/blueprint-deck/skills/blueprint-deck/` (the standard plugin layout) with
+  manifests for Claude Code and Codex. The release zip still contains just the `blueprint-deck/` folder.
+- The skill's "newer version" notice names the right way to update for each kind of install.
 - New example: `meetbuddy`, a macOS meeting recorder read from its code, with a product and a technical diagram.
 
 ## 2.2.0 (2026-10-24)
