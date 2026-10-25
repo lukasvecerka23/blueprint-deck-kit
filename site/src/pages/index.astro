@@ -130,6 +130,15 @@ const homeFaq = FAQ.filter(f => f.home);
         </li>
       ))}
     </ol>
+    <figure id="video" class="mx-auto mt-14 max-w-5xl" data-reveal>
+      <div class="browser-frame overflow-hidden rounded-xl border bg-card">
+        <video class="block aspect-video w-full bg-[#050914]" controls preload="none" playsinline poster="/video/poster.jpg"
+          aria-label="Blueprint Deck Kit in one minute: from docs to an interactive deck">
+          <source src="/video/blueprint-deck.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <figcaption class="mt-4 text-center text-sm text-muted-foreground">The whole flow in one minute: your docs, the configurator, the agent, the deck.</figcaption>
+    </figure>
   </section>
 
   <!-- ============================================================ features -->

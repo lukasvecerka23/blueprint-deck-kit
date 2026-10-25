@@ -4,7 +4,9 @@
 
 **Free and open source (MIT).** No account, no tracking, nothing else to install: it runs on your own coding agent.
 
-![A Blueprint Deck: a pan-and-zoom map of a system with areas, boxes, connections and tabs](docs/images/overview.jpg)
+![Blueprint Deck in 8 seconds: the map builds, then the guided tour zooms from step to step](docs/images/demo.gif)
+
+▶ **[Watch the 1-minute video](https://blueprint-deck.lukasvecerka.dev/#video)** · **[Try a live deck](https://blueprint-deck.lukasvecerka.dev/examples/acme/index.html)**
 
 Your coding agent (Claude Code, Codex or any agent that supports skills) reads your docs or your code and writes a
 *Blueprint Deck*: a pan-and-zoom map of your product, process or system that is also a slide deck.
@@ -23,10 +25,12 @@ ecosystems and org maps, in a product (what it does for whom) or technical (comp
 
 | | |
 |---|---|
-| ![Personas: picking one numbers its path through the map](docs/images/persona-path.jpg) | ![The guided tour on a light theme: the camera zooms to what each step talks about](docs/images/tour-light.jpg) |
-| **Personas** with their numbered path through the map | **A guided tour**, here on the light `paper` theme |
-| ![The editor: click a box to change its texts, icon, area, status and colour](docs/images/editor.jpg) | ![The configurator: shared settings, one tab per diagram, a live theme preview and the prompt](docs/images/configurator.jpg) |
-| **The editor** (press E): no agent, no rebuild | **The configurator** writes the config and the prompt |
+| ![A Blueprint Deck: a pan-and-zoom map of a system with areas, boxes, connections and tabs](docs/images/overview.jpg) | ![Personas: picking one numbers its path through the map](docs/images/persona-path.jpg) |
+| **The map**: areas, boxes, connections, tabs | **Personas** with their numbered path through the map |
+| ![The guided tour on a light theme: the camera zooms to what each step talks about](docs/images/tour-light.jpg) | ![The editor: click a box to change its texts, icon, area, status and colour](docs/images/editor.jpg) |
+| **A guided tour**, here on the light `paper` theme | **The editor** (press E): no agent, no rebuild |
+| ![The configurator: shared settings, one tab per diagram, a live theme preview and the prompt](docs/images/configurator.jpg) | |
+| **The configurator** writes the config and the prompt | |
 
 **[Website & configurator](https://blueprint-deck.lukasvecerka.dev)** ·
 **[Examples](https://blueprint-deck.lukasvecerka.dev/gallery/)** ·
