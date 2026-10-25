@@ -7,8 +7,12 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
 ## 2.4.0 (2026-10-25)
 
-- **Black-and-white PDF deck:** Shift+P (or ⋯ → *PDF deck in black & white*): white paper, black text, grey boxes and
-  connections, for printing or readers who prefer it.
+- **PDF deck in colour or black and white:** P (or ⋯ → *Export a PDF deck…*) asks which; black and white is white
+  paper, black text, grey boxes and connections, for printing. Shift+P exports black and white directly.
+- **Claude Code from the terminal:** `claude plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit` installs the plugin in one command; `/plugin install …` inside Claude Code
+  still works.
+- **A favicon for every deck:** the browser tab shows the deck's logo (an image as it is, a Lucide icon on the deck's
+  accent colours), or a default icon.
 - **Cleaner PDFs everywhere:** the PDF deck no longer uses soft shadows and filters, which some PDF engines (Safari's
   export, Windows' *Microsoft Print to PDF*) turned into stripes or grey blocks.
 - **Teams, SharePoint and mail previews:** switching diagrams and opening the editor no longer fail there with a

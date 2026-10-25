@@ -1548,6 +1548,20 @@
     .pg .node, .pg .zone, .pg .edge { filter: none !important; }
     body.print-bw { background: #fff !important; }
   }
+  /* small dialogs outside the editor (the PDF deck); the same look as the editor's */
+  .bd-modal { position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; padding: 16px; background: rgba(var(--bg-rgb), 0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+  .bd-modal-card { width: min(460px, 100%); padding: 20px 22px; border-radius: var(--r-panel); background: var(--glass-strong); display: grid; gap: 8px; }
+  .bd-modal-card h3 { margin: 0 0 4px; font-size: 18px; color: var(--fg); }
+  .bd-modal-card .bd-note { margin: 0 0 6px; font-size: 13px; line-height: 1.5; color: var(--muted); }
+  .bd-modal-card .bd-note b { color: var(--body); font-weight: 600; }
+  .bd-modal-card .opt { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--stroke); border-radius: var(--r-sm); cursor: pointer; font-size: 13.5px; color: var(--body); }
+  .bd-modal-card .opt:has(input:checked) { border-color: rgba(var(--accent-rgb), 0.6); background: rgba(var(--accent-rgb), 0.08); }
+  .bd-modal-card .opt input { margin-top: 3px; accent-color: var(--accent); }
+  .bd-modal-card .opt b { color: var(--fg); font-weight: 600; }
+  .bd-modal-card .opt small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; line-height: 1.4; }
+  .bd-modal-acts { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+  .bd-modal-acts .bd-hint { margin-right: auto; font-size: 11.5px; color: var(--faint); }
+  @media print { .bd-modal { display: none !important; } }
   /* black & white PDF deck (Shift+P): white paper, black text, every colour a grey */
   body.print-bw #print {
     --bg: #fff; --bg-rgb: 255, 255, 255; --fg: #000; --fg-rgb: 0, 0, 0;
@@ -2795,6 +2809,30 @@ function iconHtml(name, custom) {
   const inner = (custom && custom[n]) || ICONS[n] || ICONS[ICON_ALIASES[n]] || ICONS.cog;
   return inner.trim().startsWith("<svg") ? inner : `<svg class="i" viewBox="0 0 24 24">${inner}</svg>`;
 }
+// The browser tab's icon follows the deck's logo: an image as it is; a Lucide icon (or the logo's initials) on the
+// accent gradient, like the logo in the corner. Remote images can't load (the file blocks network requests), so they
+// fall back to the default icon.
+function setFavicon(logo, customIcons) {
+  try {
+    const link = document.querySelector('link[rel="icon"]') || document.head.appendChild(Object.assign(document.createElement("link"), { rel: "icon" }));
+    const l = String(logo || "icon:layout-grid").trim();
+    if (/^data:image\//.test(l)) { link.href = l; return; }
+    if (l.startsWith("<svg")) { link.href = "data:image/svg+xml," + encodeURIComponent(l.includes("xmlns=") ? l : l.replace("<svg", '<svg xmlns="http://www.w3.org/2000/svg"')); return; }
+    const cs = getComputedStyle(document.documentElement);
+    const v = (k, d) => (cs.getPropertyValue(k).trim() || d).replace(/"/g, "");
+    const a = v("--accent", "#3b82f6"), b = v("--accent-alt", a), on = v("--on-accent", "#fff");
+    let inner;
+    if (l.startsWith("icon:") || /^https?:|\.(png|svg|jpe?g|webp)$/i.test(l)) {
+      const name = l.startsWith("icon:") ? l.slice(5) : "layout-grid";
+      const svg = iconHtml(name, customIcons);
+      const body = svg.startsWith("<svg") ? svg.slice(svg.indexOf(">") + 1, svg.lastIndexOf("</svg>")) : ICONS["layout-grid"];
+      inner = `<g transform="translate(6 6) scale(0.8333)" fill="none" stroke="${on}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${body}</g>`;
+    } else {
+      inner = `<text x="16" y="21.5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="${on}">${esc(l.slice(0, 2))}</text>`;
+    }
+    link.href = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="url(#g)"/>${inner}</svg>`);
+  } catch { /* keep the previous icon */ }
+}
 function applyTheme(theme) {
   const root = document.documentElement;
   Object.entries(theme.vars || {}).forEach(([k, v]) => root.style.setProperty("--" + k, v));
@@ -2854,6 +2892,7 @@ function createDiagram(SPEC, host = {}, opts = {}) {
     if (/^(data:|https?:)/.test(l) || /\.(png|svg|jpe?g|webp)$/i.test(l)) return { html: `<img src="${esc(l)}" alt="">`, img: true };
     return { html: esc(l.slice(0, 3)), img: false };
   };
+  setFavicon(META.logo, SPEC.icons);
   if (host.renderBrand) host.renderBrand(brand, logoOf());
   else {
     const lg = logoOf();
@@ -4053,14 +4092,36 @@ const BD = (() => {
     const canEdit = hasEditor() && !(S && S.editor === false);
     // a link to a view only works for others when the file is hosted (a file opened from disk has a file:// address)
     const hosted = /^https?:$/.test(location.protocol);
-    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a read-only copy…", "", "share") : "") + item("Export a PDF deck", "P", "pdf") + item("PDF deck in black & white", "⇧P", "pdfbw") + (hosted ? item("Copy a link to this view", "", "link") : "");
+    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a read-only copy…", "", "share") : "") + item("Export a PDF deck…", "P", "pdf") + (hosted ? item("Copy a link to this view", "", "link") : "");
     m.querySelectorAll("button").forEach(b => {
       b.onmouseenter = () => (b.style.background = "rgba(var(--fg-rgb),.06)");
       b.onmouseleave = () => (b.style.background = "transparent");
-      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share({ readOnly: true }), pdf: () => current.printDeck(), pdfbw: () => current.printDeck({ bw: true }), link: copyLink })[b.dataset.a](); };
+      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share({ readOnly: true }), pdf: pdfDialog, link: copyLink })[b.dataset.a](); };
     });
     document.body.appendChild(m);
     setTimeout(() => addEventListener("click", function off(ev) { if (!m.contains(ev.target)) { m.remove(); removeEventListener("click", off); } }), 0);
+  }
+  // the PDF deck: colour or black & white (P, or ⋯ → Export a PDF deck…); Shift+P goes straight to black & white
+  function pdfDialog() {
+    if (!current) return;
+    document.querySelector(".bd-modal")?.remove();
+    const m = document.createElement("div");
+    m.className = "bd-modal";
+    m.innerHTML = `<div class="bd-modal-card glass" role="dialog" aria-modal="true" aria-labelledby="pdfTitle">
+      <h3 id="pdfTitle">Export a PDF deck</h3>
+      <p class="bd-note">A landscape deck: the cover, the overview, every tour step and every sheet. Your browser's print dialog opens; choose <b>Save as PDF</b>.</p>
+      <label class="opt"><input type="radio" name="pdfMode" value="color" checked><span><b>Colour</b><small>As on screen, in the deck's theme.</small></span></label>
+      <label class="opt"><input type="radio" name="pdfMode" value="bw"><span><b>Black &amp; white</b><small>White paper, black text, grey boxes and connections: for printing.</small></span></label>
+      <div class="bd-modal-acts"><span class="bd-hint">Shift+P: black &amp; white directly</span><button type="button" class="btn" data-x="cancel">Cancel</button><button type="button" class="btn primary" data-x="go">Export PDF</button></div>
+    </div>`;
+    document.body.appendChild(m);
+    const close = () => m.remove();
+    const go = () => { const bw = m.querySelector("[name=pdfMode]:checked").value === "bw"; close(); current.printDeck({ bw }); };
+    m.querySelector("[data-x=cancel]").onclick = close;
+    m.querySelector("[data-x=go]").onclick = go;
+    m.onclick = e => { if (e.target === m) close(); };
+    m.addEventListener("keydown", e => { e.stopPropagation(); if (e.key === "Escape") close(); if (e.key === "Enter") { e.preventDefault(); go(); } });
+    m.querySelector("[data-x=go]").focus();
   }
   function copyLink() {
     const st = current.state, p = new URLSearchParams();
@@ -4156,7 +4217,7 @@ const BD = (() => {
     const n = +e.key;
     if (multi() && n >= 1 && n <= Math.min(9, entries().length) && !(hasEditor() && BDEditor.active)) { show(n - 1); return; }
     if ((e.key === "e" || e.key === "E") && current && current.spec.settings.editor !== false && hasEditor()) { e.preventDefault(); BDEditor.toggle(); }
-    if ((e.key === "p" || e.key === "P") && current) { e.preventDefault(); current.printDeck({ bw: e.shiftKey }); }
+    if ((e.key === "p" || e.key === "P") && current) { e.preventDefault(); if (e.shiftKey) current.printDeck({ bw: true }); else pdfDialog(); }
   });
   addEventListener("hashchange", () => fromHash(false));
 

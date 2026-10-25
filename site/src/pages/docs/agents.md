@@ -59,7 +59,13 @@ also written into the config so a later update keeps them.
 
 ## Claude Code
 
-The easiest way is the plugin, installed from inside Claude Code (no script; Claude Code 2.1.275 or later):
+Install the plugin from your terminal, in one command (Claude Code 2.1.275 or later):
+
+```bash
+claude plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
+```
+
+Or from inside Claude Code:
 
 ```text
 /plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit

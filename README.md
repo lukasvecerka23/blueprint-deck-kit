@@ -18,7 +18,7 @@ Your coding agent (Claude Code, Codex or any agent that supports skills) reads y
 - **Sheets** for what isn't a place on the map: roadmap, pilot options, pricing tiers.
 - **Several diagrams in one file**, e.g. a product view for executives and a technical view for engineers.
 - **Edit it in the browser**: press **E** to change texts, colours, theme, logo, boxes, tabs, tour and personas.
-- **One HTML file** that works offline, on phones, in any browser. **P** exports a PDF deck, **Shift+P** in black and white.
+- **One HTML file** that works offline, on phones, in any browser. **P** exports a PDF deck, in colour or black and white.
 
 It works for product and architecture blueprints, data flows, business processes, customer journeys, partner
 ecosystems and org maps, in a product (what it does for whom) or technical (components and technology) viewpoint.
@@ -44,11 +44,11 @@ ecosystems and org maps, in a product (what it does for whom) or technical (comp
 
 Pick the place you work in:
 
-**Claude Code**: as a plugin, from inside Claude Code:
+**Claude Code**: as a plugin, from your terminal:
 ```
-/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
+claude plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
 ```
-Then type `/blueprint-deck`. On Claude Code older than 2.1.275, run
+Or inside Claude Code: `/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit`. Then type `/blueprint-deck`. On Claude Code older than 2.1.275, run
 `/plugin marketplace add lukasvecerka23/blueprint-deck-kit` and then `/plugin install blueprint-deck@blueprint-deck-kit`.
 Updates: turn on auto-update under `/plugin` → Marketplaces, or run `claude plugin update blueprint-deck@blueprint-deck-kit`.
 

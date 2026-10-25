@@ -4,11 +4,13 @@ Turn your docs or code into an interactive presentation diagram, a *Blueprint De
 offline, with a pan-and-zoom map of your product, process or system, clickable boxes with side panels, tabs, personas
 with their paths, a guided tour you present like slides, a built-in editor (press E) and a PDF export (press P).
 
-Install it in Claude Code:
+Install it in Claude Code, from your terminal:
 
 ```
-/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
+claude plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
 ```
+
+or inside Claude Code: `/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit`.
 
 Then ask for "a Blueprint Deck of these docs", type `/blueprint-deck`, or paste a prompt from the
 [configurator](https://blueprint-deck.lukasvecerka.dev/configurator/). The skill reads your sources, proposes the

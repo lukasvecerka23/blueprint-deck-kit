@@ -16,13 +16,13 @@ the skill, so every deck behaves the same and anyone can fix a text later withou
 
 Install it where you work:
 
-- **Claude Code**, as a plugin, from inside Claude Code:
+- **Claude Code**, as a plugin, from your terminal:
 
-  ```text
-  /plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
+  ```bash
+  claude plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
   ```
 
-  Then type `/blueprint-deck`. More (older versions, updates) on the [Agents](/docs/agents/) page.
+  Or inside Claude Code: `/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit`. Then type `/blueprint-deck`. More (older versions, updates) on the [Agents](/docs/agents/) page.
 - **Codex** (and the ChatGPT desktop app), as a plugin, in your terminal:
 
   ```bash
@@ -128,5 +128,5 @@ More in [Editing & sharing](/docs/editing/).
 | <kbd class="kbd">F</kbd> | fit the map to the screen |
 | <kbd class="kbd">+</kbd> <kbd class="kbd">-</kbd> | zoom |
 | <kbd class="kbd">E</kbd> | open the editor |
-| <kbd class="kbd">P</kbd> | export a PDF deck (<kbd class="kbd">Shift</kbd>+<kbd class="kbd">P</kbd>: black and white) |
+| <kbd class="kbd">P</kbd> | export a PDF deck, in colour or black and white (<kbd class="kbd">Shift</kbd>+<kbd class="kbd">P</kbd>: black and white directly) |
 | <kbd class="kbd">1</kbd>–<kbd class="kbd">9</kbd> | switch diagram (when the file has several) |

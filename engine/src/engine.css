@@ -402,6 +402,20 @@
     .pg .node, .pg .zone, .pg .edge { filter: none !important; }
     body.print-bw { background: #fff !important; }
   }
+  /* small dialogs outside the editor (the PDF deck); the same look as the editor's */
+  .bd-modal { position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; padding: 16px; background: rgba(var(--bg-rgb), 0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+  .bd-modal-card { width: min(460px, 100%); padding: 20px 22px; border-radius: var(--r-panel); background: var(--glass-strong); display: grid; gap: 8px; }
+  .bd-modal-card h3 { margin: 0 0 4px; font-size: 18px; color: var(--fg); }
+  .bd-modal-card .bd-note { margin: 0 0 6px; font-size: 13px; line-height: 1.5; color: var(--muted); }
+  .bd-modal-card .bd-note b { color: var(--body); font-weight: 600; }
+  .bd-modal-card .opt { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--stroke); border-radius: var(--r-sm); cursor: pointer; font-size: 13.5px; color: var(--body); }
+  .bd-modal-card .opt:has(input:checked) { border-color: rgba(var(--accent-rgb), 0.6); background: rgba(var(--accent-rgb), 0.08); }
+  .bd-modal-card .opt input { margin-top: 3px; accent-color: var(--accent); }
+  .bd-modal-card .opt b { color: var(--fg); font-weight: 600; }
+  .bd-modal-card .opt small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; line-height: 1.4; }
+  .bd-modal-acts { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+  .bd-modal-acts .bd-hint { margin-right: auto; font-size: 11.5px; color: var(--faint); }
+  @media print { .bd-modal { display: none !important; } }
   /* black & white PDF deck (Shift+P): white paper, black text, every colour a grey */
   body.print-bw #print {
     --bg: #fff; --bg-rgb: 255, 255, 255; --fg: #000; --fg-rgb: 0, 0, 0;

@@ -14,6 +14,30 @@ function iconHtml(name, custom) {
   const inner = (custom && custom[n]) || ICONS[n] || ICONS[ICON_ALIASES[n]] || ICONS.cog;
   return inner.trim().startsWith("<svg") ? inner : `<svg class="i" viewBox="0 0 24 24">${inner}</svg>`;
 }
+// The browser tab's icon follows the deck's logo: an image as it is; a Lucide icon (or the logo's initials) on the
+// accent gradient, like the logo in the corner. Remote images can't load (the file blocks network requests), so they
+// fall back to the default icon.
+function setFavicon(logo, customIcons) {
+  try {
+    const link = document.querySelector('link[rel="icon"]') || document.head.appendChild(Object.assign(document.createElement("link"), { rel: "icon" }));
+    const l = String(logo || "icon:layout-grid").trim();
+    if (/^data:image\//.test(l)) { link.href = l; return; }
+    if (l.startsWith("<svg")) { link.href = "data:image/svg+xml," + encodeURIComponent(l.includes("xmlns=") ? l : l.replace("<svg", '<svg xmlns="http://www.w3.org/2000/svg"')); return; }
+    const cs = getComputedStyle(document.documentElement);
+    const v = (k, d) => (cs.getPropertyValue(k).trim() || d).replace(/"/g, "");
+    const a = v("--accent", "#3b82f6"), b = v("--accent-alt", a), on = v("--on-accent", "#fff");
+    let inner;
+    if (l.startsWith("icon:") || /^https?:|\.(png|svg|jpe?g|webp)$/i.test(l)) {
+      const name = l.startsWith("icon:") ? l.slice(5) : "layout-grid";
+      const svg = iconHtml(name, customIcons);
+      const body = svg.startsWith("<svg") ? svg.slice(svg.indexOf(">") + 1, svg.lastIndexOf("</svg>")) : ICONS["layout-grid"];
+      inner = `<g transform="translate(6 6) scale(0.8333)" fill="none" stroke="${on}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${body}</g>`;
+    } else {
+      inner = `<text x="16" y="21.5" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="${on}">${esc(l.slice(0, 2))}</text>`;
+    }
+    link.href = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="url(#g)"/>${inner}</svg>`);
+  } catch { /* keep the previous icon */ }
+}
 function applyTheme(theme) {
   const root = document.documentElement;
   Object.entries(theme.vars || {}).forEach(([k, v]) => root.style.setProperty("--" + k, v));
@@ -73,6 +97,7 @@ function createDiagram(SPEC, host = {}, opts = {}) {
     if (/^(data:|https?:)/.test(l) || /\.(png|svg|jpe?g|webp)$/i.test(l)) return { html: `<img src="${esc(l)}" alt="">`, img: true };
     return { html: esc(l.slice(0, 3)), img: false };
   };
+  setFavicon(META.logo, SPEC.icons);
   if (host.renderBrand) host.renderBrand(brand, logoOf());
   else {
     const lg = logoOf();

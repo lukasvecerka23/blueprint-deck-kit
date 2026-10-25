@@ -34,14 +34,18 @@ const link = "underline underline-offset-4 hover:text-foreground";
 
   <!-- Claude Code: the plugin -->
   <div role="tabpanel" id={`${id}-panel-claude`} aria-labelledby={`${id}-tab-claude`} tabindex="-1" class="space-y-3">
-    <Command code={INSTALL.claudePlugin} prompt=">" />
+    <Command code={INSTALL.claudeCli} />
     {hero ? (
-      <p class={hint}>Run it inside Claude Code, then type <code class={code}>/blueprint-deck</code> or paste the prompt from the configurator.</p>
+      <p class={hint}>Run it in your terminal, then type <code class={code}>/blueprint-deck</code> in Claude Code or paste the prompt from the configurator.</p>
     ) : (
-      <p class={hint}>Run it inside Claude Code (2.1.275 or later; older: <code class={code}>/plugin marketplace add lukasvecerka23/blueprint-deck-kit</code>,
-        then <code class={code}>/plugin install blueprint-deck@blueprint-deck-kit</code>). Then type <code class={code}>/blueprint-deck</code>{" "}
-        or paste the prompt from the configurator. Updates: turn on auto-update under <code class={code}>/plugin</code> → Marketplaces, or run{" "}
-        <code class={code}>claude plugin update blueprint-deck@blueprint-deck-kit</code>.</p>
+      <>
+        <p class={hint}>Run it in your terminal: it adds this repository as a plugin marketplace and installs the plugin. Or inside Claude Code:</p>
+        <Command code={INSTALL.claudePlugin} prompt=">" />
+        <p class={hint}>Needs Claude Code 2.1.275 or later (older: <code class={code}>/plugin marketplace add lukasvecerka23/blueprint-deck-kit</code>,
+          then <code class={code}>/plugin install blueprint-deck@blueprint-deck-kit</code>). Then type <code class={code}>/blueprint-deck</code>{" "}
+          or paste the prompt from the configurator. Updates: turn on auto-update under <code class={code}>/plugin</code> → Marketplaces, or run{" "}
+          <code class={code}>claude plugin update blueprint-deck@blueprint-deck-kit</code>.</p>
+      </>
     )}
   </div>
 

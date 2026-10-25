@@ -48,12 +48,13 @@ your manual edits and any box marked `"locked": true`. See [Agents](/docs/agents
 
 ## PDF deck (press P)
 
-Press <kbd class="kbd">P</kbd> (or ⋯ → *Export a PDF deck*). The engine lays out a landscape deck, one page each: a
+Press <kbd class="kbd">P</kbd> (or ⋯ → *Export a PDF deck…*) and pick **Colour** or **Black & white**. The engine lays
+out a landscape deck, one page each: a
 cover, the overview, every tour step (or every tab, if there is no tour) and every sheet. Your browser's print dialog
 opens; choose *Save as PDF*. Background graphics should be on (they are by default in most browsers).
 
-**Black and white:** <kbd class="kbd">Shift</kbd>+<kbd class="kbd">P</kbd> (or ⋯ → *PDF deck in black & white*) makes the
-same deck on white paper with black text and grey boxes and connections, for printing or for readers who prefer it.
+**Black and white** puts the same deck on white paper with black text and grey boxes and connections, for printing or
+for readers who prefer it. <kbd class="kbd">Shift</kbd>+<kbd class="kbd">P</kbd> exports it directly, without the dialog.
 
 **If the PDF shows stripes, grey blocks or rough edges:** that comes from the browser's PDF engine, not the deck.
 Chrome on any system gives the cleanest result; Safari's export and Windows' *Microsoft Print to PDF* render soft

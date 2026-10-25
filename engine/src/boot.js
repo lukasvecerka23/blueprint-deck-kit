@@ -177,14 +177,36 @@ const BD = (() => {
     const canEdit = hasEditor() && !(S && S.editor === false);
     // a link to a view only works for others when the file is hosted (a file opened from disk has a file:// address)
     const hosted = /^https?:$/.test(location.protocol);
-    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a read-only copy…", "", "share") : "") + item("Export a PDF deck", "P", "pdf") + item("PDF deck in black & white", "⇧P", "pdfbw") + (hosted ? item("Copy a link to this view", "", "link") : "");
+    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a read-only copy…", "", "share") : "") + item("Export a PDF deck…", "P", "pdf") + (hosted ? item("Copy a link to this view", "", "link") : "");
     m.querySelectorAll("button").forEach(b => {
       b.onmouseenter = () => (b.style.background = "rgba(var(--fg-rgb),.06)");
       b.onmouseleave = () => (b.style.background = "transparent");
-      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share({ readOnly: true }), pdf: () => current.printDeck(), pdfbw: () => current.printDeck({ bw: true }), link: copyLink })[b.dataset.a](); };
+      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share({ readOnly: true }), pdf: pdfDialog, link: copyLink })[b.dataset.a](); };
     });
     document.body.appendChild(m);
     setTimeout(() => addEventListener("click", function off(ev) { if (!m.contains(ev.target)) { m.remove(); removeEventListener("click", off); } }), 0);
+  }
+  // the PDF deck: colour or black & white (P, or ⋯ → Export a PDF deck…); Shift+P goes straight to black & white
+  function pdfDialog() {
+    if (!current) return;
+    document.querySelector(".bd-modal")?.remove();
+    const m = document.createElement("div");
+    m.className = "bd-modal";
+    m.innerHTML = `<div class="bd-modal-card glass" role="dialog" aria-modal="true" aria-labelledby="pdfTitle">
+      <h3 id="pdfTitle">Export a PDF deck</h3>
+      <p class="bd-note">A landscape deck: the cover, the overview, every tour step and every sheet. Your browser's print dialog opens; choose <b>Save as PDF</b>.</p>
+      <label class="opt"><input type="radio" name="pdfMode" value="color" checked><span><b>Colour</b><small>As on screen, in the deck's theme.</small></span></label>
+      <label class="opt"><input type="radio" name="pdfMode" value="bw"><span><b>Black &amp; white</b><small>White paper, black text, grey boxes and connections: for printing.</small></span></label>
+      <div class="bd-modal-acts"><span class="bd-hint">Shift+P: black &amp; white directly</span><button type="button" class="btn" data-x="cancel">Cancel</button><button type="button" class="btn primary" data-x="go">Export PDF</button></div>
+    </div>`;
+    document.body.appendChild(m);
+    const close = () => m.remove();
+    const go = () => { const bw = m.querySelector("[name=pdfMode]:checked").value === "bw"; close(); current.printDeck({ bw }); };
+    m.querySelector("[data-x=cancel]").onclick = close;
+    m.querySelector("[data-x=go]").onclick = go;
+    m.onclick = e => { if (e.target === m) close(); };
+    m.addEventListener("keydown", e => { e.stopPropagation(); if (e.key === "Escape") close(); if (e.key === "Enter") { e.preventDefault(); go(); } });
+    m.querySelector("[data-x=go]").focus();
   }
   function copyLink() {
     const st = current.state, p = new URLSearchParams();
@@ -280,7 +302,7 @@ const BD = (() => {
     const n = +e.key;
     if (multi() && n >= 1 && n <= Math.min(9, entries().length) && !(hasEditor() && BDEditor.active)) { show(n - 1); return; }
     if ((e.key === "e" || e.key === "E") && current && current.spec.settings.editor !== false && hasEditor()) { e.preventDefault(); BDEditor.toggle(); }
-    if ((e.key === "p" || e.key === "P") && current) { e.preventDefault(); current.printDeck({ bw: e.shiftKey }); }
+    if ((e.key === "p" || e.key === "P") && current) { e.preventDefault(); if (e.shiftKey) current.printDeck({ bw: true }); else pdfDialog(); }
   });
   addEventListener("hashchange", () => fromHash(false));
 
