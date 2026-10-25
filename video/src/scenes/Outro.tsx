@@ -1,8 +1,8 @@
 import React from 'react';
 import { AbsoluteFill, OffthreadVideo, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
-import { Globe, WifiOff, FileCheck2, Send, GitBranch, Scale } from 'lucide-react';
+import { Globe, WifiOff, FileCheck2, Send, GitBranch, Scale, Link2, Copy, Check } from 'lucide-react';
 import { END, ONE_FILE, REAL } from '../content';
-import { C, FONT, GRADIENT, GRADIENT_TEXT } from '../theme';
+import { C, FONT, MONO, GRADIENT, GRADIENT_TEXT } from '../theme';
 import { clamp, Logo, useLayout } from '../components/common';
 
 export const OneFile: React.FC = () => {
@@ -59,6 +59,17 @@ export const OneFile: React.FC = () => {
             </div>
           );
         })}
+      </div>
+      {/* share as a link */}
+      <div style={{ position: 'absolute', left: 0, right: 0, top: cy + fh / 2 + 168 * u, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16 * u, opacity: interpolate(f, [40, 50], [0, 1], clamp), transform: `translateY(${interpolate(f, [40, 50], [16, 0], clamp)}px)` }}>
+        <span style={{ color: C.muted, fontSize: 22 * u, fontWeight: 500 }}>{ONE_FILE.shareLabel}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 * u, padding: `${8 * u}px ${8 * u}px ${8 * u}px ${18 * u}px`, borderRadius: 99, background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(96,165,250,0.45)', boxShadow: `0 0 ${24 * interpolate(f, [52, 70], [1, 0], clamp)}px rgba(96,165,250,.6)` }}>
+          <Link2 size={22 * u} color="#93c5fd" />
+          <span style={{ fontFamily: MONO, color: '#dbeafe', fontSize: 20 * u, whiteSpace: 'nowrap' }}>{ONE_FILE.link}</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6 * u, padding: `${6 * u}px ${14 * u}px`, borderRadius: 99, background: f >= 62 ? '#047857' : GRADIENT, color: '#fff', fontSize: 16 * u, fontWeight: 600, whiteSpace: 'nowrap' }}>
+            {f >= 62 ? <Check size={16 * u} /> : <Copy size={15 * u} />} {f >= 62 ? 'Copied' : ONE_FILE.linkButton}
+          </span>
+        </div>
       </div>
     </AbsoluteFill>
   );

@@ -9,13 +9,13 @@ export const FPS = 30;
 // Scene lengths (frames). Scenes overlap by OVERLAP frames for a soft cross-fade.
 export const OVERLAP = 12;
 export const SCENES = {
-  hook: 120, // 1: documents of every kind drift in
-  config: 190, // 2: the configurator (incl. theme), "Copy prompt"
-  agent: 115, // 3: the prompt is pasted into the agent, which reads the files
-  map: 940, // 4-10: map builds, tour, side panel, tabs/personas, switcher, edit, PDF
-  oneFile: 105, // 11: one HTML file
-  real: 270, // 12: real recording of the Acme example
-  end: 110, // 13: end card
+  hook: 115, // 1: documents of every kind drift in
+  config: 182, // 2: the configurator (incl. theme), "Copy prompt"
+  agent: 165, // 3: the agent reads the files: in a terminal (pasted prompt) or in a chat (attached files)
+  map: 920, // 4-10: map builds, tour, side panel, tabs/personas, switcher, edit, PDF
+  oneFile: 130, // 11: one HTML file: send it, or share a link
+  real: 240, // 12: real recording of the Acme example
+  end: 105, // 13: end card
 };
 
 // Inside the map scene (local frames, 0 = start of the map scene).
@@ -26,11 +26,11 @@ export const MAP_BEATS = {
   tourEnd: 335, // tour card leaves
   panel: 335, // click a box, side panel slides in (what / why)
   tabs: 455, // "Payments" tab highlights one path
-  persona: 530, // persona "Shopper" numbered path
-  switcher: 605, // switcher menu -> second diagram (process flow)
-  edit: 740, // press E, retype a title, "Saved into the file"
-  editEnd: 850, // edit mode ends
-  pdf: 850, // press P, pages fan out
+  persona: 525, // persona "Shopper" numbered path
+  switcher: 595, // switcher menu -> second diagram (process flow)
+  edit: 725, // press E, retype a title, "Saved into the file"
+  editEnd: 835, // edit mode ends
+  pdf: 835, // press P, pages fan out
 };
 export type MapBeats = typeof MAP_BEATS;
 export const NEVER = 100000; // use for beats a cut leaves out
@@ -49,19 +49,19 @@ export const sceneStarts = () => {
 
 // Subtitles: [scene, from, to, text] (from/to are local frames inside that scene).
 export const SUBTITLES: Array<[keyof typeof SCENES, number, number, string]> = [
-  ['hook', 6, 116, 'Your architecture lives in 40 docs and 3 repos.'],
-  ['config', 8, 186, 'Describe the deck, then copy the prompt.'],
-  ['agent', 6, 112, 'Your coding agent reads your docs and code.'],
+  ['hook', 6, 111, 'Your architecture lives in 40 docs and 3 repos.'],
+  ['config', 8, 178, 'Describe the deck, then copy the prompt.'],
+  ['agent', 6, 160, 'Your AI agent reads them, in a terminal or in a chat.'],
   ['map', 10, 133, '…and builds one interactive map.'],
   ['map', 137, 233, 'A guided tour zooms in, step by step.'],
   ['map', 237, 333, 'Each step tells one part of the story.'],
   ['map', 337, 453, 'Click any box to see what it is and why.'],
-  ['map', 457, 603, 'Tabs and personas show one path at a time.'],
-  ['map', 607, 738, 'One file can hold several diagrams.'],
-  ['map', 742, 848, 'Press E to edit it right in the file.'],
-  ['map', 852, 940, 'Press P for a PDF deck.'],
-  ['oneFile', 6, 105, 'One HTML file. Works offline. Send it to anyone.'],
-  ['real', 10, 150, 'This is the real thing.'],
+  ['map', 457, 593, 'Tabs and personas show one path at a time.'],
+  ['map', 597, 723, 'One file can hold several diagrams.'],
+  ['map', 727, 833, 'Press E to edit it right in the file.'],
+  ['map', 837, 920, 'Press P for a PDF deck.'],
+  ['oneFile', 6, 128, 'One HTML file, works offline. Send it, or share a link.'],
+  ['real', 10, 140, 'This is the real thing.'],
 ];
 
 // Scene 1: documents of every kind. `type` picks the badge colour (see FILE_TYPES).
@@ -127,15 +127,27 @@ export const CONFIG = {
 
 // Scene 3: agent terminal.
 export const AGENT = {
-  title: 'your coding agent',
+  title: 'your agent · terminal',
+  chatTitle: 'chat · any AI app',
+  terminalHeading: 'In a terminal',
+  chatHeading: 'In a chat',
+  chatFiles: [
+    { name: 'architecture.pdf', type: 'PDF' },
+    { name: 'requirements.docx', type: 'DOCX' },
+    { name: 'notes.md', type: 'MD' },
+  ],
+  chatMessage: 'Make a Blueprint Deck of these docs for our executives.',
+  chatReading: 'Reading 3 files…',
+  chatReply: 'Here is your Blueprint Deck:',
+  chatResult: { name: 'acme-commerce.html', meta: 'Blueprint Deck · map, tour, 2 diagrams' },
   prompt: [
-    'Use the blueprint-deck skill to generate a Blueprint Deck',
+    '/blueprint-deck  make a Blueprint Deck of this repo',
     'audience: executives · viewpoint: product',
     'tabs: main-flow, operations, roadmap',
     'tour: problem-solution · theme: blueprint',
   ],
   lines: ['Reading 40 docs and 3 repos…', '22 boxes · 15 connections · 10 tour steps', 'Wrote acme-commerce.html'],
-  agents: 'Claude Code · Codex · any agent',
+  agents: 'Claude Code · Codex · Gemini · or a chat in Claude, ChatGPT, Gemini',
 };
 
 // Scenes 4-10: map chrome, tour, side panel, switcher, edit.
@@ -171,15 +183,19 @@ export const MAP_TEXT = {
 export const ONE_FILE = {
   file: 'acme-commerce.html',
   pills: ['One file', 'Works offline', 'No server, no install'],
+  link: 'claude.ai/public/artifacts/7f3c…',
+  linkButton: 'Copy link',
+  sendLabel: 'Send the file',
+  shareLabel: 'or share a link',
 };
 
 // Scene 12: real recording (made by `npm run record`), plus captions for the browser bar.
 export const REAL = {
   clip: 'real/acme-clip.mp4',
-  startFrom: 1.0, // seconds into the clip
+  startFrom: 2.4, // seconds into the clip (starts around tour step 2)
   captions: [
     { at: 0, text: 'Guided tour · real example' },
-    { at: 6.1, text: 'Switching to the second diagram' },
+    { at: 4.6, text: 'Switching to the second diagram' },
   ],
   url: 'file:///…/examples/acme/index.html',
 };
@@ -210,7 +226,7 @@ export const SHORT = {
   } as MapBeats,
   subtitles: [
     ['hook', 6, 106, 'Your architecture lives in 40 docs and 3 repos.'],
-    ['map', 10, 108, 'Your agent turns them into one interactive map.'],
+    ['map', 10, 108, 'Your AI agent turns them into one interactive map.'],
     ['map', 112, 198, 'A guided tour zooms in, step by step.'],
     ['map', 202, 288, 'Each step tells one part of the story.'],
     ['map', 292, 393, 'One file can hold several diagrams.'],
