@@ -1,6 +1,6 @@
 {
   "name": "blueprint-deck",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Turn your docs or code into an interactive presentation diagram: one offline HTML file with a pan-and-zoom map, guided tour, tabs, personas, a built-in editor and PDF export.",
   "author": {
     "name": "Lukáš Večerka",

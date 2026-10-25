@@ -5,10 +5,12 @@ Versions: a new minor version (2.1, 2.2 …) adds features and keeps every older
 engine, ask your agent to upgrade it (or `node tools/insert.mjs --upgrade <file>`). All releases and their files:
 https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
-## 2.4.0 (2026-10-25)
+## 2.4.1 (2026-10-25)
 
-- **New address: blueprintdeck.dev.** The website, the install commands, the docs and the credit in every deck use it;
-  the old address keeps redirecting.
+- **New address: blueprintdeck.dev.** The website, the install commands, the docs, the plugin manifests and the
+  credit in every deck use it; the old address keeps redirecting.
+
+## 2.4.0 (2026-10-25)
 
 - **PDF deck in colour or black and white:** P (or ⋯ → *Export a PDF deck…*) asks which; black and white is white
   paper, black text, grey boxes and connections, for printing. Shift+P exports black and white directly.
