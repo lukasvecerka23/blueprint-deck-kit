@@ -1,7 +1,8 @@
 # Blueprint Deck Kit installer for Windows: puts the blueprint-deck skill into your coding agents' skills folders.
 #
 #   irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex
-#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1))) -Version 2.1.0
+#   $installer = irm "https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1"
+#   & ([scriptblock]::Create($installer)) -Version 2.1.0
 #   (the website's short URL https://blueprint-deck.lukasvecerka.dev/install.ps1 serves this same script)
 #   .\install.ps1                     (from a clone of the repository: installs that copy)
 #

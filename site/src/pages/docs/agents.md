@@ -203,7 +203,8 @@ curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --versi
 In PowerShell:
 
 ```powershell
-& ([scriptblock]::Create((irm https://blueprint-deck.lukasvecerka.dev/install.ps1))) -Version 2.1.0
+$installer = irm "https://blueprint-deck.lukasvecerka.dev/install.ps1"
+& ([scriptblock]::Create($installer)) -Version 2.1.0
 ```
 
 Every release and its files are on [GitHub Releases](https://github.com/lukasvecerka23/blueprint-deck-kit/releases).

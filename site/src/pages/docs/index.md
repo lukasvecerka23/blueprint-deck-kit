@@ -80,7 +80,8 @@ curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent
 In PowerShell, run the script as a script block to pass options:
 
 ```powershell
-& ([scriptblock]::Create((irm https://blueprint-deck.lukasvecerka.dev/install.ps1))) -Agent codex
+$installer = irm "https://blueprint-deck.lukasvecerka.dev/install.ps1"
+& ([scriptblock]::Create($installer)) -Agent codex
 ```
 
 Prefer to do it by hand? [Download the skill as a zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)

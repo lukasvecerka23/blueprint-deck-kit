@@ -89,7 +89,11 @@ irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/ins
 ```
 Options: `--agent claude|codex|gemini|agents|all`, `--dir <folder>` (any other agent's skills folder), `--project` (into the
 current project), `--version 2.1.0` (a specific release), `--yes` (don't ask), `--uninstall`; pass them with
-`sh -s --`. With PowerShell `-Agent`, `-Version` … (run it as `& ([scriptblock]::Create((irm <url>))) -Version 2.1.0`).
+`sh -s --`. With PowerShell, `-Agent`, `-Version` … by running the script like this:
+```powershell
+$installer = irm "https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1"
+& ([scriptblock]::Create($installer)) -Version 2.1.0
+```
 Run it again to update.
 
 - **From a clone** (e.g. to try unreleased changes on `main`): `./install.sh` installs that checkout.
