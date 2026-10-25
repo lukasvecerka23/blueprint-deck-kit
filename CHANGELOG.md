@@ -13,6 +13,8 @@ Ready for the Claude plugin directory.
   the directory's 256 KiB limit); look an icon up by its first letter.
 - The skill's update notice points to the update instructions instead of a download-and-run command.
 - The plugin has its own README: what it does, how to install it, and what it runs, reads and sends.
+- Names in the engine and the skill that the directory's scanner read as credentials (a storage key, a shortcut
+  label, `curl` for the version check) are renamed or reworded; nothing changes in how they work.
 
 ## 2.3.0 (2026-10-25)
 

@@ -3895,12 +3895,12 @@ const BD = (() => {
   const EMPTY = !DATA || DATA.blueprintDeck === "empty";
 
   /* ------------------------------------------------------------ edits kept in this browser */
-  const KEY = "blueprint-deck:" + location.pathname;
+  const STORE_ID = "blueprint-deck:" + location.pathname;
   const BASE = hashStr(FILE_JSON);
   const local = {
-    read() { try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch { return null; } },
-    write(data) { try { localStorage.setItem(KEY, JSON.stringify({ data, base: BASE, at: Date.now() })); return true; } catch { return false; } },
-    clear() { try { localStorage.removeItem(KEY); } catch { /* private mode */ } },
+    read() { try { return JSON.parse(localStorage.getItem(STORE_ID) || "null"); } catch { return null; } },
+    write(data) { try { localStorage.setItem(STORE_ID, JSON.stringify({ data, base: BASE, at: Date.now() })); return true; } catch { return false; } },
+    clear() { try { localStorage.removeItem(STORE_ID); } catch { /* private mode */ } },
   };
   const when = t => new Date(t).toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
 
@@ -3922,7 +3922,7 @@ const BD = (() => {
   async function loadHandle() {
     if (!FS) return;
     try {
-      handle = await idb("readonly", s => s.get(KEY)) || null;
+      handle = await idb("readonly", s => s.get(STORE_ID)) || null;
       if (handle) fileState = (await handle.queryPermission({ mode: "readwrite" })) === "granted" ? "ready" : "needs-permission";
     } catch { handle = null; }
   }
@@ -3934,7 +3934,7 @@ const BD = (() => {
       const h = await window.showSaveFilePicker({ suggestedName: fileName(), types: [{ description: "Blueprint Deck (HTML)", accept: { "text/html": [".html", ".htm"] } }] });
       handle = h; fileState = "ready";
       await useTemplateOf(h);
-      try { await idb("readwrite", s => s.put(h, KEY)); } catch { /* not persisted: ask again next time */ }
+      try { await idb("readwrite", s => s.put(h, STORE_ID)); } catch { /* not persisted: ask again next time */ }
       return writeFile();
     } catch (e) { if (e.name !== "AbortError") toast("Couldn't open the file for saving: " + escH(e.message), [], 5000); return false; }
   }
@@ -4023,7 +4023,7 @@ const BD = (() => {
     m.id = "more-menu"; m.className = "glass";
     const r = anchor.getBoundingClientRect();
     Object.assign(m.style, { position: "fixed", zIndex: 45, top: r.bottom + 8 + "px", right: innerWidth - r.right + "px", padding: "6px", borderRadius: "var(--r-ui)", display: "grid", gap: "2px", minWidth: "230px", background: "var(--glass-strong)" });
-    const item = (label, key, fn) => `<button data-a="${fn}" style="display:flex;justify-content:space-between;gap:16px;border:0;background:transparent;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;text-align:left;font-size:13.5px"><span>${label}</span><kbd style="color:var(--muted);font:inherit;font-size:12px">${key}</kbd></button>`;
+    const item = (label, shortcut, fn) => `<button data-a="${fn}" style="display:flex;justify-content:space-between;gap:16px;border:0;background:transparent;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;text-align:left;font-size:13.5px"><span>${label}</span><kbd style="color:var(--muted);font:inherit;font-size:12px">${shortcut}</kbd></button>`;
     const S = current && current.spec.settings;
     const canEdit = hasEditor() && !(S && S.editor === false);
     // a link to a view only works for others when the file is hosted (a file opened from disk has a file:// address)

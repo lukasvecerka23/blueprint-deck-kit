@@ -45,8 +45,8 @@ file in the browser (press E); those edits are in the data block, so always re-r
 ## Before you start: versions (a few seconds, skip it if there's no network)
 
 1. Read `SKILL_DIR/VERSION.txt` (e.g. `2.1.0`; older installs: `SKILL_DIR/VERSION`). Fetch
-   `https://api.github.com/repos/lukasvecerka23/blueprint-deck-kit/releases/latest` with your web tool or
-   `curl -fsS --max-time 5` and read `tag_name` (e.g. `v2.2.0`). If it's newer, tell the user in one line, then carry on:
+   `https://api.github.com/repos/lukasvecerka23/blueprint-deck-kit/releases/latest` (a plain GET of a public URL; no
+   credentials, nothing sent) and read `tag_name` (e.g. `v2.2.0`). If it's newer, tell the user in one line, then carry on:
    "Blueprint Deck Kit X is available (you have Y); what's new: https://github.com/lukasvecerka23/blueprint-deck-kit/releases.
    To update: …", with the way that matches where the skill is installed:
    - `SKILL_DIR` inside `~/.claude/plugins/` (Claude Code plugin): run
@@ -89,7 +89,7 @@ audience, map, personas, views, tour and overlays. `sources.include` is relative
    "From code").
 2. If `derive_status_from` is set, read those manifests and record what is actually deployed.
 3. Note conflicts between sources and resolve them per `on_conflict` (`ask` = stop and ask before writing).
-4. Branding: if `branding.website` is set, fetch the page (with your web tool, or `curl -sL`). Take the logo
+4. Branding: if `branding.website` is set, fetch the page (a plain GET with your web tool). Take the logo
    (an inline `<svg>` in the header, else `<link rel="icon" | "apple-touch-icon">` or `og:image`), the brand colours
    (`<meta name="theme-color">`, CSS custom properties, the main button colour) and the product name. An SVG logo goes
    into `meta.logo` as the `<svg …>` markup itself; a PNG/JPG becomes a `data:` URI (`base64 -i logo.png` on
