@@ -141,7 +141,8 @@ Check with `/skills list` in a Gemini CLI session, then ask for a Blueprint Deck
 
 ## Chat apps: Claude, ChatGPT, Gemini
 
-The chat apps need no terminal. Most take the skill as a zip upload, once:
+The chat apps and Claude's desktop app need no terminal and no repository: you attach your docs to a chat. Most take
+the skill as a zip upload, once:
 
 | app | how |
 |---|---|
@@ -154,6 +155,11 @@ Don't unzip the files: they already have the shape the apps expect (one `bluepri
 inside). Then start a chat, attach your docs (Markdown, PDF, text) or paste links, and ask: "Make a Blueprint Deck of
 these docs for our executives". The skill asks for what it can't tell from the files, then gives you the HTML file to
 download.
+
+**Share it as a link (Claude):** after the deck is made, ask *"Publish the deck as an artifact so I can share a
+link."* Claude puts it into an artifact and gives you a link anyone can open, without hosting anything. The deck
+works inside the artifact (tour, tabs, panels, switching diagrams, the PDF); your browser just can't keep edits there,
+so edit the downloaded file and publish it again. Publishing makes the deck public to anyone with the link.
 
 Differences from a coding agent: it only sees what you attach, not a whole repository, so it suits a handful of
 documents better than a large codebase. To change a deck later, attach the HTML file again and say what to change, or

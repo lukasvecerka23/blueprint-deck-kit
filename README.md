@@ -76,7 +76,8 @@ gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --pat
 - **Gemini** (web and desktop app): **Customize → Skills**, upload
   [blueprint-deck-skill-gemini.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill-gemini.zip) (without the optional Node tools, which Gemini doesn't accept).
 
-Then attach your docs to a chat and ask for a Blueprint Deck.
+Then attach your docs to a chat and ask for a Blueprint Deck: no terminal and no repository needed. In Claude you can
+then ask it to publish the deck as an artifact, which gives you a link anyone can open.
 
 **Install script**: for any other agent, several at once, Windows or a specific version. It installs the latest
 [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) for the agents it finds (`~/.claude/skills`,

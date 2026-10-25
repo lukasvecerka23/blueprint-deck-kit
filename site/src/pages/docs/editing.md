@@ -62,6 +62,8 @@ effects less well. The black-and-white deck avoids them almost entirely.
 
 ## Sharing
 
+- **A link from Claude.** In Claude Desktop or claude.ai, ask it to publish the deck as an artifact: you get a link
+  anyone can open, without hosting. To change the deck, edit the file and publish it again.
 - **Teams, SharePoint and mail previews** open the file in a protected frame. The deck works there (diagrams, tabs,
   tour, PDF), but the address bar doesn't follow your view and edits can't be kept in the browser; to edit, download
   the file and open it in a browser.

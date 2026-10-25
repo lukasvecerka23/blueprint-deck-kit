@@ -85,6 +85,10 @@ $installer = irm "https://blueprintdeck.dev/install.ps1"
 Prefer to do it by hand? [Download the skill as a zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
 and unzip it into your agent's skills folder, so that you get `…/skills/blueprint-deck/SKILL.md`.
 
+**No terminal?** In Claude (Desktop or claude.ai), ChatGPT on the web or Gemini, upload the skill as a zip, attach your
+docs to a chat and ask for a Blueprint Deck; skip the configurator if you like, the skill asks what it needs. In
+Claude you can then publish the deck as an artifact and share the link ([Chat apps](/docs/agents/#chat-apps-claude-chatgpt-gemini)).
+
 ## 2. Describe your diagram
 
 Open the [configurator](/configurator/) (it also works offline from `configurator/index.html` in the repository).

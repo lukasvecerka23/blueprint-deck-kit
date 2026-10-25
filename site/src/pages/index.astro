@@ -22,12 +22,12 @@ const steps = [
   },
   {
     title: "Paste it into your agent",
-    text: "In your project folder. The agent reads the docs or the code, proposes the structure, and writes diagrams/index.html plus an extraction report.",
+    text: "In your project folder, or in a chat with your docs attached (Claude, ChatGPT, Gemini). The agent reads them, proposes the structure, and writes the deck plus an extraction report.",
     code: "/blueprint-deck diagrams/diagram.config.yaml",
   },
   {
     title: "Present, edit, share",
-    text: "Open the file and present it. Press E to fix things, ask the agent for bigger changes, then share the file, host it, or send a read-only copy.",
+    text: "Open the file and present it. Press E to fix things, ask the agent for bigger changes, then send the file, a read-only copy, or a link: host it, or publish it as an artifact in Claude.",
     keys: ["←", "→", "E", "P"],
   },
 ];
@@ -64,6 +64,10 @@ const homeFaq = FAQ.filter(f => f.home);
         <p class="mx-auto mt-6 max-w-2xl text-lg text-pretty text-muted-foreground">
           Your coding agent reads your docs or code and writes one interactive HTML file: a map with a guided tour, tabs and
           personas. Present it, edit it, send it to anyone.
+        </p>
+        <p class="mx-auto mt-3 max-w-2xl text-sm text-balance text-muted-foreground">
+          No terminal? Attach your docs in <span class="font-medium text-foreground">Claude, ChatGPT or Gemini</span> instead, and share the deck as a link
+          from Claude.
         </p>
         <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
           <a href="/configurator/" class="btn" data-size="lg">Configure your deck <Icon name="arrow-right" /></a>

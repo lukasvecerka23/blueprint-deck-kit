@@ -17,7 +17,7 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
   },
   {
     q: "Can I share it?",
-    a: "It's one HTML file: email it, put it in a shared drive or attach it to a ticket. For a phone-friendly link, upload it to any static host (Cloudflare Pages, GitHub Pages, Netlify, an S3 bucket). Press <kbd class=\"kbd\">P</kbd> for a PDF deck when someone needs slides.",
+    a: "It's one HTML file: email it, put it in a shared drive or attach it to a ticket. For a link anyone can open, ask Claude to publish it as an artifact (Claude Desktop or claude.ai), or upload it to any static host (Cloudflare Pages, GitHub Pages, Netlify, an S3 bucket). Press <kbd class=\"kbd\">P</kbd> for a PDF deck when someone needs slides.",
     home: true,
   },
   {
@@ -48,6 +48,11 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
   {
     q: "Does it only work with a code repository?",
     a: "No. Point it at any folder with documentation: a repository, a folder of Markdown, text or PDF files, an export from Confluence or Notion, even web pages by URL. Run your agent in that folder and list the files (or URLs) as sources in the config.",
+  },
+  {
+    q: "Can I use it without a terminal or a repository?",
+    a: "Yes. Upload the skill once to Claude (Desktop or claude.ai), ChatGPT on the web or Gemini (a zip, see <a href=\"/docs/agents/#chat-apps-claude-chatgpt-gemini\">Chat apps</a>), then start a chat, attach your docs (PDF, Markdown, text) and ask for a Blueprint Deck. You get the HTML file to download; in Claude you can also ask it to publish the deck as an artifact and share the link.",
+    home: true,
   },
   {
     q: "Can it build a diagram from code?",
