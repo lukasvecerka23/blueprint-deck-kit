@@ -95,6 +95,7 @@ try {
     $old = if (Test-Path (Join-Path $dest "VERSION")) { (Get-Content (Join-Path $dest "VERSION") -Raw).Trim() } else { "" }
     if (Test-Path $dest) { Remove-Item -Recurse -Force $dest }
     Copy-Item -Recurse -Path $src -Destination $dest
+    Remove-Item -Recurse -Force (Join-Path $dest ".claude-plugin") -ErrorAction SilentlyContinue   # only for the marketplace
     if (-not $old) { Write-Host "installed Blueprint Deck Kit $new in $dest" }
     elseif ($old -eq $new) { Write-Host "Blueprint Deck Kit $new is up to date in $dest (reinstalled)" }
     else { Write-Host "updated Blueprint Deck Kit $old -> $new in $dest"; $updated = $true }

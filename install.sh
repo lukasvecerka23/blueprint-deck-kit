@@ -134,6 +134,7 @@ for t in $TARGETS; do
   mkdir -p "$t"
   rm -rf "${t:?}/$NAME"
   cp -R "$SRC" "$t/$NAME"
+  rm -rf "${t:?}/$NAME/.claude-plugin"   # the Claude Code plugin manifest only matters for the marketplace
   if [ -z "$OLD" ]; then say "installed Blueprint Deck Kit $NEW in $t/$NAME"
   elif [ "$OLD" = "$NEW" ]; then say "Blueprint Deck Kit $NEW is up to date in $t/$NAME (reinstalled)"
   else say "updated Blueprint Deck Kit $OLD -> $NEW in $t/$NAME"; UPDATED=1; fi

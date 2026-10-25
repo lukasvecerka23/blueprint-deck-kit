@@ -31,8 +31,10 @@ jobs:
       - name: Skill archives and release notes
         run: |
           mkdir -p out
-          tar -czf out/blueprint-deck-skill.tar.gz -C skill blueprint-deck
-          (cd skill && zip -qr ../out/blueprint-deck-skill.zip blueprint-deck)
+          # the Claude Code plugin manifest stays out: the chat apps refuse a skill zip that contains one
+          tar -czf out/blueprint-deck-skill.tar.gz --exclude "blueprint-deck/.claude-plugin" -C skill blueprint-deck
+          (cd skill && zip -qr ../out/blueprint-deck-skill.zip blueprint-deck -x "blueprint-deck/.claude-plugin/*")
+          ! unzip -l out/blueprint-deck-skill.zip | grep -q ".claude-plugin"
           cp install.sh install.ps1 out/
           awk -v v="## $VERSION" '$0 ~ "^## " { p = index($0, v) == 1 } p' CHANGELOG.md | tail -n +2 > out/notes.md
       - name: GitHub release
