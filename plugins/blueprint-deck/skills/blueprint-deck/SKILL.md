@@ -24,6 +24,11 @@ or pasted (and URLs, if you can fetch them). With no config, ask the step-0 ques
 sandbox, write the diagram there (keep the file name `index.html` or name it after the title) and give it to the user
 as a downloadable file, with the extraction report in your answer. Skip the version check if there's no network.
 Change requests: ask the user to attach the current HTML file if it isn't in the conversation.
+Where you can publish artifacts (Claude Desktop, claude.ai), end with one line that offers it: "Want a link to share?
+I can publish the deck as an artifact." Only publish when the user says yes: a published artifact is public to anyone
+with the link. Publish the HTML file exactly as written (the whole file, engine included, nothing shortened); the deck
+works inside the artifact, but edits made there aren't kept, so later changes go into the file and get published
+again.
 
 ## Modes
 

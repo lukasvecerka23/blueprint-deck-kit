@@ -9,6 +9,8 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
 - **New address: blueprintdeck.dev.** The website, the install commands, the docs, the plugin manifests and the
   credit in every deck use it; the old address keeps redirecting.
+- **A link from Claude:** in Claude Desktop and claude.ai the skill now offers, after making a deck, to publish it as
+  an artifact (a link anyone can open, no hosting). It only publishes when you say yes.
 
 ## 2.4.0 (2026-10-25)
 
