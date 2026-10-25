@@ -3,18 +3,21 @@
 The Blueprint Deck Kit promo, made with [Remotion](https://www.remotion.dev) (React). Not part of the skill or the
 website build.
 
-`assets/` holds the published renders: `promo.mp4` (16:9, ~60 s), `promo-square.mp4` (1:1), `promo-short.mp4` and
-`promo-short-wide.mp4` (~26 s, for social feeds), `readme.gif` (the README's GIF, also in `docs/images/demo.gif`) and
-`poster.jpg`. The landing page uses a lighter render, `site/public/video/blueprint-deck.mp4`.
+The rendered videos aren't kept in git (they're large and can be made again). What the project publishes lives
+elsewhere: the landing page's video is `site/public/video/blueprint-deck.mp4` (with `poster.jpg`), the README's GIF is
+`docs/images/demo.gif`.
 
 ```sh
 cd video
 npm install
+# 1. record the real clip the video ends with (public/real/acme-clip.mp4); serve the repository first:
+python3 -m http.server 8765 --directory ..      # in another terminal
+npm run record
+# 2. preview, then render
 npx remotion studio          # preview and edit in the browser
-npm run render:all           # everything into out/ (then copy what you publish into assets/)
-npm run render:web           # the lighter landing-page version (CRF 30) -> site/public/video/blueprint-deck.mp4
-npm run record               # re-record the real clip (public/real/acme-clip.mp4); serve the repo first:
-                             #   python3 -m http.server 8765 --directory ..
+npm run render:all           # promo (16:9, 1:1), the short cuts, the GIF, the poster and stills into out/
+npm run render:web           # the lighter landing-page version (CRF 30); copy it to site/public/video/blueprint-deck.mp4
+                             # (and out/poster.jpg to site/public/video/poster.jpg, out/readme.gif to docs/images/demo.gif)
 ```
 
 - Texts, subtitles and timings: `src/content.ts`

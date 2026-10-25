@@ -1,3 +1,5 @@
 node_modules/
 out/
+assets/
+public/real/*.mp4
 public/real/.rec/
