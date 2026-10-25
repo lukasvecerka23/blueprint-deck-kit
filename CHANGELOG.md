@@ -63,3 +63,17 @@ ideas behind many of these changes.
 - **Configurator** rebuilt: shared settings plus a full set of options per diagram, live theme preview, a prompt that
   carries the whole config.
 - Optional `tools/check.mjs` validates a file from the command line (Node 18+).
+
+## 1.0.0 (2026-10-20, internal)
+
+The first version, called **diagram-kit**, built inside a client project and never published. 2.0.0 is its public
+rewrite.
+
+- A Claude Code plugin (`/diagram-kit:diagram`) or a personal skill; Claude only.
+- A form (the first configurator) wrote `diagram.config.yaml`; Claude read the repository's docs, wrote the content as
+  `diagram.json` plus an extraction report, and a Python build script turned it into one offline HTML file.
+- Clickable boxes with side panels, tabs that highlight one aspect at a time, a guided tour with a zooming camera,
+  roadmap and option sheets, and several diagrams in one file with a switcher.
+- Change requests in plain language and an `update` mode that kept manual edits.
+- Dark themes only (four presets plus an accent colour), boxes on a grid of areas, no editor in the browser, no
+  personas, no PDF export.
