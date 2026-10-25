@@ -1,0 +1,9 @@
+---
+// A brand mark (filled, in the current text colour). See src/data/brand-icons.ts.
+import { BRAND_ICONS } from "../data/brand-icons";
+interface Props { name: string; class?: string }
+const { name, class: cls = "size-4" } = Astro.props;
+const d = BRAND_ICONS[name];
+if (!d) throw new Error(`Brand icon "${name}" not found`);
+---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class={cls} aria-hidden="true"><path d={d} /></svg>

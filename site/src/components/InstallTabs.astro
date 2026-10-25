@@ -3,6 +3,7 @@
 // variant="full" (the Install section): every option and its details.
 import Command from "./Command.astro";
 import Icon from "./Icon.astro";
+import BrandIcon from "./BrandIcon.astro";
 import { INSTALL, SITE } from "../data/site";
 
 interface Props { id?: string; variant?: "hero" | "full" }
@@ -10,12 +11,12 @@ const { id = "install", variant = "full" } = Astro.props;
 const hero = variant === "hero";
 const zip = `${SITE.repo}/releases/latest/download/blueprint-deck-skill.zip`;
 const tabs = [
-  { id: "claude", label: "Claude Code" },
-  { id: "codex", label: "Codex" },
-  { id: "gemini", label: "Gemini CLI" },
-  { id: "apps", label: "Chat apps" },
-  { id: "other", label: "Install script" },
-  ...(hero ? [] : [{ id: "manual", label: "Manual" }]),
+  { id: "claude", label: "Claude Code", brand: "claude" },
+  { id: "codex", label: "Codex", brand: "openai" },
+  { id: "gemini", label: "Gemini CLI", brand: "gemini" },
+  { id: "apps", label: "Chat apps", icon: "message-square" },
+  { id: "other", label: "Install script", icon: "terminal" },
+  ...(hero ? [] : [{ id: "manual", label: "Manual", icon: "download" }]),
 ];
 const hint = "text-sm text-muted-foreground";
 const code = "font-mono text-xs";
@@ -25,7 +26,8 @@ const link = "underline underline-offset-4 hover:text-foreground";
   <nav role="tablist" aria-orientation="horizontal" class:list={["max-w-full overflow-x-auto justify-start", hero && "mx-auto"]}>
     {tabs.map((t, i) => (
       <button type="button" role="tab" id={`${id}-tab-${t.id}`} aria-controls={`${id}-panel-${t.id}`}
-        aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1}>{t.label}</button>
+        aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} class="gap-1.5">
+        {t.brand ? <BrandIcon name={t.brand} class="size-3.5 shrink-0" /> : <Icon name={t.icon!} class="size-3.5 shrink-0" />}{t.label}</button>
     ))}
   </nav>
 
