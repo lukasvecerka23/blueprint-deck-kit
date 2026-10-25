@@ -14,6 +14,28 @@ the skill, so every deck behaves the same and anyone can fix a text later withou
 
 ## 1. Install the skill
 
+Install it where you work:
+
+- **Claude Code**, as a plugin, from inside Claude Code:
+
+  ```text
+  /plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
+  ```
+
+  Then type `/blueprint-deck:blueprint-deck`. More (older versions, updates) on the [Agents](/docs/agents/) page.
+- **Codex**, with its built-in skill installer, from inside Codex:
+
+  ```text
+  $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/skill/blueprint-deck
+  ```
+
+- **Claude Desktop, claude.ai or ChatGPT**: download
+  [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
+  and upload it as a skill ([how](/docs/agents/#claude-desktop-claudeai-and-chatgpt)).
+- **Other agents, or several at once**: the install script below.
+
+### The install script
+
 macOS and Linux:
 
 ```sh

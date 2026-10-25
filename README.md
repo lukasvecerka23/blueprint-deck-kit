@@ -38,7 +38,30 @@ ecosystems and org maps, in a product (what it does for whom) or technical (comp
 
 ### 1. Install the skill (once)
 
-Installs the latest [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases):
+Pick the place you work in:
+
+**Claude Code**: as a plugin, from inside Claude Code:
+```
+/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
+```
+Then type `/blueprint-deck:blueprint-deck`. On Claude Code older than 2.1.275, run
+`/plugin marketplace add lukasvecerka23/blueprint-deck-kit` and then `/plugin install blueprint-deck@blueprint-deck-kit`.
+Updates: turn on auto-update under `/plugin` → Marketplaces, or run `claude plugin update blueprint-deck@blueprint-deck-kit`.
+
+**Codex**: with its built-in skill installer, from inside Codex:
+```
+$skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/skill/blueprint-deck
+```
+It doesn't update an existing skill; to update, use the install script below, which replaces it.
+
+**Claude Desktop, claude.ai or ChatGPT** (no terminal): download
+[blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
+and upload it unchanged. Claude: **Customize → Skills**, upload, turn it on (code execution must be on). ChatGPT:
+**Plugins → Skills → Create → Upload**. Then attach your docs to a chat and ask for a Blueprint Deck.
+
+**Other agents, or several at once**: the install script. It installs the latest
+[release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) for the agents it finds (`~/.claude/skills`,
+`~/.codex/skills`, `~/.agents/skills`) and asks which when there are several.
 
 macOS / Linux:
 ```bash
@@ -48,28 +71,10 @@ Windows (PowerShell):
 ```powershell
 irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex
 ```
-
-The script copies the skill into the skills folder of the agents it finds (`~/.claude/skills`, `~/.codex/skills`,
-`~/.agents/skills`); when it finds more than one, it asks which (Enter = all, `--yes` skips the question). Options: `--agent claude|codex|agents|all`, `--dir <folder>`, `--project` (into the current
-project), `--version 2.1.0` (a specific release), `--uninstall`; with PowerShell `-Agent`, `-Version` … (run it as
-`& ([scriptblock]::Create((irm <url>))) -Version 2.1.0`).
-
-**Without the script**, from inside your agent:
-
-- **Claude Code** (as a plugin; updates through `/plugin`, with optional auto-update):
-  ```
-  /plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
-  ```
-  On Claude Code older than 2.1.275, run `/plugin marketplace add lukasvecerka23/blueprint-deck-kit` and then
-  `/plugin install blueprint-deck@blueprint-deck-kit`. The command is then `/blueprint-deck:blueprint-deck`.
-- **Codex** (its built-in skill installer; to update, delete `~/.codex/skills/blueprint-deck` and install again):
-  ```
-  $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/skill/blueprint-deck
-  ```
-- **Claude Desktop, claude.ai or ChatGPT** (no terminal): download
-  [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
-  and upload it unchanged. In Claude: **Customize → Skills**, upload, turn it on (code execution must be on). In
-  ChatGPT: **Plugins → Skills → Create → Upload**. Then attach your docs to a chat and ask for a Blueprint Deck.
+Options: `--agent claude|codex|agents|all`, `--dir <folder>` (any other agent's skills folder), `--project` (into the
+current project), `--version 2.1.0` (a specific release), `--yes` (don't ask), `--uninstall`; pass them with
+`sh -s --`. With PowerShell `-Agent`, `-Version` … (run it as `& ([scriptblock]::Create((irm <url>))) -Version 2.1.0`).
+Run it again to update.
 
 - **From a clone** (e.g. to try unreleased changes on `main`): `./install.sh` installs that checkout.
 - **By hand:** download `blueprint-deck-skill.zip` from a [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases)
@@ -114,9 +119,10 @@ Paste the prompt into your agent, in your project folder: a code repository, or 
 
 ## Updating
 
-- **The skill:** run the install command again. It tells you which version it replaced and links to
-  [what's new](https://github.com/lukasvecerka23/blueprint-deck-kit/releases). The skill also mentions it when a newer version
-  is out. A specific release: add `--version 2.1.0` (PowerShell: `-Version 2.1.0`).
+- **The skill** mentions it when a newer version is out ([what's new](https://github.com/lukasvecerka23/blueprint-deck-kit/releases)).
+  To update: Claude Code plugin: `claude plugin update blueprint-deck@blueprint-deck-kit` (or auto-update);
+  Claude/ChatGPT app: delete the skill and upload the newer zip; install script (also for Codex): run it again, it says
+  which version it replaced. A specific release: add `--version 2.1.0` (PowerShell: `-Version 2.1.0`).
 - **Your diagrams** keep working as they are: each file carries its own engine. To give a file the new features,
   ask your agent to "upgrade diagrams/index.html to the newest engine"; your content stays as it is. The editor
   (E → Diagram) shows which engine a file has.

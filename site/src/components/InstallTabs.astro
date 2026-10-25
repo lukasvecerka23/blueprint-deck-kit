@@ -1,81 +1,98 @@
 ---
+// Install options, one tab per place people work in. variant="hero": one command per agent and a one-line hint;
+// variant="full" (the Install section): every option and its details.
 import Command from "./Command.astro";
+import Icon from "./Icon.astro";
 import { INSTALL, SITE } from "../data/site";
 
+interface Props { id?: string; variant?: "hero" | "full" }
+const { id = "install", variant = "full" } = Astro.props;
+const hero = variant === "hero";
+const zip = `${SITE.repo}/releases/latest/download/blueprint-deck-skill.zip`;
 const tabs = [
-  { id: "unix", label: "macOS / Linux" },
-  { id: "windows", label: "Windows" },
   { id: "claude", label: "Claude Code" },
   { id: "codex", label: "Codex" },
+  { id: "apps", label: "Claude app · ChatGPT" },
   { id: "other", label: "Other agents" },
-  { id: "manual", label: "Manual" },
+  ...(hero ? [] : [{ id: "manual", label: "Manual" }]),
 ];
-const id = Astro.props.id ?? "install";
+const hint = "text-sm text-muted-foreground";
+const code = "font-mono text-xs";
+const link = "underline underline-offset-4 hover:text-foreground";
 ---
-<div class="tabs w-full gap-4" id={`${id}-tabs`}>
-  <nav role="tablist" aria-orientation="horizontal" class="max-w-full overflow-x-auto">
+<div class:list={["tabs w-full", hero ? "gap-3" : "gap-4"]} id={`${id}-tabs`}>
+  <nav role="tablist" aria-orientation="horizontal" class:list={["max-w-full overflow-x-auto", hero && "mx-auto"]}>
     {tabs.map((t, i) => (
       <button type="button" role="tab" id={`${id}-tab-${t.id}`} aria-controls={`${id}-panel-${t.id}`}
         aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1}>{t.label}</button>
     ))}
   </nav>
 
-  <div role="tabpanel" id={`${id}-panel-unix`} aria-labelledby={`${id}-tab-unix`} tabindex="-1" class="space-y-3">
-    <Command code={INSTALL.sh} />
-    <p class="text-sm text-muted-foreground">Installs the skill for the agents it finds on your computer
-      (<code class="font-mono text-xs">~/.claude/skills</code>, <code class="font-mono text-xs">~/.codex/skills</code>, <code class="font-mono text-xs">~/.agents/skills</code>);
-      if it finds more than one, it asks which.
-      Add <code class="font-mono text-xs">--project</code> to install into the current project instead, <code class="font-mono text-xs">--uninstall</code> to remove it.
-      It only copies files; nothing else is installed. <a class="underline underline-offset-4 hover:text-foreground" href="/install.sh">Read the script</a>.</p>
-  </div>
-
-  <div role="tabpanel" id={`${id}-panel-windows`} aria-labelledby={`${id}-tab-windows`} tabindex="-1" class="space-y-3" hidden>
-    <Command code={INSTALL.ps} prompt="PS>" />
-    <p class="text-sm text-muted-foreground">Run in PowerShell. Same behaviour as the shell script: it asks which agents when it finds more than one, or pass{" "}
-      <code class="font-mono text-xs">-Agent claude|codex|agents|all</code>, <code class="font-mono text-xs">-Project</code> or <code class="font-mono text-xs">-Uninstall</code>.{" "}
-      <a class="underline underline-offset-4 hover:text-foreground" href="/install.ps1">Read the script</a>.</p>
-  </div>
-
-  <div role="tabpanel" id={`${id}-panel-claude`} aria-labelledby={`${id}-tab-claude`} tabindex="-1" class="space-y-3" hidden>
-    <p class="text-sm text-muted-foreground">Inside Claude Code, as a plugin (no script; updates come through Claude Code):</p>
+  <!-- Claude Code: the plugin -->
+  <div role="tabpanel" id={`${id}-panel-claude`} aria-labelledby={`${id}-tab-claude`} tabindex="-1" class="space-y-3">
     <Command code={INSTALL.claudePlugin} prompt=">" />
-    <p class="text-sm text-muted-foreground">Then type <code class="font-mono text-xs">/blueprint-deck:blueprint-deck</code> or paste the prompt from the configurator.
-      Or with the script, into <code class="font-mono text-xs">~/.claude/skills/blueprint-deck</code> (the command is then <code class="font-mono text-xs">/blueprint-deck</code>):</p>
-    <Command code={INSTALL.shAgent("claude")} />
-    <Command code={INSTALL.psAgent("claude")} prompt="PS>" />
+    {hero ? (
+      <p class={hint}>Run it inside Claude Code, then type <code class={code}>/blueprint-deck:blueprint-deck</code> or paste the prompt from the configurator.</p>
+    ) : (
+      <p class={hint}>Run it inside Claude Code (2.1.275 or later; older: <code class={code}>/plugin marketplace add lukasvecerka23/blueprint-deck-kit</code>,
+        then <code class={code}>/plugin install blueprint-deck@blueprint-deck-kit</code>). Then type <code class={code}>/blueprint-deck:blueprint-deck</code>{" "}
+        or paste the prompt from the configurator. Updates: turn on auto-update under <code class={code}>/plugin</code> → Marketplaces, or run{" "}
+        <code class={code}>claude plugin update blueprint-deck@blueprint-deck-kit</code>.</p>
+    )}
   </div>
 
+  <!-- Codex: its built-in skill installer -->
   <div role="tabpanel" id={`${id}-panel-codex`} aria-labelledby={`${id}-tab-codex`} tabindex="-1" class="space-y-3" hidden>
-    <p class="text-sm text-muted-foreground">Inside Codex, with its built-in skill installer (no script):</p>
     <Command code={INSTALL.codexSkill} prompt=">" />
-    <p class="text-sm text-muted-foreground">Or with the script:</p>
-    <Command code={INSTALL.shAgent("codex")} />
-    <Command code={INSTALL.psAgent("codex")} prompt="PS>" />
-    <p class="text-sm text-muted-foreground">Either way it lands in <code class="font-mono text-xs">~/.codex/skills/blueprint-deck</code>. Start a new Codex session in your project folder and paste
-      the prompt from the configurator, or ask: "Use the blueprint-deck skill to make a diagram of these docs".</p>
+    {hero ? (
+      <p class={hint}>Run it inside Codex, then start a new session and ask for a Blueprint Deck, or paste the prompt from the configurator.</p>
+    ) : (
+      <p class={hint}>Run it inside Codex: its built-in skill installer puts the skill into <code class={code}>~/.codex/skills/blueprint-deck</code>.
+        Start a new session and paste the prompt from the configurator, or ask "Use the blueprint-deck skill to make a diagram of these docs".
+        The installer doesn't update an existing skill: to update, use the script under <span class="font-medium text-foreground">Other agents</span>, which replaces it.</p>
+    )}
   </div>
 
-  <div role="tabpanel" id={`${id}-panel-other`} aria-labelledby={`${id}-tab-other`} tabindex="-1" class="space-y-3" hidden>
-    <Command code={INSTALL.shAgent("agents")} />
-    <Command code={`curl -fsSL ${SITE.url}/install.sh | sh -s -- --dir <your agent's skills folder>`} />
-    <p class="text-sm text-muted-foreground">Same script. <code class="font-mono text-xs">--agent agents</code> installs into the shared <code class="font-mono text-xs">~/.agents/skills</code> folder;{" "}
-      <code class="font-mono text-xs">--dir</code> puts it anywhere. Agents without skill support can follow <code class="font-mono text-xs">blueprint-deck/SKILL.md</code> as instructions: tell them to read it first.</p>
-  </div>
-
-  <div role="tabpanel" id={`${id}-panel-manual`} aria-labelledby={`${id}-tab-manual`} tabindex="-1" class="space-y-3" hidden>
-    <div class="flex flex-wrap items-center gap-3">
-      <a href={`${SITE.repo}/releases/latest/download/blueprint-deck-skill.zip`} class="btn" data-variant="outline">Download the skill (.zip)</a>
-      <span class="text-sm text-muted-foreground">the latest release, one folder <code class="font-mono text-xs">blueprint-deck/</code> ·
-        <a class="underline underline-offset-4 hover:text-foreground" href={`${SITE.repo}/releases`}>all versions</a></span>
+  <!-- Claude Desktop / claude.ai / ChatGPT: upload the zip -->
+  <div role="tabpanel" id={`${id}-panel-apps`} aria-labelledby={`${id}-tab-apps`} tabindex="-1" class="space-y-3" hidden>
+    <div class:list={["flex flex-wrap items-center gap-3", hero && "justify-center"]}>
+      <a href={zip} class="btn" data-variant="outline"><Icon name="download" class="size-4" /> Download the skill (.zip)</a>
+      {!hero && <a class={`${hint} ${link}`} href={`${SITE.repo}/releases`}>all versions</a>}
     </div>
-    <Command code="unzip blueprint-deck-skill.zip -d ~/.claude/skills" />
-    <p class="text-sm text-muted-foreground">Unzip into your agent's skills folder, e.g. <code class="font-mono text-xs">~/.claude/skills/</code>, <code class="font-mono text-xs">~/.codex/skills/</code>,{" "}
-      <code class="font-mono text-xs">~/.agents/skills/</code>, or <code class="font-mono text-xs">.claude/skills/</code> inside a repository. The result is <code class="font-mono text-xs">…/skills/blueprint-deck/SKILL.md</code>.</p>
-    <p class="text-sm text-muted-foreground"><span class="font-medium text-foreground">Claude Desktop, claude.ai or ChatGPT:</span> upload the same zip, unchanged.
-      In Claude: <span class="font-medium text-foreground">Customize → Skills</span>, upload, turn it on. In ChatGPT: <span class="font-medium text-foreground">Plugins → Skills → Create → Upload</span>.
-      Then attach your docs to a chat and ask for a Blueprint Deck; you get the HTML file to download.{" "}
-      <a class="underline underline-offset-4 hover:text-foreground" href="/docs/agents/#claude-desktop-claudeai-and-chatgpt">More</a>.</p>
+    <p class={hint}>Upload it unchanged. <span class="font-medium text-foreground">Claude</span> (Desktop or claude.ai): Customize → Skills → upload, turn it on.{" "}
+      <span class="font-medium text-foreground">ChatGPT</span>: Plugins → Skills → Create → Upload. Then attach your docs to a chat and ask for a Blueprint Deck.
+      {!hero && <> Code execution must be on in Claude. In a chat the skill only sees the files you attach, and you get the HTML file to download.{" "}
+        <a class={link} href="/docs/agents/#claude-desktop-claudeai-and-chatgpt">Details</a>.</>}</p>
   </div>
+
+  <!-- Other agents, or several at once: the install script -->
+  <div role="tabpanel" id={`${id}-panel-other`} aria-labelledby={`${id}-tab-other`} tabindex="-1" class="space-y-3" hidden>
+    <Command code={INSTALL.sh} />
+    <Command code={INSTALL.ps} prompt="PS>" />
+    {hero ? (
+      <p class={hint}>The install script (macOS/Linux, then Windows): installs for Claude Code, Codex and other Agent Skills agents it finds, and asks which.{" "}
+        <a class={link} href="#install">All options</a>.</p>
+    ) : (
+      <p class={hint}>The install script, for macOS/Linux and for Windows PowerShell. It installs the latest release for the agents it finds
+        (<code class={code}>~/.claude/skills</code>, <code class={code}>~/.codex/skills</code>, <code class={code}>~/.agents/skills</code>) and asks which when there are several.
+        Options: <code class={code}>--agent claude|codex|agents|all</code>, <code class={code}>--dir &lt;skills folder&gt;</code> for any other agent,{" "}
+        <code class={code}>--project</code> (into the current project), <code class={code}>--version 2.1.0</code>, <code class={code}>--yes</code>, <code class={code}>--uninstall</code>;
+        pass them with <code class={code}>sh -s --</code> (PowerShell: <code class={code}>-Agent</code>, <code class={code}>-Version</code> …). Run it again to update.
+        It only copies files. Read the <a class={link} href="/install.sh">shell</a> or <a class={link} href="/install.ps1">PowerShell</a> script.
+        Agents without skill support can follow <code class={code}>blueprint-deck/SKILL.md</code> as instructions: tell them to read it first.</p>
+    )}
+  </div>
+
+  {!hero && (
+    <div role="tabpanel" id={`${id}-panel-manual`} aria-labelledby={`${id}-tab-manual`} tabindex="-1" class="space-y-3" hidden>
+      <div class="flex flex-wrap items-center gap-3">
+        <a href={zip} class="btn" data-variant="outline"><Icon name="download" class="size-4" /> Download the skill (.zip)</a>
+        <span class={hint}>the latest release, one folder <code class={code}>blueprint-deck/</code> ·
+          <a class={link} href={`${SITE.repo}/releases`}>all versions</a></span>
+      </div>
+      <Command code="unzip blueprint-deck-skill.zip -d ~/.claude/skills" />
+      <p class={hint}>Unzip into your agent's skills folder, e.g. <code class={code}>~/.claude/skills/</code>, <code class={code}>~/.codex/skills/</code>,{" "}
+        <code class={code}>~/.agents/skills/</code>, or <code class={code}>.claude/skills/</code> inside a repository. The result is <code class={code}>…/skills/blueprint-deck/SKILL.md</code>.</p>
+    </div>
+  )}
 </div>
-<p class="mt-4 text-sm text-muted-foreground">Installs the latest release. A specific version: add <code class="font-mono text-xs">-s -- --version 2.1.0</code>
-  {" "}(PowerShell: <code class="font-mono text-xs">-Version 2.1.0</code>) · <a class="underline underline-offset-4 hover:text-foreground" href={`${SITE.repo}/releases`}>all versions</a></p>

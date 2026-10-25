@@ -11,6 +11,9 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
   `/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit`; updates come through Claude Code.
   The repository is its own plugin marketplace.
 - **Codex without the script:** its built-in skill installer installs the skill straight from GitHub.
+- **Install by agent.** The website and README now start from the agent you use (Claude Code plugin, Codex installer,
+  zip upload for the apps); the install script is the option for other agents or several at once. The skill's update
+  notice names the right way to update for each kind of install.
 - **Claude Desktop, claude.ai and ChatGPT:** upload the release zip as a skill, no terminal needed. The skill knows how
   to work in a chat: the attached files are the sources, and the result is an HTML file to download.
 - **The installer asks which agents.** When it finds more than one (e.g. Claude Code and Codex), it asks where to
