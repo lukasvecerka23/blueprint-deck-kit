@@ -18,7 +18,7 @@ You write the JSON. That keeps every diagram consistent and lets people fix text
 - `SKILL_DIR/templates/diagram.config.yaml`: the annotated config; `SKILL_DIR/templates/example.json`: a finished example
 - `SKILL_DIR/tools/check.mjs`: optional command-line check (needs Node 18+, nothing to install)
 
-**In a chat app** (claude.ai, Claude Desktop, ChatGPT; no project folder): the sources are the files the user attached
+**In a chat app** (claude.ai, Claude Desktop, ChatGPT, Gemini; no project folder): the sources are the files the user attached
 or pasted (and URLs, if you can fetch them). With no config, ask the step-0 questions in the chat. Work in your
 sandbox, write the diagram there (keep the file name `index.html` or name it after the title) and give it to the user
 as a downloadable file, with the extraction report in your answer. Skip the version check if there's no network.
@@ -52,7 +52,7 @@ file in the browser (press E); those edits are in the data block, so always re-r
      `claude plugin update blueprint-deck@blueprint-deck-kit`, or turn on auto-update under /plugin → Marketplaces
    - `SKILL_DIR` inside `~/.codex/plugins/` (Codex or ChatGPT desktop plugin): run `codex plugin marketplace upgrade`,
      or update it in the Plugins Directory
-   - a chat app (claude.ai, Claude Desktop, ChatGPT on the web; no project folder): delete the skill and upload the newer
+   - a chat app (claude.ai, Claude Desktop, ChatGPT on the web, Gemini; no project folder): delete the skill and upload the newer
      `blueprint-deck-skill.zip` from the releases page
    - anywhere else (Claude Code, Codex or Gemini CLI skills folder, other agents): run
      `curl -fsSL https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.sh | sh`

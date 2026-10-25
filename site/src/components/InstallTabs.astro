@@ -11,8 +11,8 @@ const hero = variant === "hero";
 const zip = `${SITE.repo}/releases/latest/download/blueprint-deck-skill.zip`;
 const tabs = [
   { id: "claude", label: "Claude Code" },
-  { id: "codex", label: "Codex · ChatGPT" },
-  { id: "gemini", label: "Gemini" },
+  { id: "codex", label: "Codex" },
+  { id: "gemini", label: "Gemini CLI" },
   { id: "apps", label: "Chat apps" },
   { id: "other", label: "Other agents" },
   ...(hero ? [] : [{ id: "manual", label: "Manual" }]),
@@ -42,16 +42,15 @@ const link = "underline underline-offset-4 hover:text-foreground";
     )}
   </div>
 
-  <!-- Codex and the ChatGPT desktop app: one plugin system, our repository is a marketplace -->
+  <!-- Codex: our repository is a plugin marketplace (Codex shares its plugins with the ChatGPT desktop app) -->
   <div role="tabpanel" id={`${id}-panel-codex`} aria-labelledby={`${id}-tab-codex`} tabindex="-1" class="space-y-3" hidden>
     <Command code={INSTALL.codexMarketplace} />
     {hero ? (
-      <p class={hint}>Or in the ChatGPT desktop app: Plugins → add the marketplace <code class={code}>lukasvecerka23/blueprint-deck-kit</code>. Then install Blueprint Deck from the Plugins Directory.</p>
+      <p class={hint}>Adds this repository as a plugin marketplace; then install Blueprint Deck from the Plugins Directory and ask for a deck.</p>
     ) : (
       <>
-        <p class={hint}>Codex and the ChatGPT desktop app share one plugin system. Add this repository as a marketplace (the command above, or
-          in the app: Plugins → add the marketplace <code class={code}>lukasvecerka23/blueprint-deck-kit</code>), then install Blueprint Deck from the
-          Plugins Directory. Updates: <code class={code}>codex plugin marketplace upgrade</code>. Without plugins, Codex's skill installer works too:</p>
+        <p class={hint}>Adds this repository as a plugin marketplace; then install Blueprint Deck from the Plugins Directory. Updates:{" "}
+          <code class={code}>codex plugin marketplace upgrade</code>. Without plugins, Codex's own skill installer works too:</p>
         <Command code={INSTALL.codexSkill} prompt=">" />
         <p class={hint}>It puts the skill into <code class={code}>~/.codex/skills/blueprint-deck</code> but doesn't update it later; the script under{" "}
           <span class="font-medium text-foreground">Other agents</span> does.</p>
@@ -74,16 +73,25 @@ const link = "underline underline-offset-4 hover:text-foreground";
     )}
   </div>
 
-  <!-- the chat apps: upload the zip (Claude on paid plans, ChatGPT on the web on paid plans) -->
+  <!-- the chat apps: Claude and Gemini take the zip; ChatGPT takes it on the web, the desktop app uses the plugin -->
   <div role="tabpanel" id={`${id}-panel-apps`} aria-labelledby={`${id}-tab-apps`} tabindex="-1" class="space-y-3" hidden>
     <div class:list={["flex flex-wrap items-center gap-3", hero && "justify-center"]}>
       <a href={zip} class="btn" data-variant="outline"><Icon name="download" class="size-4" /> Download the skill (.zip)</a>
       {!hero && <a class={`${hint} ${link}`} href={`${SITE.repo}/releases`}>all versions</a>}
     </div>
-    <p class={hint}>Upload it unchanged. <span class="font-medium text-foreground">Claude</span> (Desktop or claude.ai): Customize → Skills → upload, turn it on.{" "}
-      <span class="font-medium text-foreground">ChatGPT</span> (on the web): Plugins → Skills → Create → Upload. Both need a paid plan. Then attach your docs to a chat and ask for a Blueprint Deck.
-      {!hero && <> Code execution must be on in Claude. In a chat the skill only sees the files you attach, and you get the HTML file to download.{" "}
-        <a class={link} href="/docs/agents/#claude-desktop-claudeai-and-chatgpt">Details</a>.</>}</p>
+    {hero ? (
+      <p class={hint}>Upload it unchanged: <span class="font-medium text-foreground">Claude</span> and <span class="font-medium text-foreground">Gemini</span> under Customize → Skills,{" "}
+        <span class="font-medium text-foreground">ChatGPT</span> under Plugins → Skills. Then attach your docs to a chat and ask for a Blueprint Deck.</p>
+    ) : (
+      <ul class={`${hint} list-disc space-y-1.5 pl-5`}>
+        <li><span class="font-medium text-foreground">Claude</span> (Desktop or claude.ai, paid plans): Customize → Skills → upload, turn it on. Code execution must be on.</li>
+        <li><span class="font-medium text-foreground">ChatGPT</span>: on the web (paid plans) Plugins → Skills → Create → Upload. In the desktop app, add the plugin instead:
+          Plugins → add the marketplace <code class={code}>lukasvecerka23/blueprint-deck-kit</code>, then install Blueprint Deck.</li>
+        <li><span class="font-medium text-foreground">Gemini</span> (web or Mac app, personal accounts): Customize → Skills → upload (some accounts show it under Settings → Skills).</li>
+        <li>Then attach your docs to a chat and ask for a Blueprint Deck. In a chat the skill only sees the files you attach, and you get the HTML file to download.{" "}
+          <a class={link} href="/docs/agents/#chat-apps-claude-chatgpt-gemini">Details</a>.</li>
+      </ul>
+    )}
   </div>
 
   <!-- Other agents, or several at once: the install script -->

@@ -52,13 +52,12 @@ Then type `/blueprint-deck`. On Claude Code older than 2.1.275, run
 `/plugin marketplace add lukasvecerka23/blueprint-deck-kit` and then `/plugin install blueprint-deck@blueprint-deck-kit`.
 Updates: turn on auto-update under `/plugin` → Marketplaces, or run `claude plugin update blueprint-deck@blueprint-deck-kit`.
 
-**Codex and the ChatGPT desktop app** (one plugin system): add this repository as a plugin marketplace, then install
-Blueprint Deck from the Plugins Directory:
+**Codex**: add this repository as a plugin marketplace, then install Blueprint Deck from the Plugins Directory:
 ```
 codex plugin marketplace add lukasvecerka23/blueprint-deck-kit
 ```
-In the ChatGPT desktop app: Plugins → add the marketplace `lukasvecerka23/blueprint-deck-kit`. Without plugins, Codex's
-own skill installer works too (it doesn't update the skill later; the install script below does):
+Without plugins, Codex's own skill installer works too (it doesn't update the skill later; the install script below
+does):
 ```
 $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck
 ```
@@ -68,10 +67,15 @@ $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tr
 gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --path plugins/blueprint-deck/skills/blueprint-deck
 ```
 
-**Claude Desktop, claude.ai or ChatGPT on the web** (no terminal; paid plans): download
+**Chat apps** (no terminal): download
 [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
-and upload it unchanged. Claude: **Customize → Skills**, upload, turn it on (code execution must be on). ChatGPT:
-**Plugins → Skills → Create → Upload**. Then attach your docs to a chat and ask for a Blueprint Deck.
+and upload it unchanged.
+- **Claude** (Desktop or claude.ai, paid plans): **Customize → Skills**, upload, turn it on (code execution must be on).
+- **ChatGPT** on the web (paid plans): **Plugins → Skills → Create → Upload**. In the desktop app, add the plugin
+  instead: **Plugins** → add the marketplace `lukasvecerka23/blueprint-deck-kit`, then install Blueprint Deck.
+- **Gemini** (web or Mac app, personal accounts): **Customize → Skills**, upload.
+
+Then attach your docs to a chat and ask for a Blueprint Deck.
 
 **Other agents, or several at once**: the install script. It installs the latest
 [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) for the agents it finds (`~/.claude/skills`,
@@ -135,7 +139,8 @@ Paste the prompt into your agent, in your project folder: a code repository, or 
 
 - **The skill** mentions it when a newer version is out ([what's new](https://github.com/lukasvecerka23/blueprint-deck-kit/releases)).
   To update: Claude Code plugin: `claude plugin update blueprint-deck@blueprint-deck-kit` (or auto-update);
-  Claude/ChatGPT app: delete the skill and upload the newer zip; install script (also for Codex): run it again, it says
+  Codex/ChatGPT desktop plugin: `codex plugin marketplace upgrade`; Claude, ChatGPT or Gemini app: delete the skill and
+  upload the newer zip; install script (also for Codex): run it again, it says
   which version it replaced. A specific release: add `--version 2.1.0` (PowerShell: `-Version 2.1.0`).
 - **Your diagrams** keep working as they are: each file carries its own engine. To give a file the new features,
   ask your agent to "upgrade diagrams/index.html to the newest engine"; your content stays as it is. The editor

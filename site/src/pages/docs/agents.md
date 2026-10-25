@@ -1,12 +1,15 @@
 ---
 layout: ../../layouts/Docs.astro
 title: Agents
-description: How the skill works, its modes (generate, change, update, upgrade, init) and how to use it with Claude Code, Codex and other agents.
+description: How the skill works, its modes (generate, change, update, upgrade, init) and how to install and use it in Claude Code, Codex, Gemini CLI, the Claude, ChatGPT and Gemini apps and other agents.
 ---
 
 ## How the skill works
 
-The skill is a folder, `blueprint-deck/`, with a `SKILL.md` that tells the agent what to do, and the files it needs:
+The skill is a folder, `blueprint-deck/`, with a `SKILL.md` that tells the agent what to do, and the files it needs.
+Installed, it sits in your agent's skills folder (e.g. `~/.claude/skills/blueprint-deck/SKILL.md`, or inside the
+plugin); in the repository it lives at
+[`plugins/blueprint-deck/skills/blueprint-deck/`](https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck).
 
 | file | what it is |
 |---|---|
@@ -88,17 +91,17 @@ the slash command:
 Claude Code also picks the skill on its own when you ask for "an interactive diagram of this repo" or "a blueprint of
 the platform for the board meeting".
 
-## Codex and the ChatGPT desktop app
+## Codex
 
-Codex and the ChatGPT desktop app share one plugin system, and this repository is a plugin marketplace for it. Add it
-once, then install Blueprint Deck from the Plugins Directory:
+This repository is a plugin marketplace for Codex. Add it once, then install Blueprint Deck from the Plugins
+Directory:
 
 ```bash
 codex plugin marketplace add lukasvecerka23/blueprint-deck-kit
 ```
 
-In the ChatGPT desktop app: **Plugins** → add the marketplace `lukasvecerka23/blueprint-deck-kit`, then install
-**Blueprint Deck**. Updates come through the marketplace (`codex plugin marketplace upgrade`).
+Updates come through the marketplace (`codex plugin marketplace upgrade`). Codex shares its plugins with the ChatGPT
+desktop app, so the plugin shows up there too (see [Chat apps](#chat-apps-claude-chatgpt-gemini)).
 
 Without plugins, Codex's own skill installer installs the skill straight from GitHub:
 
@@ -135,19 +138,22 @@ curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent
 
 Check with `/skills list` in a Gemini CLI session, then ask for a Blueprint Deck in your project folder.
 
-## Claude Desktop, claude.ai and ChatGPT
+## Chat apps: Claude, ChatGPT, Gemini
 
-The chat apps take the skill as a zip upload, no terminal needed. Skills need a paid plan in both apps (in Claude
-they run with code execution), and in ChatGPT the upload works on the web, not in the desktop app (use the plugin
-there, see above).
+The chat apps need no terminal: you upload the skill as a zip, once.
 
 1. Download [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
-   from the latest release. Don't unzip it: it already has the shape the apps expect (one `blueprint-deck/` folder).
-2. Upload it:
-   - **Claude** (claude.ai or Claude Desktop): **Customize → Skills**, upload the zip, then turn the skill on. Code
-     execution must be on (Settings → Capabilities), because the skill works with files.
-   - **ChatGPT** (on the web): **Plugins → Skills → Create → Upload from your computer**. ChatGPT scans the upload
-     before you can use it.
+   from the latest release. Don't unzip it: it already has the shape the apps expect (one `blueprint-deck/` folder
+   with `SKILL.md` inside).
+2. Add it to your app:
+   - **Claude** (claude.ai or Claude Desktop; paid plans): **Customize → Skills**, upload the zip, then turn the skill
+     on. Code execution must be on (Settings → Capabilities), because the skill works with files.
+   - **ChatGPT on the web** (paid plans): **Plugins → Skills → Create → Upload from your computer**. ChatGPT scans the
+     upload before you can use it.
+   - **ChatGPT desktop app**: it takes plugins, not skill uploads. **Plugins** → add the marketplace
+     `lukasvecerka23/blueprint-deck-kit`, then install **Blueprint Deck** (the same plugin as in [Codex](#codex)).
+   - **Gemini** (web or Mac app, personal Google accounts): **Customize → Skills** (some accounts show it under
+     Settings → Skills), upload the zip.
 3. Start a chat, attach your docs (Markdown, PDF, text) or paste links, and ask: "Make a Blueprint Deck of these docs
    for our executives". The skill asks for what it can't tell from the files, then gives you the HTML file to
    download.
@@ -177,8 +183,17 @@ Then make a Blueprint Deck from diagrams/diagram.config.yaml.
 
 ## Updating
 
-Run the install command again: it replaces the skill and says which version it replaced
-(see the [changelog](/changelog/)). To install a specific release:
+When the skill runs, it asks GitHub for the latest release and tells you when a newer version is out (it never
+updates anything by itself). How to update depends on how you installed it:
+
+| installed with | to update |
+|---|---|
+| the Claude Code plugin | `claude plugin update blueprint-deck@blueprint-deck-kit`, or auto-update under `/plugin` → Marketplaces |
+| the Codex / ChatGPT desktop plugin | `codex plugin marketplace upgrade`, or update it in the Plugins Directory |
+| a zip upload (Claude, ChatGPT, Gemini apps) | delete the skill and upload the newer zip |
+| the install script, Codex's skill installer or Gemini CLI | run the install script again: it replaces the skill and says which version it replaced |
+
+What changed is in the [changelog](/changelog/). To install a specific release with the script:
 
 ```bash
 curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --version 2.1.0
@@ -190,8 +205,7 @@ In PowerShell:
 & ([scriptblock]::Create((irm https://blueprint-deck.lukasvecerka.dev/install.ps1))) -Version 2.1.0
 ```
 
-Every release and its files are on [GitHub Releases](https://github.com/lukasvecerka23/blueprint-deck-kit/releases). When the skill runs, it asks GitHub for the latest
-release and tells you when a newer version is out; it never updates anything by itself.
+Every release and its files are on [GitHub Releases](https://github.com/lukasvecerka23/blueprint-deck-kit/releases).
 
 Diagrams you already made keep working: each file carries its own engine. To give a file the new features, ask your
 agent to *upgrade* it (or run `node tools/insert.mjs --upgrade diagrams/index.html`). The content stays as it is.

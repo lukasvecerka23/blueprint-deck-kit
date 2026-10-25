@@ -12,7 +12,7 @@ import { INSTALL, SITE } from "../data/site";
 const steps = [
   {
     title: "Install the skill",
-    text: "From inside your agent: a plugin in Claude Code, the skill installer in Codex, or upload it to the Claude or ChatGPT app. Nothing else to install.",
+    text: "From inside your agent: a plugin in Claude Code or Codex, Gemini CLI's installer, or upload it to the Claude, ChatGPT or Gemini app. Nothing else to install.",
     code: INSTALL.claudePlugin,
   },
   {
@@ -170,9 +170,9 @@ const homeFaq = FAQ.filter(f => f.home);
       <div data-reveal>
         <p class="text-sm font-medium text-brand">Install</p>
         <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">One command, then ask your agent</h2>
-        <p class="mt-4 text-muted-foreground">The skill is a folder: <code class="font-mono text-sm">SKILL.md</code>, the engine, the format reference and the style guide. Install it from inside your agent, upload it to the Claude or ChatGPT app, or use the install script for any other agent. It only copies files.</p>
+        <p class="mt-4 text-muted-foreground">The skill is a folder: <code class="font-mono text-sm">SKILL.md</code>, the engine, the format reference and the style guide. Install it from inside your agent, upload it to the Claude, ChatGPT or Gemini app, or use the install script for any other agent. It only copies files.</p>
         <ul class="mt-6 space-y-2.5 text-sm">
-          <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /> Claude Code, Codex, the Claude and ChatGPT apps, and other Agent Skills agents</li>
+          <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /> Claude Code, Codex, Gemini CLI, the Claude, ChatGPT and Gemini apps, and other Agent Skills agents</li>
           <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /> Your agent runs locally with your own subscription</li>
           <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /><span>Updates through your agent, or re-run the install script</span></li>
         </ul>
