@@ -50,9 +50,11 @@ file in the browser (press E); those edits are in the data block, so always re-r
    To update: …", with the way that matches where the skill is installed:
    - `SKILL_DIR` inside `~/.claude/plugins/` (Claude Code plugin): run
      `claude plugin update blueprint-deck@blueprint-deck-kit`, or turn on auto-update under /plugin → Marketplaces
-   - a chat app (claude.ai, Claude Desktop, ChatGPT; no project folder): delete the skill and upload the newer
+   - `SKILL_DIR` inside `~/.codex/plugins/` (Codex or ChatGPT desktop plugin): run `codex plugin marketplace upgrade`,
+     or update it in the Plugins Directory
+   - a chat app (claude.ai, Claude Desktop, ChatGPT on the web; no project folder): delete the skill and upload the newer
      `blueprint-deck-skill.zip` from the releases page
-   - anywhere else (Claude Code or Codex skills folder, other agents): run
+   - anywhere else (Claude Code, Codex or Gemini CLI skills folder, other agents): run
      `curl -fsSL https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.sh | sh`
      (Windows: `irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex`)
    Never stop or install anything yourself because of this.

@@ -8,10 +8,10 @@
 #   ./install.sh                      (from a clone of the repository: installs that copy)
 #
 # Options:
-#   --agent claude|codex|agents|all   where to install (default: the agents found on this computer; with more
+#   --agent claude|codex|gemini|agents|all   where to install (default: the agents found on this computer; with more
 #                                     than one it asks which, Enter = all)
 #   --dir <path>                      install into this skills folder instead
-#   --project                         install into the current project (./.claude/skills, ./.codex/skills, ./.agents/skills)
+#   --project                         install into the current project (./.claude/skills, ./.codex/skills, …)
 #   --version <x.y.z>                 install that release (default: the latest published release)
 #   --ref <branch or tag>             install the skill as it is on a branch or tag (e.g. main: unreleased work)
 #   --uninstall                       remove the skill again
@@ -58,16 +58,18 @@ else
   case "$AGENT" in
     claude) add "$B/.claude/skills" ;;
     codex) add "$B/.codex/skills" ;;
+    gemini) add "$B/.gemini/skills" ;;
     agents) add "$B/.agents/skills" ;;
-    all) add "$B/.claude/skills"; add "$B/.codex/skills"; add "$B/.agents/skills" ;;
+    all) add "$B/.claude/skills"; add "$B/.codex/skills"; add "$B/.gemini/skills"; add "$B/.agents/skills" ;;
     "")
       # every agent found on this computer
       FOUND=""
       { [ -d "$B/.claude" ] || command -v claude >/dev/null 2>&1; } && FOUND="$FOUND claude"
       { [ -d "$B/.codex" ] || command -v codex >/dev/null 2>&1; } && FOUND="$FOUND codex"
+      { [ -d "$B/.gemini" ] || command -v gemini >/dev/null 2>&1; } && FOUND="$FOUND gemini"
       [ -d "$B/.agents" ] && FOUND="$FOUND agents"
       [ -z "$FOUND" ] && FOUND="agents"
-      label() { case "$1" in claude) printf 'Claude Code' ;; codex) printf 'Codex' ;; agents) printf 'other agents (~/.agents)' ;; esac; }
+      label() { case "$1" in claude) printf 'Claude Code' ;; codex) printf 'Codex' ;; gemini) printf 'Gemini CLI' ;; agents) printf 'other agents (~/.agents)' ;; esac; }
       set -- $FOUND
       # more than one: ask which (Enter = all). Only with a terminal; never in CI, with --yes or when uninstalling.
       # The answer is read from /dev/tty, so this also works with curl … | sh.
@@ -91,7 +93,7 @@ else
       fi
       for a in "$@"; do add "$B/.$a/skills"; done
       ;;
-    *) say "unknown agent '$AGENT' (claude, codex, agents or all)" >&2; exit 2 ;;
+    *) say "unknown agent '$AGENT' (claude, codex, gemini, agents or all)" >&2; exit 2 ;;
   esac
 fi
 
@@ -107,8 +109,8 @@ HERE="$(cd "$(dirname "$0")" 2>/dev/null && pwd || true)"
 TMP=""
 cleanup() { if [ -n "$TMP" ]; then rm -rf "$TMP"; fi; }
 trap cleanup EXIT
-if [ -n "$HERE" ] && [ -f "$HERE/skill/$NAME/SKILL.md" ]; then
-  SRC="$HERE/skill/$NAME"
+if [ -n "$HERE" ] && [ -f "$HERE/plugins/$NAME/skills/$NAME/SKILL.md" ]; then
+  SRC="$HERE/plugins/$NAME/skills/$NAME"
 else
   TMP="$(mktemp -d)"
   fetch() { if command -v curl >/dev/null 2>&1; then curl -fsSL "$1" -o "$2"; elif command -v wget >/dev/null 2>&1; then wget -qO "$2" "$1"; else say "needs curl or wget" >&2; exit 1; fi; }
@@ -124,8 +126,8 @@ else
       || { say "Could not download the latest release from $GITHUB/releases" >&2; exit 1; }
   fi
   tar -xzf "$TMP/kit.tgz" -C "$TMP"
-  SRC="$(find "$TMP" -maxdepth 3 -type d -name "$NAME" -exec test -f "{}/SKILL.md" \; -print | head -n 1)"
-  [ -n "$SRC" ] && [ -f "$SRC/SKILL.md" ] || { say "download did not contain skill/$NAME" >&2; exit 1; }
+  SRC="$(find "$TMP" -maxdepth 6 -type d -name "$NAME" -exec test -f "{}/SKILL.md" \; -print | head -n 1)"
+  [ -n "$SRC" ] && [ -f "$SRC/SKILL.md" ] || { say "download did not contain the $NAME skill" >&2; exit 1; }
 fi
 
 NEW="$(cat "$SRC/VERSION" 2>/dev/null || echo "?")"

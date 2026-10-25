@@ -27,14 +27,14 @@ jobs:
           node dev/assemble.mjs
           node dev/assemble.mjs --upgrade examples/*/index.html
           git diff --exit-code
-          for f in examples/*/index.html; do node skill/blueprint-deck/tools/check.mjs "$f"; done
+          for f in examples/*/index.html; do node plugins/blueprint-deck/skills/blueprint-deck/tools/check.mjs "$f"; done
       - name: Skill archives and release notes
         run: |
           mkdir -p out
-          # the Claude Code plugin manifest stays out: the chat apps refuse a skill zip that contains one
-          tar -czf out/blueprint-deck-skill.tar.gz --exclude "blueprint-deck/.claude-plugin" -C skill blueprint-deck
-          (cd skill && zip -qr ../out/blueprint-deck-skill.zip blueprint-deck -x "blueprint-deck/.claude-plugin/*")
-          ! unzip -l out/blueprint-deck-skill.zip | grep -q ".claude-plugin"
+          # only the skill folder (the plugin manifests live one level up; the chat apps refuse a skill with a manifest)
+          tar -czf out/blueprint-deck-skill.tar.gz -C plugins/blueprint-deck/skills blueprint-deck
+          (cd plugins/blueprint-deck/skills && zip -qr ../../../out/blueprint-deck-skill.zip blueprint-deck)
+          ! unzip -l out/blueprint-deck-skill.zip | grep -q "plugin.json"
           cp install.sh install.ps1 out/
           awk -v v="## $VERSION" '$0 ~ "^## " { p = index($0, v) == 1 } p' CHANGELOG.md | tail -n +2 > out/notes.md
       - name: GitHub release

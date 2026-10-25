@@ -15,14 +15,14 @@ jobs:
       - name: Engine is assembled from engine/src
         run: |
           node dev/assemble.mjs
-          git diff --exit-code skill/blueprint-deck/blueprint-deck.html
+          git diff --exit-code plugins/blueprint-deck/skills/blueprint-deck/blueprint-deck.html
       - name: Examples use the current engine
         run: |
           node dev/assemble.mjs --upgrade examples/*/index.html
           git diff --exit-code examples
       - name: Examples have no errors
         run: |
-          for f in examples/*/index.html; do echo "== $f"; node skill/blueprint-deck/tools/check.mjs "$f"; done
+          for f in examples/*/index.html; do echo "== $f"; node plugins/blueprint-deck/skills/blueprint-deck/tools/check.mjs "$f"; done
       - name: Install scripts
         run: |
           sh -n install.sh

@@ -24,13 +24,13 @@ site/
   src/layouts/            Base (head, SEO, header, footer, theme), Docs (sidebar, on-this-page, prev/next)
   src/components/         Icon (Lucide, read from the skill), Logo, Command (copy button), InstallTabs, FaqList, ExamplePreview
   src/data/               site constants and docs nav, the example list, the FAQ
-  src/content.config.ts   a content collection that loads ../skill/blueprint-deck/reference/{spec,style-guide}.md
+  src/content.config.ts   a content collection that loads ../plugins/blueprint-deck/skills/blueprint-deck/reference/{spec,style-guide}.md
   public/                 favicon.svg, og.png (+ og.svg, its source), robots.txt; the rest is generated
 ```
 
-**Docs stay in sync with the skill.** *Diagram format* and *Style guide* render `skill/blueprint-deck/reference/spec.md`
+**Docs stay in sync with the skill.** *Diagram format* and *Style guide* render `plugins/blueprint-deck/skills/blueprint-deck/reference/spec.md`
 and `style-guide.md` at build time (content collection with a `glob` loader pointing outside `src/`), and
-*Configuring* renders `skill/blueprint-deck/templates/diagram.config.yaml` section by section with Shiki. Edit those
+*Configuring* renders `plugins/blueprint-deck/skills/blueprint-deck/templates/diagram.config.yaml` section by section with Shiki. Edit those
 files, rebuild, done.
 
 **The sync step** (`npm run sync`, also run automatically by `npm run dev` and `npm run build`) copies:
@@ -39,9 +39,9 @@ files, rebuild, done.
 |---|---|
 | `configurator/` | `/configurator/` |
 | `examples/` | `/examples/` (each deck at `/examples/<name>/index.html`) |
-| `skill/blueprint-deck/blueprint-deck.html` | `/engine/blueprint-deck.html` |
+| `plugins/blueprint-deck/skills/blueprint-deck/blueprint-deck.html` | `/engine/blueprint-deck.html` |
 | `install.sh`, `install.ps1` | `/install.sh`, `/install.ps1` |
-| `skill/blueprint-deck/` | `/blueprint-deck-skill.zip` (one folder, `blueprint-deck/`, inside) |
+| `plugins/blueprint-deck/skills/blueprint-deck/` | `/blueprint-deck-skill.zip` (one folder, `blueprint-deck/`, inside) |
 
 Missing sources are skipped with a warning. The zip is written by a small built-in zip writer (no `zip` CLI needed).
 These copies are build artifacts and are git-ignored (`site/.gitignore`); `favicon.svg`, `og.png`, `og.svg` and

@@ -309,7 +309,7 @@
 /* ==========================================================================================
    Blueprint Deck configurator
    A small app in plain JavaScript, no build step:
-     1. constants   allowed values, mirrored from skill/blueprint-deck/templates/diagram.config.yaml
+     1. constants   allowed values, mirrored from plugins/blueprint-deck/skills/blueprint-deck/templates/diagram.config.yaml
      2. state       the answers (shared sections + a list of diagrams), defaults, persistence
      3. YAML        a tiny serializer for the config, and a parser to import it back
      4. form        declarative field lists rendered to HTML, one delegated input handler
@@ -558,7 +558,7 @@ function toYaml(cfg) {
   const L = [
     "# diagram.config.yaml: how your Blueprint Deck should be generated (made with the Blueprint Deck configurator).",
     "# Put it in <your repo>/diagrams/ and ask your agent: \"/blueprint-deck diagrams/diagram.config.yaml\".",
-    "# Every key is explained in the kit's annotated template: skill/blueprint-deck/templates/diagram.config.yaml",
+    "# Every key is explained in the kit's annotated template: plugins/blueprint-deck/skills/blueprint-deck/templates/diagram.config.yaml",
     `version: ${cfg.version || 2}`,
     "",
     "# ---------------------------------------------------------------- shared by every diagram in the file",

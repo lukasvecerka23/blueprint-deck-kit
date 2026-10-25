@@ -1,0 +1,12 @@
+{
+  "name": "blueprint-deck-kit",
+  "interface": { "displayName": "Blueprint Deck Kit" },
+  "plugins": [
+    {
+      "name": "blueprint-deck",
+      "source": { "source": "local", "path": "./plugins/blueprint-deck" },
+      "policy": { "installation": "AVAILABLE" },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 //
 //   ../configurator/                            -> public/configurator/
 //   ../examples/                                -> public/examples/
-//   ../skill/blueprint-deck/blueprint-deck.html -> public/engine/blueprint-deck.html
+//   ../plugins/blueprint-deck/skills/blueprint-deck/blueprint-deck.html -> public/engine/blueprint-deck.html
 //   _redirects                                  -> /install.sh and /install.ps1 go to the scripts on GitHub (one source);
 //                                                  the skill downloads go to the latest GitHub release
 //
@@ -44,7 +44,7 @@ function copyFile(from, to) {
 mkdirSync(PUBLIC, { recursive: true });
 copyDir("configurator", "configurator");
 copyDir("examples", "examples");
-copyFile("skill/blueprint-deck/blueprint-deck.html", "engine/blueprint-deck.html");
+copyFile("plugins/blueprint-deck/skills/blueprint-deck/blueprint-deck.html", "engine/blueprint-deck.html");
 // leftovers from earlier setups: the site used to copy the install scripts and host the releases
 for (const f of ["install.sh", "install.ps1", "releases", "version.json", "blueprint-deck-skill.zip", "blueprint-deck-skill.tar.gz"]) rmSync(join(PUBLIC, f), { recursive: true, force: true });
 

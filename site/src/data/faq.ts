@@ -22,7 +22,7 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
   },
   {
     q: "Which agents does it work with?",
-    a: "Claude Code (as a plugin), Codex, the Claude and ChatGPT apps (upload the skill as a zip), and any other agent that supports Agent Skills (a folder with a <code>SKILL.md</code>; the install script puts it into its skills folder). Agents without skill support can still follow <code>SKILL.md</code> as plain instructions: point them at the file.",
+    a: "Claude Code and Codex (as a plugin), the ChatGPT desktop app (the same plugin), Gemini CLI, Claude Desktop, claude.ai and ChatGPT on the web (upload the skill as a zip; paid plans), and any other agent that supports Agent Skills (a folder with a <code>SKILL.md</code>; the install script puts it into its skills folder). Agents without skill support can still follow <code>SKILL.md</code> as plain instructions: point them at the file.",
     home: true,
   },
   {

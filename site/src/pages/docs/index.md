@@ -23,13 +23,21 @@ Install it where you work:
   ```
 
   Then type `/blueprint-deck`. More (older versions, updates) on the [Agents](/docs/agents/) page.
-- **Codex**, with its built-in skill installer, from inside Codex:
+- **Codex or the ChatGPT desktop app**: add this repository as a plugin marketplace, then install Blueprint Deck from
+  the Plugins Directory:
 
   ```text
-  $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/skill/blueprint-deck
+  codex plugin marketplace add lukasvecerka23/blueprint-deck-kit
   ```
 
-- **Claude Desktop, claude.ai or ChatGPT**: download
+  In the ChatGPT desktop app: Plugins → add the marketplace `lukasvecerka23/blueprint-deck-kit`.
+- **Gemini CLI**, with its own skill installer:
+
+  ```text
+  gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --path plugins/blueprint-deck/skills/blueprint-deck
+  ```
+
+- **Claude Desktop, claude.ai or ChatGPT on the web** (paid plans): download
   [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
   and upload it as a skill ([how](/docs/agents/#claude-desktop-claudeai-and-chatgpt)).
 - **Other agents, or several at once**: the install script below.
@@ -50,12 +58,12 @@ irm https://blueprint-deck.lukasvecerka.dev/install.ps1 | iex
 
 The installer downloads the latest [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) from GitHub
 and copies the `blueprint-deck` skill folder into the skills folder of the agents it finds (`~/.claude/skills`,
-`~/.codex/skills`, `~/.agents/skills`). When it finds more than one, it asks which (press Enter for all of them).
+`~/.codex/skills`, `~/.gemini/skills`, `~/.agents/skills`). When it finds more than one, it asks which (press Enter for all of them).
 It installs nothing else. Run it again to update.
 
 | option (sh) | option (PowerShell) | what it does |
 |---|---|---|
-| `--agent claude\|codex\|agents\|all` | `-Agent …` | install for one agent only (or all) |
+| `--agent claude\|codex\|gemini\|agents\|all` | `-Agent …` | install for one agent only (or all) |
 | `--project` | `-Project` | install into the current project (`./.claude/skills`, …) |
 | `--dir <path>` | `-Dir <path>` | install into any skills folder |
 | `--version <x.y.z>` | `-Version <x.y.z>` | a specific release (default: the latest) |

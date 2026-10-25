@@ -5,7 +5,8 @@ Thanks for helping. Issues, examples, translations of the UI labels and fixes ar
 ## How the repository fits together
 
 ```
-skill/blueprint-deck/        what users install (the agent skill)
+plugins/blueprint-deck/      the plugin (Claude Code, Codex, ChatGPT desktop): .claude-plugin/, .codex-plugin/
+  skills/blueprint-deck/     what users install (the agent skill)
   SKILL.md                   the instructions the agent follows
   blueprint-deck.html        the engine with an empty data block (generated, don't edit)
   reference/ templates/      format reference, style guide, icons, config template, example
@@ -29,9 +30,9 @@ dev/                         maintainer scripts
 You need Node 18+ (users don't; only contributors).
 
 ```bash
-node dev/assemble.mjs                                  # engine/src → skill/blueprint-deck/blueprint-deck.html
+node dev/assemble.mjs                                  # engine/src → plugins/blueprint-deck/skills/blueprint-deck/blueprint-deck.html
 node dev/assemble.mjs --upgrade examples/*/index.html  # put the new engine into the examples (keeps their data)
-node skill/blueprint-deck/tools/check.mjs examples/acme/index.html --explain
+node plugins/blueprint-deck/skills/blueprint-deck/tools/check.mjs examples/acme/index.html --explain
 python3 -m http.server 8765                            # then open http://localhost:8765/examples/acme/index.html
 ```
 
@@ -56,7 +57,7 @@ deploys from `main` on every push and is independent of releases; it hosts no sk
 redirect to the latest GitHub release).
 
 The version lives in one place: `VERSION` in `engine/src/core.js` (`dev/assemble.mjs` copies it into the engine and
-`skill/blueprint-deck/VERSION`).
+`plugins/blueprint-deck/skills/blueprint-deck/VERSION`).
 
 1. Bump `VERSION` (minor for features, major if old diagrams would need an upgrade) and add a `## x.y.z (date)` section
    at the top of `CHANGELOG.md`.

@@ -1,6 +1,6 @@
 // Dev only: regenerates engine/src/icons.js from the Lucide package (npm pack lucide-static) and dev/icon-list.txt.
 //   node dev/make-icons.mjs path/to/lucide-static/package
-// Also writes skill/blueprint-deck/reference/lucide-all.json (every Lucide icon, for icons a diagram adds itself).
+// Also writes plugins/blueprint-deck/skills/blueprint-deck/reference/lucide-all.json (every Lucide icon, for icons a diagram adds itself).
 import fs from "node:fs";
 import path from "node:path";
 
@@ -37,8 +37,8 @@ const ICON_ALIASES = ${JSON.stringify(ALIASES)};
 fs.mkdirSync(path.join(root, "engine/src"), { recursive: true });
 fs.writeFileSync(path.join(root, "engine/src/icons.js"), out);
 const all = Object.fromEntries(Object.entries(nodes).map(([k, v]) => [k, inner(v)]));
-fs.mkdirSync(path.join(root, "skill/blueprint-deck/reference"), { recursive: true });
-fs.writeFileSync(path.join(root, "skill/blueprint-deck/reference/lucide-all.json"), JSON.stringify(all));
+fs.mkdirSync(path.join(root, "plugins/blueprint-deck/skills/blueprint-deck/reference"), { recursive: true });
+fs.writeFileSync(path.join(root, "plugins/blueprint-deck/skills/blueprint-deck/reference/lucide-all.json"), JSON.stringify(all));
 const md = `# Icons
 
 Every diagram includes these ${names.length} [Lucide](https://lucide.dev) icons (Lucide ${version}, ISC License). Use the name in \`icon\`.
@@ -51,5 +51,5 @@ Short names from earlier versions still work: ${Object.entries(ALIASES).map(([a,
 diagram's \`icons\` map, e.g. \`"icons": { "ferris-wheel": "<path d=…/>" }\`, then use \`"icon": "ferris-wheel"\`.
 Brand logos are not part of Lucide; add them the same way (an inner SVG on a 24×24 grid) or as an image (\`"icon": "data:image/svg+xml;base64,…"\`).
 `;
-fs.writeFileSync(path.join(root, "skill/blueprint-deck/reference/icons.md"), md);
+fs.writeFileSync(path.join(root, "plugins/blueprint-deck/skills/blueprint-deck/reference/icons.md"), md);
 console.log(`${names.length} icons, ${Math.round(out.length / 1024)} KB → engine/src/icons.js`);

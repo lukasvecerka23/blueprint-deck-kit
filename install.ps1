@@ -5,12 +5,12 @@
 #   (the website's short URL https://blueprint-deck.lukasvecerka.dev/install.ps1 serves this same script)
 #   .\install.ps1                     (from a clone of the repository: installs that copy)
 #
-# Parameters: -Agent claude|codex|agents|all (default: the agents found; with more than one it asks which, Enter = all),
+# Parameters: -Agent claude|codex|gemini|agents|all (default: the agents found; with more than one it asks which, Enter = all),
 #             -Dir <skills folder>, -Project, -Version <x.y.z> (a specific release),
 #             -Ref <branch or tag> (the skill as it is on a branch, e.g. main), -Uninstall, -Yes (don't ask, all found)
 # It only copies files: no Node, no Python, nothing else is installed.
 param(
-  [ValidateSet("", "claude", "codex", "agents", "all")][string]$Agent = "",
+  [ValidateSet("", "claude", "codex", "gemini", "agents", "all")][string]$Agent = "",
   [string]$Dir = "",
   [switch]$Project,
   [string]$Ref = $(if ($env:BLUEPRINT_DECK_REF) { $env:BLUEPRINT_DECK_REF } else { "" }),
@@ -30,13 +30,15 @@ else {
   switch ($Agent) {
     "claude" { $targets += Join-Path $Base ".claude\skills" }
     "codex"  { $targets += Join-Path $Base ".codex\skills" }
+    "gemini" { $targets += Join-Path $Base ".gemini\skills" }
     "agents" { $targets += Join-Path $Base ".agents\skills" }
-    "all"    { $targets += @((Join-Path $Base ".claude\skills"), (Join-Path $Base ".codex\skills"), (Join-Path $Base ".agents\skills")) }
+    "all"    { $targets += @((Join-Path $Base ".claude\skills"), (Join-Path $Base ".codex\skills"), (Join-Path $Base ".gemini\skills"), (Join-Path $Base ".agents\skills")) }
     default {
       # every agent found on this computer
       $found = @()
       if ((Test-Path (Join-Path $Base ".claude")) -or (Get-Command claude -ErrorAction SilentlyContinue)) { $found += @{ Id = "claude"; Label = "Claude Code" } }
       if ((Test-Path (Join-Path $Base ".codex")) -or (Get-Command codex -ErrorAction SilentlyContinue)) { $found += @{ Id = "codex"; Label = "Codex" } }
+      if ((Test-Path (Join-Path $Base ".gemini")) -or (Get-Command gemini -ErrorAction SilentlyContinue)) { $found += @{ Id = "gemini"; Label = "Gemini CLI" } }
       if (Test-Path (Join-Path $Base ".agents")) { $found += @{ Id = "agents"; Label = "other agents (~\.agents)" } }
       if ($found.Count -eq 0) { $found += @{ Id = "agents"; Label = "other agents (~\.agents)" } }
       # more than one: ask which (Enter = all). Only in an interactive console; never in CI, with -Yes or when uninstalling.
@@ -63,8 +65,8 @@ if ($Uninstall) {
 
 $tmp = $null
 $here = if ($PSScriptRoot) { $PSScriptRoot } else { "" }
-if ($here -and (Test-Path (Join-Path $here "skill\$Name\SKILL.md"))) {
-  $src = Join-Path $here "skill\$Name"
+if ($here -and (Test-Path (Join-Path $here "plugins\$Name\skills\$Name\SKILL.md"))) {
+  $src = Join-Path $here "plugins\$Name\skills\$Name"
 } else {
   $tmp = Join-Path ([IO.Path]::GetTempPath()) ("blueprint-deck-" + [guid]::NewGuid())
   New-Item -ItemType Directory -Path $tmp | Out-Null
@@ -83,7 +85,7 @@ if ($here -and (Test-Path (Join-Path $here "skill\$Name\SKILL.md"))) {
   }
   Expand-Archive -Path $zip -DestinationPath $tmp
   $src = Get-ChildItem -Path $tmp -Directory -Recurse -Filter $Name | Where-Object { Test-Path (Join-Path $_.FullName "SKILL.md") } | Select-Object -First 1 -ExpandProperty FullName
-  if (-not $src -or -not (Test-Path (Join-Path $src "SKILL.md"))) { throw "download did not contain skill\$Name" }
+  if (-not $src -or -not (Test-Path (Join-Path $src "SKILL.md"))) { throw "download did not contain the $Name skill" }
 }
 
 try {

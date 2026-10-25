@@ -1,0 +1,11 @@
+{
+  "name": "blueprint-deck",
+  "version": "2.2.0",
+  "description": "Turn your docs or code into an interactive presentation diagram: one offline HTML file with a pan-and-zoom map, guided tour, tabs, personas, a built-in editor and PDF export.",
+  "author": { "name": "Lukas Vecerka", "url": "https://lukasvecerka.dev" },
+  "homepage": "https://blueprint-deck.lukasvecerka.dev",
+  "repository": "https://github.com/lukasvecerka23/blueprint-deck-kit",
+  "license": "MIT",
+  "keywords": ["diagram", "architecture", "presentation", "documentation", "blueprint", "agent-skill"],
+  "skills": "./skills/"
+}

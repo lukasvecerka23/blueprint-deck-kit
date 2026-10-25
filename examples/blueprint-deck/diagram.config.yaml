@@ -19,10 +19,10 @@ branding:
 
 sources:
   include:
-    - "skill/blueprint-deck/SKILL.md"
-    - "skill/blueprint-deck/reference/*.md"
-    - "skill/blueprint-deck/templates/*"
-    - "skill/blueprint-deck/tools/check.mjs"
+    - "plugins/blueprint-deck/skills/blueprint-deck/SKILL.md"
+    - "plugins/blueprint-deck/skills/blueprint-deck/reference/*.md"
+    - "plugins/blueprint-deck/skills/blueprint-deck/templates/*"
+    - "plugins/blueprint-deck/skills/blueprint-deck/tools/check.mjs"
     - "engine/src/*.js"
     - "engine/src/*.css"
     - "engine/src/template.html"
@@ -30,7 +30,7 @@ sources:
     - "dev/make-icons.mjs"
     - "configurator/index.html"
   exclude: ["README.md", "dev/old-*"]
-  priority: ["skill/blueprint-deck/SKILL.md", "engine/src/*.js"]
+  priority: ["plugins/blueprint-deck/skills/blueprint-deck/SKILL.md", "engine/src/*.js"]
   derive_status_from: []
   on_conflict: report
   cite_sources: true

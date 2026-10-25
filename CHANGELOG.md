@@ -11,6 +11,10 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
   `/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit`; updates come through Claude Code.
   The repository is its own plugin marketplace.
 - **Codex without the script:** its built-in skill installer installs the skill straight from GitHub.
+- **One plugin for Claude Code, Codex and the ChatGPT desktop app.** The skill moved to
+  `plugins/blueprint-deck/skills/blueprint-deck/`; the plugin has a manifest for Claude Code and one for Codex, and the
+  repository is a marketplace for both (`codex plugin marketplace add lukasvecerka23/blueprint-deck-kit`).
+- **Gemini CLI:** `gemini skills install …`, and the install script knows Gemini (`--agent gemini`, `~/.gemini/skills`).
 - **Install by agent.** The website and README now start from the agent you use (Claude Code plugin, Codex installer,
   zip upload for the apps); the install script is the option for other agents or several at once. The skill's update
   notice names the right way to update for each kind of install.

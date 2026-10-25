@@ -6,7 +6,7 @@ const { code, prompt = "$", class: cls } = Astro.props;
 ---
 <div class:list={["group flex items-center gap-3 rounded-lg border bg-code pl-4 pr-1.5 py-1.5 font-mono text-[0.8125rem]", cls]}>
   <span class="select-none text-muted-foreground" aria-hidden="true">{prompt}</span>
-  <code class="min-w-0 flex-1 overflow-x-auto whitespace-nowrap py-1.5 [scrollbar-width:none]">{code}</code>
+  <code class="min-w-0 flex-1 overflow-x-auto whitespace-nowrap py-1.5 text-left [scrollbar-width:none]">{code}</code>
   <button type="button" class="btn shrink-0 data-[copied]:text-emerald-600 dark:data-[copied]:text-emerald-400" data-variant="ghost" data-size="sm" data-copy={code} aria-label="Copy command">
     <Icon name="copy" class="size-3.5" /><span data-copy-label>Copy</span>
   </button>

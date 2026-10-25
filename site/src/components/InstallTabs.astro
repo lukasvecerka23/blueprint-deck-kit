@@ -11,8 +11,9 @@ const hero = variant === "hero";
 const zip = `${SITE.repo}/releases/latest/download/blueprint-deck-skill.zip`;
 const tabs = [
   { id: "claude", label: "Claude Code" },
-  { id: "codex", label: "Codex" },
-  { id: "apps", label: "Claude app · ChatGPT" },
+  { id: "codex", label: "Codex · ChatGPT" },
+  { id: "gemini", label: "Gemini" },
+  { id: "apps", label: "Chat apps" },
   { id: "other", label: "Other agents" },
   ...(hero ? [] : [{ id: "manual", label: "Manual" }]),
 ];
@@ -21,7 +22,7 @@ const code = "font-mono text-xs";
 const link = "underline underline-offset-4 hover:text-foreground";
 ---
 <div class:list={["tabs w-full", hero ? "gap-3" : "gap-4"]} id={`${id}-tabs`}>
-  <nav role="tablist" aria-orientation="horizontal" class:list={["max-w-full overflow-x-auto", hero && "mx-auto"]}>
+  <nav role="tablist" aria-orientation="horizontal" class:list={["max-w-full overflow-x-auto justify-start", hero && "mx-auto"]}>
     {tabs.map((t, i) => (
       <button type="button" role="tab" id={`${id}-tab-${t.id}`} aria-controls={`${id}-panel-${t.id}`}
         aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1}>{t.label}</button>
@@ -41,26 +42,46 @@ const link = "underline underline-offset-4 hover:text-foreground";
     )}
   </div>
 
-  <!-- Codex: its built-in skill installer -->
+  <!-- Codex and the ChatGPT desktop app: one plugin system, our repository is a marketplace -->
   <div role="tabpanel" id={`${id}-panel-codex`} aria-labelledby={`${id}-tab-codex`} tabindex="-1" class="space-y-3" hidden>
-    <Command code={INSTALL.codexSkill} prompt=">" />
+    <Command code={INSTALL.codexMarketplace} />
     {hero ? (
-      <p class={hint}>Run it inside Codex, then start a new session and ask for a Blueprint Deck, or paste the prompt from the configurator.</p>
+      <p class={hint}>Or in the ChatGPT desktop app: Plugins → add the marketplace <code class={code}>lukasvecerka23/blueprint-deck-kit</code>. Then install Blueprint Deck from the Plugins Directory.</p>
     ) : (
-      <p class={hint}>Run it inside Codex: its built-in skill installer puts the skill into <code class={code}>~/.codex/skills/blueprint-deck</code>.
-        Start a new session and paste the prompt from the configurator, or ask "Use the blueprint-deck skill to make a diagram of these docs".
-        The installer doesn't update an existing skill: to update, use the script under <span class="font-medium text-foreground">Other agents</span>, which replaces it.</p>
+      <>
+        <p class={hint}>Codex and the ChatGPT desktop app share one plugin system. Add this repository as a marketplace (the command above, or
+          in the app: Plugins → add the marketplace <code class={code}>lukasvecerka23/blueprint-deck-kit</code>), then install Blueprint Deck from the
+          Plugins Directory. Updates: <code class={code}>codex plugin marketplace upgrade</code>. Without plugins, Codex's skill installer works too:</p>
+        <Command code={INSTALL.codexSkill} prompt=">" />
+        <p class={hint}>It puts the skill into <code class={code}>~/.codex/skills/blueprint-deck</code> but doesn't update it later; the script under{" "}
+          <span class="font-medium text-foreground">Other agents</span> does.</p>
+      </>
     )}
   </div>
 
-  <!-- Claude Desktop / claude.ai / ChatGPT: upload the zip -->
+  <!-- Gemini CLI -->
+  <div role="tabpanel" id={`${id}-panel-gemini`} aria-labelledby={`${id}-tab-gemini`} tabindex="-1" class="space-y-3" hidden>
+    <Command code={INSTALL.geminiSkill} />
+    {hero ? (
+      <p class={hint}>Gemini CLI's own skill installer. Then start <code class={code}>gemini</code> in your project folder and ask for a Blueprint Deck.</p>
+    ) : (
+      <>
+        <p class={hint}>Gemini CLI's own skill installer, straight from GitHub. Check with <code class={code}>/skills list</code>. Or with the script, into{" "}
+          <code class={code}>~/.gemini/skills</code>:</p>
+        <Command code={INSTALL.shAgent("gemini")} />
+        <Command code={INSTALL.psAgent("gemini")} prompt="PS>" />
+      </>
+    )}
+  </div>
+
+  <!-- the chat apps: upload the zip (Claude on paid plans, ChatGPT on the web on paid plans) -->
   <div role="tabpanel" id={`${id}-panel-apps`} aria-labelledby={`${id}-tab-apps`} tabindex="-1" class="space-y-3" hidden>
     <div class:list={["flex flex-wrap items-center gap-3", hero && "justify-center"]}>
       <a href={zip} class="btn" data-variant="outline"><Icon name="download" class="size-4" /> Download the skill (.zip)</a>
       {!hero && <a class={`${hint} ${link}`} href={`${SITE.repo}/releases`}>all versions</a>}
     </div>
     <p class={hint}>Upload it unchanged. <span class="font-medium text-foreground">Claude</span> (Desktop or claude.ai): Customize → Skills → upload, turn it on.{" "}
-      <span class="font-medium text-foreground">ChatGPT</span>: Plugins → Skills → Create → Upload. Then attach your docs to a chat and ask for a Blueprint Deck.
+      <span class="font-medium text-foreground">ChatGPT</span> (on the web): Plugins → Skills → Create → Upload. Both need a paid plan. Then attach your docs to a chat and ask for a Blueprint Deck.
       {!hero && <> Code execution must be on in Claude. In a chat the skill only sees the files you attach, and you get the HTML file to download.{" "}
         <a class={link} href="/docs/agents/#claude-desktop-claudeai-and-chatgpt">Details</a>.</>}</p>
   </div>
@@ -70,12 +91,12 @@ const link = "underline underline-offset-4 hover:text-foreground";
     <Command code={INSTALL.sh} />
     <Command code={INSTALL.ps} prompt="PS>" />
     {hero ? (
-      <p class={hint}>The install script (macOS/Linux, then Windows): installs for Claude Code, Codex and other Agent Skills agents it finds, and asks which.{" "}
+      <p class={hint}>The install script (macOS/Linux, then Windows): installs for Claude Code, Codex, Gemini CLI and other Agent Skills agents it finds, and asks which.{" "}
         <a class={link} href="#install">All options</a>.</p>
     ) : (
       <p class={hint}>The install script, for macOS/Linux and for Windows PowerShell. It installs the latest release for the agents it finds
-        (<code class={code}>~/.claude/skills</code>, <code class={code}>~/.codex/skills</code>, <code class={code}>~/.agents/skills</code>) and asks which when there are several.
-        Options: <code class={code}>--agent claude|codex|agents|all</code>, <code class={code}>--dir &lt;skills folder&gt;</code> for any other agent,{" "}
+        (<code class={code}>~/.claude/skills</code>, <code class={code}>~/.codex/skills</code>, <code class={code}>~/.gemini/skills</code>, <code class={code}>~/.agents/skills</code>) and asks which when there are several.
+        Options: <code class={code}>--agent claude|codex|gemini|agents|all</code>, <code class={code}>--dir &lt;skills folder&gt;</code> for any other agent,{" "}
         <code class={code}>--project</code> (into the current project), <code class={code}>--version 2.1.0</code>, <code class={code}>--yes</code>, <code class={code}>--uninstall</code>;
         pass them with <code class={code}>sh -s --</code> (PowerShell: <code class={code}>-Agent</code>, <code class={code}>-Version</code> …). Run it again to update.
         It only copies files. Read the <a class={link} href="/install.sh">shell</a> or <a class={link} href="/install.ps1">PowerShell</a> script.

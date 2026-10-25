@@ -2,7 +2,7 @@
 // Renders the annotated template config from the skill, section by section, with short explanations.
 import { Code } from "astro:components";
 import Docs from "../../layouts/Docs.astro";
-import template from "../../../../skill/blueprint-deck/templates/diagram.config.yaml?raw";
+import template from "../../../../plugins/blueprint-deck/skills/blueprint-deck/templates/diagram.config.yaml?raw";
 import { SITE } from "../../data/site";
 
 const NOTES: Record<string, { title: string; html: string }> = {
@@ -55,7 +55,7 @@ for (const line of lines) {
 chunks.push({ key: cur.key, text: cur.lines.join("\n").trim() });
 
 const headings = chunks.map(c => ({ depth: 2, slug: `cfg-${c.key}`, text: NOTES[c.key]?.title ?? c.key }));
-const SOURCE = "skill/blueprint-deck/templates/diagram.config.yaml";
+const SOURCE = "plugins/blueprint-deck/skills/blueprint-deck/templates/diagram.config.yaml";
 ---
 <Docs title="Configuring" description="The config is your control surface: the agent follows it literally. Make it in the configurator, or edit the YAML." headings={headings} source={SOURCE}>
   <p>

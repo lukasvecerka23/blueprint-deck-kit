@@ -6,10 +6,10 @@ No browser check was run (see Assumptions).
 
 ## Sources read
 
-- `skill/blueprint-deck/SKILL.md`
-- `skill/blueprint-deck/reference/spec.md`, `style-guide.md`, `icons.md` (`lucide-all.json` only by size/role)
-- `skill/blueprint-deck/templates/diagram.config.yaml`, `templates/example.json`
-- `skill/blueprint-deck/tools/check.mjs`
+- `plugins/blueprint-deck/skills/blueprint-deck/SKILL.md`
+- `plugins/blueprint-deck/skills/blueprint-deck/reference/spec.md`, `style-guide.md`, `icons.md` (`lucide-all.json` only by size/role)
+- `plugins/blueprint-deck/skills/blueprint-deck/templates/diagram.config.yaml`, `templates/example.json`
+- `plugins/blueprint-deck/skills/blueprint-deck/tools/check.mjs`
 - `engine/src/core.js`, `render.js`, `boot.js`, `editor.js` (header comments, section comments and the relevant functions),
   `engine.css` (media queries), `editor.css` (not used), `icons.js` (header), `template.html`
 - `dev/assemble.mjs`, `dev/make-icons.mjs`
@@ -87,7 +87,7 @@ Edge groups: `gen` (main flow), `check`, `inside`, `edit`, `share`, `dev`.
 
 1. **Configurator naming is stale.** `configurator/index.html` still says "diagram-kit", writes the prompt
    `/diagram-kit:diagram diagrams/diagram.config.yaml` and points to `plugin/skills/diagram/templates/diagram.config.yaml`;
-   the skill is now `blueprint-deck` in `skill/blueprint-deck/`. Resolved by the config comment (it is being rebuilt):
+   the skill is now `blueprint-deck` in `plugins/blueprint-deck/skills/blueprint-deck/`. Resolved by the config comment (it is being rebuilt):
    the box only says "a form that writes diagram.config.yaml and a prompt", no names or paths from it.
 2. **`templates/example.json` also uses the old name** ("used to show what diagram-kit generates … from one diagram.json").
    Not shown in the diagram; reported for the maintainers.

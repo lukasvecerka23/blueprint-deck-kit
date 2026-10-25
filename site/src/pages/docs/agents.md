@@ -88,16 +88,25 @@ the slash command:
 Claude Code also picks the skill on its own when you ask for "an interactive diagram of this repo" or "a blueprint of
 the platform for the board meeting".
 
-## Codex
+## Codex and the ChatGPT desktop app
 
-Inside Codex, ask its built-in skill installer (no script):
+Codex and the ChatGPT desktop app share one plugin system, and this repository is a plugin marketplace for it. Add it
+once, then install Blueprint Deck from the Plugins Directory:
 
-```text
-$skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/skill/blueprint-deck
+```bash
+codex plugin marketplace add lukasvecerka23/blueprint-deck-kit
 ```
 
-It installs the skill as it is on `main`. To update, delete `~/.codex/skills/blueprint-deck` and install again, or use
-the script, which replaces it. With the script, for Codex only:
+In the ChatGPT desktop app: **Plugins** → add the marketplace `lukasvecerka23/blueprint-deck-kit`, then install
+**Blueprint Deck**. Updates come through the marketplace (`codex plugin marketplace upgrade`).
+
+Without plugins, Codex's own skill installer installs the skill straight from GitHub:
+
+```text
+$skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck
+```
+
+It installs the skill as it is on `main` and doesn't update it later. The script does both, for Codex only:
 
 ```bash
 curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex
@@ -110,17 +119,35 @@ configurator, or ask:
 Use the blueprint-deck skill to make a diagram of this repo from diagrams/diagram.config.yaml.
 ```
 
+## Gemini CLI
+
+Gemini CLI has its own skill installer:
+
+```bash
+gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --path plugins/blueprint-deck/skills/blueprint-deck
+```
+
+Or the script, into `~/.gemini/skills` (Gemini CLI also reads `~/.agents/skills`):
+
+```bash
+curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent gemini
+```
+
+Check with `/skills list` in a Gemini CLI session, then ask for a Blueprint Deck in your project folder.
+
 ## Claude Desktop, claude.ai and ChatGPT
 
-The chat apps take the skill as a zip upload, no terminal needed:
+The chat apps take the skill as a zip upload, no terminal needed. Skills need a paid plan in both apps (in Claude
+they run with code execution), and in ChatGPT the upload works on the web, not in the desktop app (use the plugin
+there, see above).
 
 1. Download [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
    from the latest release. Don't unzip it: it already has the shape the apps expect (one `blueprint-deck/` folder).
 2. Upload it:
    - **Claude** (claude.ai or Claude Desktop): **Customize → Skills**, upload the zip, then turn the skill on. Code
      execution must be on (Settings → Capabilities), because the skill works with files.
-   - **ChatGPT**: **Plugins → Skills → Create → Upload from your computer**. ChatGPT scans the upload before you can
-     use it.
+   - **ChatGPT** (on the web): **Plugins → Skills → Create → Upload from your computer**. ChatGPT scans the upload
+     before you can use it.
 3. Start a chat, attach your docs (Markdown, PDF, text) or paste links, and ask: "Make a Blueprint Deck of these docs
    for our executives". The skill asks for what it can't tell from the files, then gives you the HTML file to
    download.

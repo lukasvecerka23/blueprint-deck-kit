@@ -48,20 +48,30 @@ Then type `/blueprint-deck`. On Claude Code older than 2.1.275, run
 `/plugin marketplace add lukasvecerka23/blueprint-deck-kit` and then `/plugin install blueprint-deck@blueprint-deck-kit`.
 Updates: turn on auto-update under `/plugin` → Marketplaces, or run `claude plugin update blueprint-deck@blueprint-deck-kit`.
 
-**Codex**: with its built-in skill installer, from inside Codex:
+**Codex and the ChatGPT desktop app** (one plugin system): add this repository as a plugin marketplace, then install
+Blueprint Deck from the Plugins Directory:
 ```
-$skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/skill/blueprint-deck
+codex plugin marketplace add lukasvecerka23/blueprint-deck-kit
 ```
-It doesn't update an existing skill; to update, use the install script below, which replaces it.
+In the ChatGPT desktop app: Plugins → add the marketplace `lukasvecerka23/blueprint-deck-kit`. Without plugins, Codex's
+own skill installer works too (it doesn't update the skill later; the install script below does):
+```
+$skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck
+```
 
-**Claude Desktop, claude.ai or ChatGPT** (no terminal): download
+**Gemini CLI**: with its own skill installer:
+```
+gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --path plugins/blueprint-deck/skills/blueprint-deck
+```
+
+**Claude Desktop, claude.ai or ChatGPT on the web** (no terminal; paid plans): download
 [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
 and upload it unchanged. Claude: **Customize → Skills**, upload, turn it on (code execution must be on). ChatGPT:
 **Plugins → Skills → Create → Upload**. Then attach your docs to a chat and ask for a Blueprint Deck.
 
 **Other agents, or several at once**: the install script. It installs the latest
 [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) for the agents it finds (`~/.claude/skills`,
-`~/.codex/skills`, `~/.agents/skills`) and asks which when there are several.
+`~/.codex/skills`, `~/.gemini/skills`, `~/.agents/skills`) and asks which when there are several.
 
 macOS / Linux:
 ```bash
@@ -71,7 +81,7 @@ Windows (PowerShell):
 ```powershell
 irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex
 ```
-Options: `--agent claude|codex|agents|all`, `--dir <folder>` (any other agent's skills folder), `--project` (into the
+Options: `--agent claude|codex|gemini|agents|all`, `--dir <folder>` (any other agent's skills folder), `--project` (into the
 current project), `--version 2.1.0` (a specific release), `--yes` (don't ask), `--uninstall`; pass them with
 `sh -s --`. With PowerShell `-Agent`, `-Version` … (run it as `& ([scriptblock]::Create((irm <url>))) -Version 2.1.0`).
 Run it again to update.
@@ -138,8 +148,8 @@ diagram.config.yaml ──▶ your agent + the blueprint-deck skill ──▶ di
 The engine is fixed and lives inside every file; the agent only writes the diagram's content (areas, boxes,
 connections, tabs, personas, tour, sheets) as a JSON block at the top of the file. That is why every diagram behaves
 the same, why it needs no build step, and why you can edit it without the agent. The format is documented in
-[`skill/blueprint-deck/reference/spec.md`](skill/blueprint-deck/reference/spec.md); the rules the agent follows in
-[`SKILL.md`](skill/blueprint-deck/SKILL.md) and the [style guide](skill/blueprint-deck/reference/style-guide.md).
+[`plugins/blueprint-deck/skills/blueprint-deck/reference/spec.md`](plugins/blueprint-deck/skills/blueprint-deck/reference/spec.md); the rules the agent follows in
+[`SKILL.md`](plugins/blueprint-deck/skills/blueprint-deck/SKILL.md) and the [style guide](plugins/blueprint-deck/skills/blueprint-deck/reference/style-guide.md).
 
 Optional, if you have Node 18+: `node ~/.claude/skills/blueprint-deck/tools/check.mjs diagrams/index.html --explain`
 validates a file and lists what each view highlights. Without Node, press E → Check in the browser.

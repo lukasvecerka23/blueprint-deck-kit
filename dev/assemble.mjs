@@ -1,5 +1,5 @@
 // Dev only (users never run this): assembles engine/src into the single engine file the skill copies for every diagram.
-//   node dev/assemble.mjs                         → skill/blueprint-deck/blueprint-deck.html (empty engine)
+//   node dev/assemble.mjs                         → plugins/blueprint-deck/skills/blueprint-deck/blueprint-deck.html (empty engine)
 //   node dev/assemble.mjs --upgrade a.html b.html → put the current engine into existing diagrams, keeping their data
 //   node dev/assemble.mjs --from-json d.json out.html [--minify-data]
 import fs from "node:fs";
@@ -46,14 +46,17 @@ if (args[0] === "--upgrade") {
   console.log("wrote", args[2]);
 } else {
   // the installed skill and its zip carry the licence and the third-party notices
-  for (const f of ["LICENSE", "THIRD_PARTY_NOTICES.md"]) fs.copyFileSync(path.join(root, f), path.join(root, "skill/blueprint-deck", f));
+  for (const f of ["LICENSE", "THIRD_PARTY_NOTICES.md"]) fs.copyFileSync(path.join(root, f), path.join(root, "plugins/blueprint-deck/skills/blueprint-deck", f));
   // the installed skill knows its version (install.sh, the update check in SKILL.md)
-  fs.writeFileSync(path.join(root, "skill/blueprint-deck/VERSION"), VERSION + "\n");
-  // the Claude Code plugin manifest carries the same version (Claude Code updates plugins when it changes)
-  const pluginJson = path.join(root, "skill/blueprint-deck/.claude-plugin/plugin.json");
-  const plugin = JSON.parse(fs.readFileSync(pluginJson, "utf8"));
-  if (plugin.version !== VERSION) { plugin.version = VERSION; fs.writeFileSync(pluginJson, JSON.stringify(plugin, null, 2) + "\n"); }
-  const out = path.join(root, "skill/blueprint-deck/blueprint-deck.html");
+  fs.writeFileSync(path.join(root, "plugins/blueprint-deck/skills/blueprint-deck/VERSION"), VERSION + "\n");
+  // the plugin manifests (Claude Code; Codex and the ChatGPT desktop app) carry the same version: plugin updates
+  // reach users only when it changes
+  for (const m of [".claude-plugin/plugin.json", ".codex-plugin/plugin.json"]) {
+    const file = path.join(root, "plugins/blueprint-deck", m);
+    const plugin = JSON.parse(fs.readFileSync(file, "utf8"));
+    if (plugin.version !== VERSION) { plugin.version = VERSION; fs.writeFileSync(file, JSON.stringify(plugin, null, 2) + "\n"); }
+  }
+  const out = path.join(root, "plugins/blueprint-deck/skills/blueprint-deck/blueprint-deck.html");
   fs.writeFileSync(out, page('{ "blueprintDeck": "empty" }'));
   console.log(`engine ${VERSION} → ${path.relative(root, out)} (${Math.round(fs.statSync(out).size / 1024)} KB)`);
 }
