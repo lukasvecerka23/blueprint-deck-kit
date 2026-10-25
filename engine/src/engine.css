@@ -396,7 +396,31 @@
     #print { display: block; }
     .pg { position: relative; width: 297mm; height: 209.5mm; overflow: hidden; page-break-after: always; break-after: page; background: radial-gradient(900px 600px at 8% -10%, var(--glow1), transparent 60%), var(--bg); }
     .pg .glass, .pg .btn { backdrop-filter: none; -webkit-backdrop-filter: none; }
+    /* PDF renderers differ (Chrome on a Mac is clean; Windows "Microsoft Print to PDF", Edge or Safari's export turn
+       blurred shadows and filters into bands and grey blocks): print without them. Dimming stays, as opacity only. */
+    .pg *, .pg *::before, .pg *::after { box-shadow: none !important; text-shadow: none !important; }
+    .pg .node, .pg .zone, .pg .edge { filter: none !important; }
+    body.print-bw { background: #fff !important; }
   }
+  /* black & white PDF deck (Shift+P): white paper, black text, every colour a grey */
+  body.print-bw #print {
+    --bg: #fff; --bg-rgb: 255, 255, 255; --fg: #000; --fg-rgb: 0, 0, 0;
+    --text: #111; --body: #222; --muted: #555; --faint: #6b6b6b; --tab-text: #444;
+    --ink: #fff; --glass: #fff; --glass-strong: #fff; --node-a: #fff; --node-b: #fff; --node-base: #fff;
+    --glow1: transparent; --glow2: transparent; --glow3: transparent; --dot: transparent;
+    --frame: rgba(0, 0, 0, 0.35); --frame-label: #333;
+    --accent: #222; --accent-rgb: 34, 34, 34; --accent-deep: #000; --accent-alt: #555; --accent-alt-rgb: 85, 85, 85;
+    --accent-light: #555; --on-accent: #fff; --ok: #222; --ok-rgb: 34, 34, 34; --warn: #222; --warn-rgb: 34, 34, 34;
+    --stroke: rgba(0, 0, 0, 0.2); --stroke-strong: rgba(0, 0, 0, 0.4); --shadow-k: 0; --tone: 0%;
+  }
+  body.print-bw #print * { --c: #333 !important; --rgb: 40, 40, 40 !important; --cx: #222 !important; }
+  body.print-bw #print, body.print-bw #print .pg { background: #fff !important; color: var(--text); }
+  /* status labels and chips get their colours straight from the theme: grey them too */
+  body.print-bw #print .st, body.print-bw #print .chip, body.print-bw #print .badge { color: #222 !important; background: #fff !important; border-color: rgba(0, 0, 0, 0.45) !important; }
+  body.print-bw #print .edge { stroke: rgba(0, 0, 0, 0.3); }
+  body.print-bw #print .edge.mid { stroke: rgba(0, 0, 0, 0.55); }
+  body.print-bw #print .edge.on { stroke: rgba(0, 0, 0, 0.85); }
+  body.print-bw #print .zone, body.print-bw #print .node { background-image: none !important; background-color: #fff !important; }
   /* contain + clip: the full-size map inside must not widen the printed page (Chrome would shrink every page to fit it) */
   .pg-map { position: absolute; overflow: hidden; contain: strict; clip-path: inset(0); }
   .pg-map > div { position: absolute; left: 0; top: 0; transform-origin: 0 0; }

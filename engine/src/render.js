@@ -976,10 +976,11 @@ function createDiagram(SPEC, host = {}, opts = {}) {
   /* =====================================================================
      PDF DECK: a cover, the overview, every tour step (or every tab) and every sheet, one landscape page each
      ===================================================================== */
-  function printDeck() {
+  function printDeck(opts = {}) {
     const keep = snapshot();
     const out = $("print");
     out.replaceChildren();
+    document.body.classList.toggle("print-bw", !!opts.bw);
     const PW = 1123, PH = 792, M = 44;
     const page = cls => { const p = document.createElement("div"); p.className = "pg " + (cls || ""); out.appendChild(p); return p; };
     const foot = (p, txt) => p.insertAdjacentHTML("beforeend", `<div class="pg-foot">${BDCore.stripTags(META.title)}${txt ? " · " + txt : ""}</div>`);
@@ -1042,7 +1043,7 @@ function createDiagram(SPEC, host = {}, opts = {}) {
       p.innerHTML = `${o.eyebrow ? `<span class="eyebrow">${o.eyebrow}</span>` : ""}<h1>${o.title}</h1>${o.lead ? `<p class="lead">${o.lead}</p>` : ""}${blocksHtml(o.blocks)}`;
     });
     restore(keep, false);
-    const done = () => { out.replaceChildren(); };
+    const done = () => { out.replaceChildren(); document.body.classList.remove("print-bw"); };
     addEventListener("afterprint", done, { once: true });
     setTimeout(() => window.print(), 60);
   }

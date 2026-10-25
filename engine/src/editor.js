@@ -119,8 +119,10 @@ const BDEditor = (() => {
       sel = { kind: "diagram" };
       render();
       BD.status();
-      if (!localStorage.getItem("bd-editor-intro")) {
-        BD.toast("Click a box or an area to edit it · drag boxes to move them · changes are saved as you go", [{ label: "Got it", fn: () => localStorage.setItem("bd-editor-intro", "1") }], 9000);
+      // the browser's storage may be blocked (sandboxed viewers, private mode): then the intro just shows every time
+      let seen = false; try { seen = !!localStorage.getItem("bd-editor-intro"); } catch { /* storage blocked */ }
+      if (!seen) {
+        BD.toast("Click a box or an area to edit it · drag boxes to move them · changes are saved as you go", [{ label: "Got it", fn: () => { try { localStorage.setItem("bd-editor-intro", "1"); } catch { /* storage blocked */ } } }], 9000);
       }
     }
     BD.rerender();

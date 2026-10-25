@@ -18,7 +18,7 @@ Your coding agent (Claude Code, Codex or any agent that supports skills) reads y
 - **Sheets** for what isn't a place on the map: roadmap, pilot options, pricing tiers.
 - **Several diagrams in one file**, e.g. a product view for executives and a technical view for engineers.
 - **Edit it in the browser**: press **E** to change texts, colours, theme, logo, boxes, tabs, tour and personas.
-- **One HTML file** that works offline, on phones, in any browser. **P** exports a PDF deck.
+- **One HTML file** that works offline, on phones, in any browser. **P** exports a PDF deck, **Shift+P** in black and white.
 
 It works for product and architecture blueprints, data flows, business processes, customer journeys, partner
 ecosystems and org maps, in a product (what it does for whom) or technical (components and technology) viewpoint.

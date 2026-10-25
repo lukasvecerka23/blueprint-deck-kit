@@ -5,6 +5,16 @@ Versions: a new minor version (2.1, 2.2 …) adds features and keeps every older
 engine, ask your agent to upgrade it (or `node tools/insert.mjs --upgrade <file>`). All releases and their files:
 https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
+## 2.4.0 (2026-10-25)
+
+- **Black-and-white PDF deck:** Shift+P (or ⋯ → *PDF deck in black & white*): white paper, black text, grey boxes and
+  connections, for printing or readers who prefer it.
+- **Cleaner PDFs everywhere:** the PDF deck no longer uses soft shadows and filters, which some PDF engines (Safari's
+  export, Windows' *Microsoft Print to PDF*) turned into stripes or grey blocks.
+- **Teams, SharePoint and mail previews:** switching diagrams and opening the editor no longer fail there with a
+  security error. These viewers sandbox the file, so the address bar can't follow the view and the browser can't keep
+  edits; the deck now carries on without them.
+
 ## 2.3.1 (2026-10-25)
 
 Ready for the Claude plugin directory.

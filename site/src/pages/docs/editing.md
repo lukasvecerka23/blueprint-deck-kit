@@ -52,8 +52,18 @@ Press <kbd class="kbd">P</kbd> (or ⋯ → *Export a PDF deck*). The engine lays
 cover, the overview, every tour step (or every tab, if there is no tour) and every sheet. Your browser's print dialog
 opens; choose *Save as PDF*. Background graphics should be on (they are by default in most browsers).
 
+**Black and white:** <kbd class="kbd">Shift</kbd>+<kbd class="kbd">P</kbd> (or ⋯ → *PDF deck in black & white*) makes the
+same deck on white paper with black text and grey boxes and connections, for printing or for readers who prefer it.
+
+**If the PDF shows stripes, grey blocks or rough edges:** that comes from the browser's PDF engine, not the deck.
+Chrome on any system gives the cleanest result; Safari's export and Windows' *Microsoft Print to PDF* render soft
+effects less well. The black-and-white deck avoids them almost entirely.
+
 ## Sharing
 
+- **Teams, SharePoint and mail previews** open the file in a protected frame. The deck works there (diagrams, tabs,
+  tour, PDF), but the address bar doesn't follow your view and edits can't be kept in the browser; to edit, download
+  the file and open it in a browser.
 - **Send a read-only copy.** In the file, open **⋯ → Download a copy to share** (or **Share…** in the editor bar),
   name it, and pick **Read-only**. The copy has the same diagram, tour, tabs and PDF export, but no editor at all:
   the editing code isn't in the file, so it can't be switched back on in the browser. Your own file stays editable;

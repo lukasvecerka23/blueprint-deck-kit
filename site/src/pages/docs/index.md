@@ -128,5 +128,5 @@ More in [Editing & sharing](/docs/editing/).
 | <kbd class="kbd">F</kbd> | fit the map to the screen |
 | <kbd class="kbd">+</kbd> <kbd class="kbd">-</kbd> | zoom |
 | <kbd class="kbd">E</kbd> | open the editor |
-| <kbd class="kbd">P</kbd> | export a PDF deck |
+| <kbd class="kbd">P</kbd> | export a PDF deck (<kbd class="kbd">Shift</kbd>+<kbd class="kbd">P</kbd>: black and white) |
 | <kbd class="kbd">1</kbd>–<kbd class="kbd">9</kbd> | switch diagram (when the file has several) |

@@ -177,11 +177,11 @@ const BD = (() => {
     const canEdit = hasEditor() && !(S && S.editor === false);
     // a link to a view only works for others when the file is hosted (a file opened from disk has a file:// address)
     const hosted = /^https?:$/.test(location.protocol);
-    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a read-only copy…", "", "share") : "") + item("Export a PDF deck", "P", "pdf") + (hosted ? item("Copy a link to this view", "", "link") : "");
+    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a read-only copy…", "", "share") : "") + item("Export a PDF deck", "P", "pdf") + item("PDF deck in black & white", "⇧P", "pdfbw") + (hosted ? item("Copy a link to this view", "", "link") : "");
     m.querySelectorAll("button").forEach(b => {
       b.onmouseenter = () => (b.style.background = "rgba(var(--fg-rgb),.06)");
       b.onmouseleave = () => (b.style.background = "transparent");
-      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share({ readOnly: true }), pdf: () => current.printDeck(), link: copyLink })[b.dataset.a](); };
+      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share({ readOnly: true }), pdf: () => current.printDeck(), pdfbw: () => current.printDeck({ bw: true }), link: copyLink })[b.dataset.a](); };
     });
     document.body.appendChild(m);
     setTimeout(() => addEventListener("click", function off(ev) { if (!m.contains(ev.target)) { m.remove(); removeEventListener("click", off); } }), 0);
@@ -249,7 +249,9 @@ const BD = (() => {
     const list = entries();
     i = Math.max(0, Math.min(list.length - 1, i));
     mount(i, { hash: innerHash, intro: false, hero: false });
-    history.replaceState(null, "", "#" + ["d=" + list[i].id, innerHash].filter(Boolean).join("&"));
+    // keep the address pointing at this diagram; viewers that sandbox the file (Teams, SharePoint, some mail
+    // previews: origin "null", about:srcdoc) forbid changing it, and the switch works without it
+    try { history.replaceState(null, "", "#" + ["d=" + list[i].id, innerHash].filter(Boolean).join("&")); } catch { /* sandboxed */ }
   }
   function fromHash(first) {
     const p = new URLSearchParams(location.hash.slice(1));
@@ -278,7 +280,7 @@ const BD = (() => {
     const n = +e.key;
     if (multi() && n >= 1 && n <= Math.min(9, entries().length) && !(hasEditor() && BDEditor.active)) { show(n - 1); return; }
     if ((e.key === "e" || e.key === "E") && current && current.spec.settings.editor !== false && hasEditor()) { e.preventDefault(); BDEditor.toggle(); }
-    if ((e.key === "p" || e.key === "P") && current) { e.preventDefault(); current.printDeck(); }
+    if ((e.key === "p" || e.key === "P") && current) { e.preventDefault(); current.printDeck({ bw: e.shiftKey }); }
   });
   addEventListener("hashchange", () => fromHash(false));
 
