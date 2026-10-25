@@ -52,13 +52,15 @@ Then type `/blueprint-deck`. On Claude Code older than 2.1.275, run
 `/plugin marketplace add lukasvecerka23/blueprint-deck-kit` and then `/plugin install blueprint-deck@blueprint-deck-kit`.
 Updates: turn on auto-update under `/plugin` → Marketplaces, or run `claude plugin update blueprint-deck@blueprint-deck-kit`.
 
-**Codex**: with its built-in skill installer, from inside Codex:
+**Codex** (and the ChatGPT desktop app): as a plugin, in your terminal:
+```
+codex plugin marketplace add lukasvecerka23/blueprint-deck-kit && codex plugin add blueprint-deck@blueprint-deck-kit
+```
+Updates: `codex plugin marketplace upgrade`. The plugin also appears in the ChatGPT desktop app. Or, inside Codex,
+its own skill installer (installs from `main` and doesn't update later):
 ```
 $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck
 ```
-It doesn't update the skill later (the install script below does). Or install it as a plugin, which updates through
-Codex and also appears in the ChatGPT desktop app: `codex plugin marketplace add lukasvecerka23/blueprint-deck-kit`,
-then install Blueprint Deck from the Plugins Directory.
 
 **Gemini CLI**: with its own skill installer:
 ```
@@ -69,7 +71,7 @@ gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --pat
 [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
 and upload it unchanged.
 - **Claude** (Desktop or claude.ai, paid plans): **Customize → Skills**, upload, turn it on (code execution must be on).
-- **ChatGPT** on the web (paid plans): **Plugins → Skills → Create → Upload**. The desktop app uses Codex's skills:
+- **ChatGPT** on the web (paid plans): **Plugins → Skills → Create → Upload**. The desktop app uses Codex's plugins:
   install it as for Codex above and it shows up there too.
 - **Gemini** (web or Mac app, personal accounts): **Customize → Skills**, upload.
 

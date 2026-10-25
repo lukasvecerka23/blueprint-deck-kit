@@ -130,9 +130,9 @@ else
   [ -n "$SRC" ] && [ -f "$SRC/SKILL.md" ] || { say "download did not contain the $NAME skill" >&2; exit 1; }
 fi
 
-NEW="$(cat "$SRC/VERSION" 2>/dev/null || echo "?")"
+NEW="$(cat "$SRC/VERSION.txt" 2>/dev/null || cat "$SRC/VERSION" 2>/dev/null || echo "?")"
 for t in $TARGETS; do
-  OLD="$(cat "$t/$NAME/VERSION" 2>/dev/null || true)"
+  OLD="$(cat "$t/$NAME/VERSION.txt" 2>/dev/null || cat "$t/$NAME/VERSION" 2>/dev/null || true)"   # VERSION before 2.3.0
   mkdir -p "$t"
   rm -rf "${t:?}/$NAME"
   cp -R "$SRC" "$t/$NAME"

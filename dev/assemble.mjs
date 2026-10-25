@@ -46,9 +46,11 @@ if (args[0] === "--upgrade") {
   console.log("wrote", args[2]);
 } else {
   // the installed skill and its zip carry the licence and the third-party notices
-  for (const f of ["LICENSE", "THIRD_PARTY_NOTICES.md"]) fs.copyFileSync(path.join(root, f), path.join(root, "plugins/blueprint-deck/skills/blueprint-deck", f));
+  // (as LICENSE.md and VERSION.txt: the Gemini app refuses files without an extension in a skill)
+  fs.copyFileSync(path.join(root, "LICENSE"), path.join(root, "plugins/blueprint-deck/skills/blueprint-deck/LICENSE.md"));
+  fs.copyFileSync(path.join(root, "THIRD_PARTY_NOTICES.md"), path.join(root, "plugins/blueprint-deck/skills/blueprint-deck/THIRD_PARTY_NOTICES.md"));
   // the installed skill knows its version (install.sh, the update check in SKILL.md)
-  fs.writeFileSync(path.join(root, "plugins/blueprint-deck/skills/blueprint-deck/VERSION"), VERSION + "\n");
+  fs.writeFileSync(path.join(root, "plugins/blueprint-deck/skills/blueprint-deck/VERSION.txt"), VERSION + "\n");
   // the plugin manifests (Claude Code; Codex and the ChatGPT desktop app) carry the same version: plugin updates
   // reach users only when it changes
   for (const m of [".claude-plugin/plugin.json", ".codex-plugin/plugin.json"]) {

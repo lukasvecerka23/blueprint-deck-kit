@@ -90,12 +90,14 @@ if ($here -and (Test-Path (Join-Path $here "plugins\$Name\skills\$Name\SKILL.md"
 }
 
 try {
-  $new = if (Test-Path (Join-Path $src "VERSION")) { (Get-Content (Join-Path $src "VERSION") -Raw).Trim() } else { "?" }
+  # VERSION.txt since 2.3.0, VERSION before
+  $readVersion = { param($dir) foreach ($f in "VERSION.txt", "VERSION") { $p = Join-Path $dir $f; if (Test-Path $p) { return (Get-Content $p -Raw).Trim() } }; return "" }
+  $new = & $readVersion $src; if (-not $new) { $new = "?" }
   $updated = $false
   foreach ($t in $targets) {
     New-Item -ItemType Directory -Force -Path $t | Out-Null
     $dest = Join-Path $t $Name
-    $old = if (Test-Path (Join-Path $dest "VERSION")) { (Get-Content (Join-Path $dest "VERSION") -Raw).Trim() } else { "" }
+    $old = & $readVersion $dest
     if (Test-Path $dest) { Remove-Item -Recurse -Force $dest }
     Copy-Item -Recurse -Path $src -Destination $dest
     Remove-Item -Recurse -Force (Join-Path $dest ".claude-plugin") -ErrorAction SilentlyContinue   # only for the marketplace

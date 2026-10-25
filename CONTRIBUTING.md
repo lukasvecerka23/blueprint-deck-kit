@@ -58,7 +58,7 @@ deploys from `main` on every push and is independent of releases; it hosts no sk
 redirect to the latest GitHub release).
 
 The version lives in one place: `VERSION` in `engine/src/core.js` (`dev/assemble.mjs` copies it into the engine and
-`plugins/blueprint-deck/skills/blueprint-deck/VERSION`).
+`plugins/blueprint-deck/skills/blueprint-deck/VERSION.txt` and both plugin manifests).
 
 1. Bump `VERSION` (minor for features, major if old diagrams would need an upgrade) and add a `## x.y.z (date)` section
    at the top of `CHANGELOG.md`.

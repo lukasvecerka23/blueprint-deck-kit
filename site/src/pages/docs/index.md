@@ -23,13 +23,11 @@ Install it where you work:
   ```
 
   Then type `/blueprint-deck`. More (older versions, updates) on the [Agents](/docs/agents/) page.
-- **Codex**, with its built-in skill installer, from inside Codex:
+- **Codex** (and the ChatGPT desktop app), as a plugin, in your terminal:
 
-  ```text
-  $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck
+  ```bash
+  codex plugin marketplace add lukasvecerka23/blueprint-deck-kit && codex plugin add blueprint-deck@blueprint-deck-kit
   ```
-
-  Or as a plugin, with updates ([how](/docs/agents/#codex)).
 
 - **Gemini CLI**, with its own skill installer:
 

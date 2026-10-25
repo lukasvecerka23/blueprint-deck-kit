@@ -93,27 +93,23 @@ the platform for the board meeting".
 
 ## Codex
 
-Inside Codex, its built-in skill installer installs Blueprint Deck in one step:
+This repository is a plugin marketplace for Codex. In your terminal, add it and install the plugin:
+
+```bash
+codex plugin marketplace add lukasvecerka23/blueprint-deck-kit && codex plugin add blueprint-deck@blueprint-deck-kit
+```
+
+Updates come through the marketplace: `codex plugin marketplace upgrade`. Codex shares its plugins with the ChatGPT
+desktop app, so Blueprint Deck shows up there too (see [Chat apps](#chat-apps-claude-chatgpt-gemini)).
+
+Without plugins, Codex's own skill installer installs the skill from inside Codex:
 
 ```text
 $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck
 ```
 
-It installs the skill as it is on `main` into `~/.codex/skills/blueprint-deck` and doesn't update it later. To
-update, run the install script, which replaces it:
-
-```bash
-curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex
-```
-
-**As a plugin, with updates:** this repository is also a plugin marketplace. Add it once, then install Blueprint Deck
-from the Plugins Directory; updates come through `codex plugin marketplace upgrade`. Codex shares its plugins with the
-ChatGPT desktop app, and the app also uses the skills installed above, so either way it shows up there too (see
-[Chat apps](#chat-apps-claude-chatgpt-gemini)).
-
-```bash
-codex plugin marketplace add lukasvecerka23/blueprint-deck-kit
-```
+It installs the skill as it is on `main` into `~/.codex/skills/blueprint-deck` and doesn't update it later; the install
+script does both (`--agent codex`).
 
 Start a new Codex session in your project folder and paste the prompt from the configurator, or ask:
 
@@ -149,10 +145,9 @@ The chat apps need no terminal: you upload the skill as a zip, once.
      on. Code execution must be on (Settings → Capabilities), because the skill works with files.
    - **ChatGPT on the web** (paid plans): **Plugins → Skills → Create → Upload from your computer**. ChatGPT scans the
      upload before you can use it.
-   - **ChatGPT desktop app**: it takes no skill uploads, but it uses Codex's skills. Install it as for
-     [Codex](#codex) (`$skill-installer` or the install script) and it shows up in the app too. For updates through
-     the app, use the plugin instead: **Plugins** → add the marketplace `lukasvecerka23/blueprint-deck-kit`, then
-     install **Blueprint Deck**.
+   - **ChatGPT desktop app**: it takes no skill uploads, but it uses Codex's plugins and skills. Install it as for
+     [Codex](#codex) and it shows up in the app too, or in the app: **Plugins** → add the marketplace
+     `lukasvecerka23/blueprint-deck-kit`, then install **Blueprint Deck**.
    - **Gemini** (web or Mac app, personal Google accounts): **Customize → Skills** (some accounts show it under
      Settings → Skills), upload the zip.
 3. Start a chat, attach your docs (Markdown, PDF, text) or paste links, and ask: "Make a Blueprint Deck of these docs

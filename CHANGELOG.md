@@ -11,10 +11,9 @@ Install it from inside the agent or app you already use.
 
 - **Claude Code plugin.** `/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit`, then
   `/blueprint-deck`. The repository is its own plugin marketplace; updates come through Claude Code.
-- **Codex:** `$skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck`
-  installs it in one step. The same repository is also a plugin marketplace for Codex
-  (`codex plugin marketplace add lukasvecerka23/blueprint-deck-kit`), with updates; the ChatGPT desktop app uses
-  Codex's skills and plugins.
+- **Codex plugin**, also in the ChatGPT desktop app:
+  `codex plugin marketplace add lukasvecerka23/blueprint-deck-kit && codex plugin add blueprint-deck@blueprint-deck-kit`;
+  updates with `codex plugin marketplace upgrade`. Codex's `$skill-installer` works too.
 - **Gemini CLI:** `gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --path plugins/blueprint-deck/skills/blueprint-deck`.
 - **Chat apps, no terminal:** upload the release zip as a skill in Claude (Desktop or claude.ai), ChatGPT on the web or
   the Gemini app. The skill knows how to work in a chat: the attached files are the sources, and you get the HTML file
@@ -23,6 +22,9 @@ Install it from inside the agent or app you already use.
   Gemini CLI (`--agent gemini`), and stays the way for any other agent, Windows or a specific version.
 - **New layout:** the skill moved to `plugins/blueprint-deck/skills/blueprint-deck/` (the standard plugin layout) with
   manifests for Claude Code and Codex. The release zip still contains just the `blueprint-deck/` folder.
+- **Stricter apps:** the skill's `VERSION` and `LICENSE` are now `VERSION.txt` and `LICENSE.md`, and the frontmatter is
+  quoted, because the Gemini app refuses files without an extension and parses YAML strictly. The installers read the
+  old `VERSION` of earlier installs.
 - The skill's "newer version" notice names the right way to update for each kind of install.
 - New example: `meetbuddy`, a macOS meeting recorder read from its code, with a product and a technical diagram.
 

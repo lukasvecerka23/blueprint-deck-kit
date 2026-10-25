@@ -1,6 +1,6 @@
 ---
 name: blueprint-deck
-license: 'MIT (see LICENSE in this folder)'
+license: 'MIT (see LICENSE.md in this folder)'
 description: 'Generate, change or update an interactive presentation diagram (a "Blueprint Deck") from documentation or code: a codebase (services, APIs, manifests), a repository''s docs, a folder of Markdown, text or PDF files, wiki or Notion exports, or web pages. The result is one HTML file that works offline - a pan-and-zoom map with clickable boxes and side panels, tabs, personas with their paths, a guided tour, roadmap and option sheets, a built-in editor (press E) and PDF export. Works for architecture and product blueprints, data flows, processes, customer journeys, ecosystems and org maps; one file can hold several diagrams. Use when the user asks for an interactive diagram, blueprint, architecture or product presentation, or to change an existing Blueprint Deck.'
 ---
 
@@ -43,7 +43,7 @@ file in the browser (press E); those edits are in the data block, so always re-r
 
 ## Before you start: versions (a few seconds, skip it if there's no network)
 
-1. Read `SKILL_DIR/VERSION` (e.g. `2.1.0`). Fetch
+1. Read `SKILL_DIR/VERSION.txt` (e.g. `2.1.0`; older installs: `SKILL_DIR/VERSION`). Fetch
    `https://api.github.com/repos/lukasvecerka23/blueprint-deck-kit/releases/latest` with your web tool or
    `curl -fsS --max-time 5` and read `tag_name` (e.g. `v2.2.0`). If it's newer, tell the user in one line, then carry on:
    "Blueprint Deck Kit X is available (you have Y); what's new: https://github.com/lukasvecerka23/blueprint-deck-kit/releases.
@@ -59,7 +59,7 @@ file in the browser (press E); those edits are in the data block, so always re-r
      (Windows: `irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex`)
    Never stop or install anything yourself because of this.
 2. When you work on an existing diagram, read its engine version from the top of the file
-   (`<meta name="generator" content="Blueprint Deck Kit X">`). If it's older than `SKILL_DIR/VERSION`, mention once
+   (`<meta name="generator" content="Blueprint Deck Kit X">`). If it's older than the skill's version, mention once
    that the file can get the newer engine (mode `upgrade`), and do it only when the user agrees.
 
 ## 0. Find the config

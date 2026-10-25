@@ -20,6 +20,7 @@ export const INSTALL = {
   claudePlugin: "/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit",
   codexSkill: "$skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck",
   codexMarketplace: "codex plugin marketplace add lukasvecerka23/blueprint-deck-kit",
+  codexPlugin: "codex plugin marketplace add lukasvecerka23/blueprint-deck-kit && codex plugin add blueprint-deck@blueprint-deck-kit",
   geminiSkill: "gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --path plugins/blueprint-deck/skills/blueprint-deck",
 };
 

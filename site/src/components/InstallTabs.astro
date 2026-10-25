@@ -44,18 +44,17 @@ const link = "underline underline-offset-4 hover:text-foreground";
     )}
   </div>
 
-  <!-- Codex: our repository is a plugin marketplace (Codex shares its plugins with the ChatGPT desktop app) -->
+  <!-- Codex: our repository is a plugin marketplace; the plugin also appears in the ChatGPT desktop app -->
   <div role="tabpanel" id={`${id}-panel-codex`} aria-labelledby={`${id}-tab-codex`} tabindex="-1" class="space-y-3" hidden>
-    <Command code={INSTALL.codexSkill} prompt=">" />
+    <Command code={INSTALL.codexPlugin} />
     {hero ? (
-      <p class={hint}>Run it inside Codex: its skill installer installs Blueprint Deck in one go. Then start a new session and ask for a deck.</p>
+      <p class={hint}>Run it in your terminal: it adds the marketplace and installs the plugin (also for the ChatGPT desktop app). Then ask Codex for a deck.</p>
     ) : (
       <>
-        <p class={hint}>Run it inside Codex: its built-in skill installer puts the skill into <code class={code}>~/.codex/skills/blueprint-deck</code>.
-          It doesn't update it later; to update, run the <span class="font-medium text-foreground">Install script</span>, which replaces it.
-          Or use the plugin, which updates through Codex and also appears in the ChatGPT desktop app: add the marketplace</p>
-        <Command code={INSTALL.codexMarketplace} />
-        <p class={hint}>then install Blueprint Deck from the Plugins Directory. Updates: <code class={code}>codex plugin marketplace upgrade</code>.</p>
+        <p class={hint}>Run it in your terminal: it adds this repository as a plugin marketplace and installs Blueprint Deck. The plugin also appears
+          in the ChatGPT desktop app. Updates: <code class={code}>codex plugin marketplace upgrade</code>. Or, inside Codex, its own skill installer
+          (installs from <code class={code}>main</code>, doesn't update later):</p>
+        <Command code={INSTALL.codexSkill} prompt=">" />
       </>
     )}
   </div>
@@ -87,7 +86,7 @@ const link = "underline underline-offset-4 hover:text-foreground";
     ) : (
       <ul class={`${hint} list-disc space-y-1.5 pl-5`}>
         <li><span class="font-medium text-foreground">Claude</span> (Desktop or claude.ai, paid plans): Customize → Skills → upload, turn it on. Code execution must be on.</li>
-        <li><span class="font-medium text-foreground">ChatGPT</span>: on the web (paid plans) Plugins → Skills → Create → Upload. The desktop app uses Codex's skills:
+        <li><span class="font-medium text-foreground">ChatGPT</span>: on the web (paid plans) Plugins → Skills → Create → Upload. The desktop app uses Codex's plugins:
           install it as under <span class="font-medium text-foreground">Codex</span> and it shows up there too.</li>
         <li><span class="font-medium text-foreground">Gemini</span> (web or Mac app, personal accounts): Customize → Skills → upload (some accounts show it under Settings → Skills).</li>
         <li>Then attach your docs to a chat and ask for a Blueprint Deck. In a chat the skill only sees the files you attach, and you get the HTML file to download.{" "}
