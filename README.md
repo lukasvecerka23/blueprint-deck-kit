@@ -6,7 +6,7 @@
 
 ![Blueprint Deck in 8 seconds: the map builds, then the guided tour zooms from step to step](docs/images/demo.gif)
 
-▶ **[Watch the 1-minute video](https://blueprint-deck.lukasvecerka.dev/#video)** · **[Try a live deck](https://blueprint-deck.lukasvecerka.dev/examples/acme/index.html)**
+▶ **[Watch the 1-minute video](https://blueprintdeck.dev/#video)** · **[Try a live deck](https://blueprintdeck.dev/examples/acme/index.html)**
 
 Your coding agent (Claude Code, Codex or any agent that supports skills) reads your docs or your code and writes a
 *Blueprint Deck*: a pan-and-zoom map of your product, process or system that is also a slide deck.
@@ -32,9 +32,9 @@ ecosystems and org maps, in a product (what it does for whom) or technical (comp
 | ![The configurator: shared settings, one tab per diagram, a live theme preview and the prompt](docs/images/configurator.jpg) | |
 | **The configurator** writes the config and the prompt | |
 
-**[Website & configurator](https://blueprint-deck.lukasvecerka.dev)** ·
-**[Examples](https://blueprint-deck.lukasvecerka.dev/gallery/)** ·
-**[Docs](https://blueprint-deck.lukasvecerka.dev/docs/)**
+**[Website & configurator](https://blueprintdeck.dev)** ·
+**[Examples](https://blueprintdeck.dev/gallery/)** ·
+**[Docs](https://blueprintdeck.dev/docs/)**
 
 ---
 
@@ -107,7 +107,7 @@ Nothing else to install, no account: the skill is plain files, and the agent run
 
 ### 2. Describe the diagram
 
-Open the **[configurator](https://blueprint-deck.lukasvecerka.dev/configurator/)** (or `configurator/index.html`
+Open the **[configurator](https://blueprintdeck.dev/configurator/)** (or `configurator/index.html`
 from a clone, offline). Pick the type, viewpoint, audience, sources, tabs, tour, look and brand colours, one tab per
 diagram if you want several. Click **Copy prompt**: it contains the whole configuration.
 
@@ -170,7 +170,7 @@ validates a file and lists what each view highlights. Without Node, press E → 
 
 ## Examples
 
-Open them from [`examples/`](examples/) or the [gallery](https://blueprint-deck.lukasvecerka.dev/gallery/):
+Open them from [`examples/`](examples/) or the [gallery](https://blueprintdeck.dev/gallery/):
 - `acme`: a fictional shop, two diagrams in one file (platform architecture with personas + checkout process)
 - `blueprint-deck`: this kit explaining itself
 - `saas-onboarding`: a customer journey (fictional), light theme

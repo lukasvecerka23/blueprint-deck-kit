@@ -7,6 +7,9 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
 ## 2.4.0 (2026-10-25)
 
+- **New address: blueprintdeck.dev.** The website, the install commands, the docs and the credit in every deck use it;
+  the old address keeps redirecting.
+
 - **PDF deck in colour or black and white:** P (or ⋯ → *Export a PDF deck…*) asks which; black and white is white
   paper, black text, grey boxes and connections, for printing. Shift+P exports black and white directly.
 - **Claude Code from the terminal:** `claude plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit` installs the plugin in one command; `/plugin install …` inside Claude Code

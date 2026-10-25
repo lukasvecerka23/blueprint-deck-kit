@@ -56,7 +56,7 @@ file in the browser (press E); those edits are in the data block, so always re-r
    - a chat app (claude.ai, Claude Desktop, ChatGPT on the web, Gemini; no project folder): delete the skill and upload the newer
      zip from the releases page (`blueprint-deck-skill-gemini.zip` in Gemini)
    - anywhere else (Claude Code, Codex or Gemini CLI skills folder, other agents): run the install script again, as
-     described at https://blueprint-deck.lukasvecerka.dev/docs/agents/#updating
+     described at https://blueprintdeck.dev/docs/agents/#updating
    Never stop or install anything yourself because of this.
 2. When you work on an existing diagram, read its engine version from the top of the file
    (`<meta name="generator" content="Blueprint Deck Kit X">`). If it's older than the skill's version, mention once
@@ -70,7 +70,7 @@ top-level `type`) mean one diagram with those settings.
 
 Without a config: copy `SKILL_DIR/templates/diagram.config.yaml` to `diagrams/`, fill in what you can infer from the
 repo, and ask the user in one message: the audience and goal, product or technical viewpoint, and what story the tour
-should tell. Mention the configurator (https://blueprint-deck.lukasvecerka.dev/configurator).
+should tell. Mention the configurator (https://blueprintdeck.dev/configurator).
 
 The config is the user's control surface: follow it literally. `comments`, `focus` and every `notes` field are
 instructions; `comments` override `sources.priority` (still report the conflict). Shared sections (project,

@@ -1,5 +1,5 @@
 # diagram.config.yaml: how your Blueprint Deck should be generated.
-# Make it with the configurator (https://blueprint-deck.lukasvecerka.dev/configurator or configurator/index.html),
+# Make it with the configurator (https://blueprintdeck.dev/configurator or configurator/index.html),
 # or edit this file. Put it in <your repo>/diagrams/ and ask your agent: "/blueprint-deck diagrams/diagram.config.yaml".
 # The agent reads this file and the sources it lists; it needs no other instructions.
 version: 2

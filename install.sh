@@ -4,7 +4,7 @@
 #   curl -fsSL https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.sh | sh
 #   … | sh -s -- --agent codex
 #   … | sh -s -- --version 2.1.0      (a specific release; the list: https://github.com/lukasvecerka23/blueprint-deck-kit/releases)
-#   (the website's short URL https://blueprint-deck.lukasvecerka.dev/install.sh serves this same script)
+#   (the website's short URL https://blueprintdeck.dev/install.sh serves this same script)
 #   ./install.sh                      (from a clone of the repository: installs that copy)
 #
 # Options:
@@ -148,6 +148,6 @@ fi
 
 say ""
 say "Done. Start a new agent session in your project folder (code or docs), then:"
-say "  1. Describe your diagram: https://blueprint-deck.lukasvecerka.dev/configurator/"
+say "  1. Describe your diagram: https://blueprintdeck.dev/configurator/"
 say "  2. Paste the prompt it gives you (or ask: \"Use the blueprint-deck skill to make a diagram of this repo\")."
 say "  In Claude Code you can also type /$NAME."

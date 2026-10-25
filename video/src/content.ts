@@ -189,7 +189,7 @@ export const END = {
   name: 'Blueprint Deck Kit',
   tagline: 'Turn your docs into a deck people will love.',
   license: 'Free & open source · MIT',
-  site: 'blueprint-deck.lukasvecerka.dev',
+  site: 'blueprintdeck.dev',
   repo: 'github.com/lukasvecerka23/blueprint-deck-kit',
 };
 

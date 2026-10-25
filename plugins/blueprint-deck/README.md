@@ -13,7 +13,7 @@ claude plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck
 or inside Claude Code: `/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit`.
 
 Then ask for "a Blueprint Deck of these docs", type `/blueprint-deck`, or paste a prompt from the
-[configurator](https://blueprint-deck.lukasvecerka.dev/configurator/). The skill reads your sources, proposes the
+[configurator](https://blueprintdeck.dev/configurator/). The skill reads your sources, proposes the
 structure, writes the content as JSON into a copy of the bundled engine (`skills/blueprint-deck/blueprint-deck.html`)
 and checks the result. Every box cites the file it came from, and an extraction report lists conflicts and gaps.
 
@@ -30,5 +30,5 @@ and checks the result. Every box cites the file it came from, and an extraction 
 - **The decks it writes** make no network requests at all: every file carries a Content Security Policy that blocks
   them, and the engine sanitizes all content before showing it.
 
-Docs: https://blueprint-deck.lukasvecerka.dev/docs/ · Source: https://github.com/lukasvecerka23/blueprint-deck-kit ·
+Docs: https://blueprintdeck.dev/docs/ · Source: https://github.com/lukasvecerka23/blueprint-deck-kit ·
 License: MIT (`skills/blueprint-deck/LICENSE.md`).

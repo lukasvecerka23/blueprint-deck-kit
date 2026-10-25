@@ -19,7 +19,7 @@ const publicDirIndex = {
 };
 
 export default defineConfig({
-  site: "https://blueprint-deck.lukasvecerka.dev",
+  site: "https://blueprintdeck.dev",
   output: "static",
   trailingSlash: "ignore",
   build: { format: "directory" },

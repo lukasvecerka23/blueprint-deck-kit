@@ -7,7 +7,7 @@
     "name": "Lukáš Večerka",
     "url": "https://lukasvecerka.dev"
   },
-  "homepage": "https://blueprint-deck.lukasvecerka.dev",
+  "homepage": "https://blueprintdeck.dev",
   "repository": "https://github.com/lukasvecerka23/blueprint-deck-kit",
   "license": "MIT",
   "keywords": [
@@ -19,8 +19,8 @@
     "agent-skill"
   ],
   "icon": "./.claude-plugin/icon.png",
-  "documentationUrl": "https://blueprint-deck.lukasvecerka.dev/docs/",
+  "documentationUrl": "https://blueprintdeck.dev/docs/",
   "supportUrl": "https://github.com/lukasvecerka23/blueprint-deck-kit/issues",
-  "privacyPolicyUrl": "https://blueprint-deck.lukasvecerka.dev/privacy/",
+  "privacyPolicyUrl": "https://blueprintdeck.dev/privacy/",
   "termsOfServiceUrl": "https://github.com/lukasvecerka23/blueprint-deck-kit/blob/main/LICENSE"
 }

@@ -45,13 +45,13 @@ Install it where you work:
 macOS and Linux:
 
 ```sh
-curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh
+curl -fsSL https://blueprintdeck.dev/install.sh | sh
 ```
 
 Windows (PowerShell):
 
 ```powershell
-irm https://blueprint-deck.lukasvecerka.dev/install.ps1 | iex
+irm https://blueprintdeck.dev/install.ps1 | iex
 ```
 
 The installer downloads the latest [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) from GitHub
@@ -72,13 +72,13 @@ It installs nothing else. Run it again to update.
 Pass options to the piped script with `sh -s --`, for example to install for Codex only:
 
 ```bash
-curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent codex
+curl -fsSL https://blueprintdeck.dev/install.sh | sh -s -- --agent codex
 ```
 
 In PowerShell, run the script as a script block to pass options:
 
 ```powershell
-$installer = irm "https://blueprint-deck.lukasvecerka.dev/install.ps1"
+$installer = irm "https://blueprintdeck.dev/install.ps1"
 & ([scriptblock]::Create($installer)) -Agent codex
 ```
 

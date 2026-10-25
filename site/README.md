@@ -1,7 +1,7 @@
-# blueprint-deck.lukasvecerka.dev
+# blueprintdeck.dev
 
 The landing page and docs of Blueprint Deck Kit. Astro (static output), Tailwind CSS v4 and Basecoat UI; no client
-framework. Production: https://blueprint-deck.lukasvecerka.dev (Cloudflare Pages).
+framework. Production: https://blueprintdeck.dev (Cloudflare Pages).
 
 ## Run it
 
@@ -65,7 +65,7 @@ The site is static, so Pages serves `dist/` directly; the build needs the whole 
    - Environment variable: **`NODE_VERSION` = `22`**
 3. **Save and Deploy.** Every push to `main` deploys production; other branches and pull requests get preview URLs.
 4. **Custom domain:** in the Pages project → **Custom domains** → **Set up a custom domain** →
-   `blueprint-deck.lukasvecerka.dev`. If `lukasvecerka.dev` is on Cloudflare DNS, the CNAME is created for you;
+   `blueprintdeck.dev`. If `lukasvecerka.dev` is on Cloudflare DNS, the CNAME is created for you;
    otherwise add a `CNAME blueprint-deck → <project>.pages.dev` at your DNS provider and wait for verification.
    The `.dev` TLD is on the HSTS preload list, so browsers only connect over HTTPS; Pages issues and renews the
    certificate automatically, so nothing else is needed (the domain will not load until the certificate is active,

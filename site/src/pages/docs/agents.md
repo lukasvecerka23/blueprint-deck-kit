@@ -80,7 +80,7 @@ Install it one way only (plugin or script), otherwise Claude Code lists the skil
 Or with the script, for Claude Code only (the default command also finds Claude Code by itself):
 
 ```bash
-curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent claude
+curl -fsSL https://blueprintdeck.dev/install.sh | sh -s -- --agent claude
 ```
 
 The skill lands in `~/.claude/skills/blueprint-deck`; use
@@ -134,7 +134,7 @@ gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --pat
 Or the script, into `~/.gemini/skills` (Gemini CLI also reads `~/.agents/skills`):
 
 ```bash
-curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --agent gemini
+curl -fsSL https://blueprintdeck.dev/install.sh | sh -s -- --agent gemini
 ```
 
 Check with `/skills list` in a Gemini CLI session, then ask for a Blueprint Deck in your project folder.
@@ -193,13 +193,13 @@ updates anything by itself). How to update depends on how you installed it:
 What changed is in the [changelog](/changelog/). To install a specific release with the script:
 
 ```bash
-curl -fsSL https://blueprint-deck.lukasvecerka.dev/install.sh | sh -s -- --version 2.1.0
+curl -fsSL https://blueprintdeck.dev/install.sh | sh -s -- --version 2.1.0
 ```
 
 In PowerShell:
 
 ```powershell
-$installer = irm "https://blueprint-deck.lukasvecerka.dev/install.ps1"
+$installer = irm "https://blueprintdeck.dev/install.ps1"
 & ([scriptblock]::Create($installer)) -Version 2.1.0
 ```
 

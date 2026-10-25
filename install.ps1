@@ -3,7 +3,7 @@
 #   irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex
 #   $installer = irm "https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1"
 #   & ([scriptblock]::Create($installer)) -Version 2.1.0
-#   (the website's short URL https://blueprint-deck.lukasvecerka.dev/install.ps1 serves this same script)
+#   (the website's short URL https://blueprintdeck.dev/install.ps1 serves this same script)
 #   .\install.ps1                     (from a clone of the repository: installs that copy)
 #
 # Parameters: -Agent claude|codex|gemini|agents|all (default: the agents found; with more than one it asks which, Enter = all),
@@ -115,6 +115,6 @@ try {
 
 Write-Host ""
 Write-Host "Done. Start a new agent session in your project folder (code or docs), then:"
-Write-Host "  1. Describe your diagram: https://blueprint-deck.lukasvecerka.dev/configurator/"
+Write-Host "  1. Describe your diagram: https://blueprintdeck.dev/configurator/"
 Write-Host "  2. Paste the prompt it gives you (or ask: 'Use the blueprint-deck skill to make a diagram of these docs')."
 Write-Host "  In Claude Code you can also type /$Name."

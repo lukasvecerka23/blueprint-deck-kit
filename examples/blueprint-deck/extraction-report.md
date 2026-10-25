@@ -100,7 +100,7 @@ Edge groups: `gen` (main flow), `check`, `inside`, `edit`, `share`, `dev`.
 
 - **Static host** (suggested in the brief under Sharing): no source mentions hosting the file on a web server or a
   static host. Left out; the Sharing area shows the file, phones and deep links only.
-- **Configurator URL**: SKILL.md names https://blueprint-deck.lukasvecerka.dev/configurator; not shown on the map
+- **Configurator URL**: SKILL.md names https://blueprintdeck.dev/configurator; not shown on the map
   because the configurator is being rebuilt. `meta.url` is the GitHub repo from the template's comment instead.
 - Whether the configurator's live preview (boot.js `?preview`) is wired up in the configurator being rebuilt is not
   verifiable from the current configurator source; the box says only that the engine has a preview mode.

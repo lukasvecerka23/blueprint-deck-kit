@@ -1,7 +1,7 @@
 export const SITE = {
   name: "Blueprint Deck Kit",
   short: "Blueprint Deck",
-  url: "https://blueprint-deck.lukasvecerka.dev",
+  url: "https://blueprintdeck.dev",
   repo: "https://github.com/lukasvecerka23/blueprint-deck-kit",
   sponsor: "https://github.com/sponsors/lukasvecerka23",
   author: "Lukáš Večerka",
