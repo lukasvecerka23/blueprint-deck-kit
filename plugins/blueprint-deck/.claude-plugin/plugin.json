@@ -20,5 +20,7 @@
   ],
   "icon": "./.claude-plugin/icon.png",
   "documentationUrl": "https://blueprint-deck.lukasvecerka.dev/docs/",
-  "supportUrl": "https://github.com/lukasvecerka23/blueprint-deck-kit/issues"
+  "supportUrl": "https://github.com/lukasvecerka23/blueprint-deck-kit/issues",
+  "privacyPolicyUrl": "https://blueprint-deck.lukasvecerka.dev/privacy/",
+  "termsOfServiceUrl": "https://github.com/lukasvecerka23/blueprint-deck-kit/blob/main/LICENSE"
 }
