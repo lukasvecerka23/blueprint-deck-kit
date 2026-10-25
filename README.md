@@ -66,6 +66,10 @@ project), `--version 2.1.0` (a specific release), `--uninstall`; with PowerShell
   ```
   $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/skill/blueprint-deck
   ```
+- **Claude Desktop, claude.ai or ChatGPT** (no terminal): download
+  [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
+  and upload it unchanged. In Claude: **Customize → Skills**, upload, turn it on (code execution must be on). In
+  ChatGPT: **Plugins → Skills → Create → Upload**. Then attach your docs to a chat and ask for a Blueprint Deck.
 
 - **From a clone** (e.g. to try unreleased changes on `main`): `./install.sh` installs that checkout.
 - **By hand:** download `blueprint-deck-skill.zip` from a [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases)

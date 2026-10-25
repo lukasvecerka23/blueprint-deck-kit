@@ -110,6 +110,25 @@ configurator, or ask:
 Use the blueprint-deck skill to make a diagram of this repo from diagrams/diagram.config.yaml.
 ```
 
+## Claude Desktop, claude.ai and ChatGPT
+
+The chat apps take the skill as a zip upload, no terminal needed:
+
+1. Download [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
+   from the latest release. Don't unzip it: it already has the shape the apps expect (one `blueprint-deck/` folder).
+2. Upload it:
+   - **Claude** (claude.ai or Claude Desktop): **Customize → Skills**, upload the zip, then turn the skill on. Code
+     execution must be on (Settings → Capabilities), because the skill works with files.
+   - **ChatGPT**: **Plugins → Skills → Create → Upload from your computer**. ChatGPT scans the upload before you can
+     use it.
+3. Start a chat, attach your docs (Markdown, PDF, text) or paste links, and ask: "Make a Blueprint Deck of these docs
+   for our executives". The skill asks for what it can't tell from the files, then gives you the HTML file to
+   download.
+
+Differences from a coding agent: it only sees what you attach, not a whole repository, so it suits a handful of
+documents better than a large codebase. To change a deck later, attach the HTML file again and say what to change, or
+press **E** in the file. To update the skill, delete it and upload the newer zip.
+
 ## Other agents
 
 Agents that support Agent Skills find the skill in their skills folder: `--agent agents` installs into the shared
