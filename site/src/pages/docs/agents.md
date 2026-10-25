@@ -63,8 +63,8 @@ The easiest way is the plugin, installed from inside Claude Code (no script; Cla
 ```
 
 On older versions: `/plugin marketplace add lukasvecerka23/blueprint-deck-kit`, then
-`/plugin install blueprint-deck@blueprint-deck-kit`. Plugin skills carry the plugin's name, so the command is
-`/blueprint-deck:blueprint-deck`. To get updates automatically, turn on auto-update for the `blueprint-deck-kit`
+`/plugin install blueprint-deck@blueprint-deck-kit`. The command is `/blueprint-deck` (the full name
+`/blueprint-deck:blueprint-deck` works too). To get updates automatically, turn on auto-update for the `blueprint-deck-kit`
 marketplace under `/plugin` → Marketplaces, or run `claude plugin update blueprint-deck@blueprint-deck-kit`.
 Install it one way only (plugin or script), otherwise Claude Code lists the skill twice.
 

@@ -44,7 +44,7 @@ Pick the place you work in:
 ```
 /plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
 ```
-Then type `/blueprint-deck:blueprint-deck`. On Claude Code older than 2.1.275, run
+Then type `/blueprint-deck`. On Claude Code older than 2.1.275, run
 `/plugin marketplace add lukasvecerka23/blueprint-deck-kit` and then `/plugin install blueprint-deck@blueprint-deck-kit`.
 Updates: turn on auto-update under `/plugin` → Marketplaces, or run `claude plugin update blueprint-deck@blueprint-deck-kit`.
 

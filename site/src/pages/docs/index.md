@@ -22,7 +22,7 @@ Install it where you work:
   /plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit
   ```
 
-  Then type `/blueprint-deck:blueprint-deck`. More (older versions, updates) on the [Agents](/docs/agents/) page.
+  Then type `/blueprint-deck`. More (older versions, updates) on the [Agents](/docs/agents/) page.
 - **Codex**, with its built-in skill installer, from inside Codex:
 
   ```text
