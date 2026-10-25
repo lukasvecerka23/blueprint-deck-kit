@@ -23,6 +23,7 @@ configurator/                the form that writes diagram.config.yaml and the pr
 site/                        the website (Astro)
 examples/                    example diagrams (each one HTML file + its config and report)
 dev/                         maintainer scripts
+video/                       the promo video (Remotion) and its renders in video/assets/
 ```
 
 ## Working on the engine
