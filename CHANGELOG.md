@@ -14,6 +14,8 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 - **A small credit:** "Made with Blueprint Deck Kit" under the start screen's footnote, at the end of the ⋯ menu and
   in the PDF footer; never on the map. `behaviour.credit: false` in the config (or the editor's Behaviour section)
   hides it.
+- *Copy a link to this view* is gone from the ⋯ menu: most decks are opened from disk, where such a link only works
+  on one computer. Links to a view (`#tour=3`, `#node=api` …) still work when typed.
 - **A favicon for every deck:** the browser tab shows the deck's logo (an image as it is, a Lucide icon on the deck's
   accent colours), or a default icon.
 - **Cleaner PDFs everywhere:** the PDF deck no longer uses soft shadows and filters, which some PDF engines (Safari's

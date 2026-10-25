@@ -93,4 +93,4 @@ The part after `#` opens a specific view, so you can link straight to a slide:
 | `index.html#status=off` | the map without status tags |
 | `index.html#d=checkout&tour=2` | diagram `checkout`, step 2 (files with several diagrams) |
 
-Combine them with `&`. The ⋯ menu has *Copy a link to this view*, which builds the link for what is on screen.
+Combine them with `&`. They're useful when the file is hosted: a link can open the deck at the right step.

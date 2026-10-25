@@ -4502,14 +4502,12 @@ const BD = (() => {
     const item = (label, shortcut, fn) => `<button data-a="${fn}" style="display:flex;justify-content:space-between;gap:16px;border:0;background:transparent;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;text-align:left;font-size:13.5px"><span>${label}</span><kbd style="color:var(--muted);font:inherit;font-size:12px">${shortcut}</kbd></button>`;
     const S = current && current.spec.settings;
     const canEdit = hasEditor() && !(S && S.editor === false);
-    // a link to a view only works for others when the file is hosted (a file opened from disk has a file:// address)
-    const hosted = /^https?:$/.test(location.protocol);
-    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a read-only copy…", "", "share") : "") + item("Export a PDF deck…", "P", "pdf") + (hosted ? item("Copy a link to this view", "", "link") : "")
+    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a read-only copy…", "", "share") : "") + item("Export a PDF deck…", "P", "pdf")
       + (!(S && S.credit === false) ? `<a href="https://blueprint-deck.lukasvecerka.dev" target="_blank" rel="noopener" style="display:block;margin-top:4px;padding:8px 10px 4px;border-top:1px solid var(--stroke);font-size:12px;color:var(--faint);text-decoration:none">Made with Blueprint Deck Kit ↗</a>` : "");
     m.querySelectorAll("button").forEach(b => {
       b.onmouseenter = () => (b.style.background = "rgba(var(--fg-rgb),.06)");
       b.onmouseleave = () => (b.style.background = "transparent");
-      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share({ readOnly: true }), pdf: pdfDialog, link: copyLink })[b.dataset.a](); };
+      b.onclick = () => { m.remove(); ({ edit: () => BDEditor.toggle(true), share: () => BDEditor.share({ readOnly: true }), pdf: pdfDialog })[b.dataset.a](); };
     });
     document.body.appendChild(m);
     setTimeout(() => addEventListener("click", function off(ev) { if (!m.contains(ev.target)) { m.remove(); removeEventListener("click", off); } }), 0);
@@ -4536,19 +4534,7 @@ const BD = (() => {
     m.addEventListener("keydown", e => { e.stopPropagation(); if (e.key === "Escape") close(); if (e.key === "Enter") { e.preventDefault(); go(); } });
     m.querySelector("[data-x=go]").focus();
   }
-  function copyLink() {
-    const st = current.state, p = new URLSearchParams();
-    if (multi()) p.set("d", entries()[curIndex].id);
-    if (st.tour >= 0) p.set("tour", st.tour + 1); else if (st.lens !== current.spec.lenses[0].id) p.set("lens", st.lens);
-    if (st.panel && current.nodeById[st.panel]) p.set("node", st.panel);
-    const url = location.href.split("#")[0] + (p.toString() ? "#" + p : "");
-    // a file opened from disk has a file:// address: the link works on this computer only
-    const local = location.protocol === "file:";
-    const note = local ? "<br><small>This file is opened from your disk, so the link works on this computer only. For a link others can open, host the file (see Sharing in the docs).</small>" : "";
-    const done = () => toast("Link copied" + (local ? "" : ": " + escH(url.length > 70 ? "…" + url.slice(-60) : url)) + note, [], local ? 9000 : 3500);
-    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(done, () => toast(escH(url) + note, [], 12000));
-    else toast(escH(url) + note, [], 12000);
-  }
+
 
   // several diagrams: the brand box becomes a switcher (click it, or press 1–9)
   function renderSwitcher(brand, lg) {
