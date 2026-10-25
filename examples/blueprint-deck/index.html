@@ -1454,6 +1454,9 @@
   .pillars + .hero-btns { margin-top: 0; }
   .hero-btns .btn { padding: 13px 22px; font-size: 15px; border-radius: var(--r-ui); }
   .hero-foot { margin-top: 22px; font-size: 12px; color: var(--faint); }
+  .hero-credit { margin-top: 10px; font-size: 11px; letter-spacing: .02em; }
+  .hero-credit a { color: var(--faint); text-decoration: none; opacity: .8; }
+  .hero-credit a:hover { color: var(--muted); opacity: 1; }
 
   /* ---------- overlays (options sheets, roadmap) ---------- */
   #ov { position: fixed; inset: 0; z-index: 35; overflow-x: hidden; overflow-y: auto; opacity: 0; visibility: hidden; transition: opacity .4s, visibility .4s; background: radial-gradient(ellipse at center, rgba(var(--bg-rgb), 0.84), rgba(var(--bg-rgb), 0.96)); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
@@ -1590,7 +1593,8 @@
   .pg-side h2 { margin: 0; font-size: 19pt; line-height: 1.2; color: var(--fg); }
   .pg-side p { margin: 0; font-size: 11pt; line-height: 1.5; color: var(--body); }
   .pg-side .t-sum { grid-template-columns: 1fr; gap: 2mm; } .pg-side .t-sum div { font-size: 9pt; padding: 2mm 3mm; }
-  .pg-foot { position: absolute; left: 12mm; bottom: 7mm; font-size: 8pt; color: var(--faint); }
+  .pg-foot { position: absolute; left: 12mm; right: 12mm; bottom: 7mm; font-size: 8pt; color: var(--faint); }
+  .pg-credit { float: right; opacity: .75; }
   .pg-cover { display: grid; place-items: center; text-align: center; }
   .pg-cover .hero-card { animation: none; }
   .pg-ov { padding: 14mm 16mm; } .pg-ov h1 { margin: 2mm 0; font-size: 22pt; } .pg-ov .lead { font-size: 10.5pt; color: var(--muted); margin: 0; }
@@ -2218,6 +2222,7 @@ const BDCore = (() => {
     hero: true,
     legend: "collapsed", // collapsed | open | false
     editor: true,
+    credit: true, // a small "Made with Blueprint Deck Kit" on the start screen, in the ⋯ menu and the PDF footer
     keyboard: true,
     tour: { position: "auto" }, // auto | right | bottom
     camera: { zoomToFocus: true, maxZoom: 1.25, nodeZoom: 1.15, zoneZoom: 1.3, padding: 24 },
@@ -3650,6 +3655,7 @@ function createDiagram(SPEC, host = {}, opts = {}) {
       <button class="btn" id="heroExplore">${L10N.explore}</button>
     </div>
     ${H.footnote ? `<div class="hero-foot">${H.footnote}</div>` : ""}
+    ${SPEC.settings.credit !== false ? `<div class="hero-credit"><a href="https://blueprint-deck.lukasvecerka.dev" target="_blank" rel="noopener">Made with Blueprint Deck Kit</a></div>` : ""}
   </div>`;
   function hideHero() { hero.classList.add("gone"); lastWake = 0; wake(); }
   runAnim(false);
@@ -3803,7 +3809,8 @@ function createDiagram(SPEC, host = {}, opts = {}) {
     document.body.classList.toggle("print-bw", !!opts.bw);
     const PW = 1123, PH = 792, M = 44;
     const page = cls => { const p = document.createElement("div"); p.className = "pg " + (cls || ""); out.appendChild(p); return p; };
-    const foot = (p, txt) => p.insertAdjacentHTML("beforeend", `<div class="pg-foot">${BDCore.stripTags(META.title)}${txt ? " · " + txt : ""}</div>`);
+    const credit = SPEC.settings.credit !== false ? `<span class="pg-credit">Made with Blueprint Deck Kit</span>` : "";
+    const foot = (p, txt) => p.insertAdjacentHTML("beforeend", `<div class="pg-foot">${BDCore.stripTags(META.title)}${txt ? " · " + txt : ""}${credit}</div>`);
     const mapInto = (p, box, area) => {
       const c = world.cloneNode(true);
       c.removeAttribute("id");
@@ -4092,7 +4099,8 @@ const BD = (() => {
     const canEdit = hasEditor() && !(S && S.editor === false);
     // a link to a view only works for others when the file is hosted (a file opened from disk has a file:// address)
     const hosted = /^https?:$/.test(location.protocol);
-    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a read-only copy…", "", "share") : "") + item("Export a PDF deck…", "P", "pdf") + (hosted ? item("Copy a link to this view", "", "link") : "");
+    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a read-only copy…", "", "share") : "") + item("Export a PDF deck…", "P", "pdf") + (hosted ? item("Copy a link to this view", "", "link") : "")
+      + (!(S && S.credit === false) ? `<a href="https://blueprint-deck.lukasvecerka.dev" target="_blank" rel="noopener" style="display:block;margin-top:4px;padding:8px 10px 4px;border-top:1px solid var(--stroke);font-size:12px;color:var(--faint);text-decoration:none">Made with Blueprint Deck Kit ↗</a>` : "");
     m.querySelectorAll("button").forEach(b => {
       b.onmouseenter = () => (b.style.background = "rgba(var(--fg-rgb),.06)");
       b.onmouseleave = () => (b.style.background = "transparent");
@@ -4585,6 +4593,7 @@ const BDEditor = (() => {
         ["settings.edges.particles", "Moving dots", "select", { options: [["main", "On the main flow"], ["focus", "Only in tabs and steps"], ["off", "Off"]], def: "main" }],
         ["settings.tour.position", "Tour card", "select", { options: [["auto", "Side on wide screens, else bottom"], ["right", "Always on the side"], ["bottom", "Always at the bottom"]], def: "auto" }],
         ["settings.hero", "Start screen", "check", { def: true, text: "Show the start screen" }],
+        ["settings.credit", "Credit", "check", { def: true, text: "Show “Made with Blueprint Deck Kit” (start screen, ⋯ menu, PDF)" }],
       ], own, "settings"))) +
       section("Start screen", grp("own4", fields([["hero.eyebrow", "Eyebrow"], ["hero.title", "Headline"], ["hero.lead", "Lead", "area", { rows: 3 }], ["hero.footnote", "Footnote"]], own, "hero"))) +
       section("Areas", `<button type="button" class="mini" id="addZone">+ Add an area</button><small>Click an area's title on the map to edit it.</small>`) +

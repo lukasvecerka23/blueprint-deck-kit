@@ -40,6 +40,7 @@ behaviour:
   overview_edges: all                  # all | main | none
   legend: collapsed                    # collapsed | open | "off"
   editor: true                         # E edits the file in the browser; false locks it
+  credit: true                         # a small "Made with Blueprint Deck Kit" (start screen, ⋯ menu, PDF footer); false hides it
   keyboard: true
 
 workflow:

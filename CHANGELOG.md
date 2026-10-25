@@ -11,6 +11,9 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
   paper, black text, grey boxes and connections, for printing. Shift+P exports black and white directly.
 - **Claude Code from the terminal:** `claude plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit` installs the plugin in one command; `/plugin install …` inside Claude Code
   still works.
+- **A small credit:** "Made with Blueprint Deck Kit" under the start screen's footnote, at the end of the ⋯ menu and
+  in the PDF footer; never on the map. `behaviour.credit: false` in the config (or the editor's Behaviour section)
+  hides it.
 - **A favicon for every deck:** the browser tab shows the deck's logo (an image as it is, a Lucide icon on the deck's
   accent colours), or a default icon.
 - **Cleaner PDFs everywhere:** the PDF deck no longer uses soft shadows and filters, which some PDF engines (Safari's

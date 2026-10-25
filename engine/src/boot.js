@@ -177,7 +177,8 @@ const BD = (() => {
     const canEdit = hasEditor() && !(S && S.editor === false);
     // a link to a view only works for others when the file is hosted (a file opened from disk has a file:// address)
     const hosted = /^https?:$/.test(location.protocol);
-    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a read-only copy…", "", "share") : "") + item("Export a PDF deck…", "P", "pdf") + (hosted ? item("Copy a link to this view", "", "link") : "");
+    m.innerHTML = (canEdit ? item("Edit this diagram", "E", "edit") + item("Download a read-only copy…", "", "share") : "") + item("Export a PDF deck…", "P", "pdf") + (hosted ? item("Copy a link to this view", "", "link") : "")
+      + (!(S && S.credit === false) ? `<a href="https://blueprint-deck.lukasvecerka.dev" target="_blank" rel="noopener" style="display:block;margin-top:4px;padding:8px 10px 4px;border-top:1px solid var(--stroke);font-size:12px;color:var(--faint);text-decoration:none">Made with Blueprint Deck Kit ↗</a>` : "");
     m.querySelectorAll("button").forEach(b => {
       b.onmouseenter = () => (b.style.background = "rgba(var(--fg-rgb),.06)");
       b.onmouseleave = () => (b.style.background = "transparent");

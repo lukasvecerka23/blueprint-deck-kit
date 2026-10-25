@@ -92,6 +92,7 @@ const BDCore = (() => {
     hero: true,
     legend: "collapsed", // collapsed | open | false
     editor: true,
+    credit: true, // a small "Made with Blueprint Deck Kit" on the start screen, in the ⋯ menu and the PDF footer
     keyboard: true,
     tour: { position: "auto" }, // auto | right | bottom
     camera: { zoomToFocus: true, maxZoom: 1.25, nodeZoom: 1.15, zoneZoom: 1.3, padding: 24 },

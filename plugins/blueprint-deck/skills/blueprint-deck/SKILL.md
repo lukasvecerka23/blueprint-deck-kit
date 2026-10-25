@@ -138,6 +138,7 @@ Config → JSON mapping:
 | behaviour.hero / tour_position / zoom_to_focus | settings.hero / settings.tour.position / settings.camera.zoomToFocus |
 | behaviour.edges_filter_by_view / edge_labels / overview_edges | settings.edges.filterByContext / labels / overview |
 | behaviour.particles (main-flow/focus-only/off) | settings.edges.particles (main/focus/off) + settings.edges.mainFlow |
+| behaviour.credit | settings.credit (false hides "Made with Blueprint Deck Kit") |
 | behaviour.legend / editor / keyboard | settings.legend (`off` → false) / settings.editor / settings.keyboard |
 | workflow.read_only_copy | after step 5, also write the read-only copy (step 4) |
 

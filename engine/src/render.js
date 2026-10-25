@@ -855,6 +855,7 @@ function createDiagram(SPEC, host = {}, opts = {}) {
       <button class="btn" id="heroExplore">${L10N.explore}</button>
     </div>
     ${H.footnote ? `<div class="hero-foot">${H.footnote}</div>` : ""}
+    ${SPEC.settings.credit !== false ? `<div class="hero-credit"><a href="https://blueprint-deck.lukasvecerka.dev" target="_blank" rel="noopener">Made with Blueprint Deck Kit</a></div>` : ""}
   </div>`;
   function hideHero() { hero.classList.add("gone"); lastWake = 0; wake(); }
   runAnim(false);
@@ -1008,7 +1009,8 @@ function createDiagram(SPEC, host = {}, opts = {}) {
     document.body.classList.toggle("print-bw", !!opts.bw);
     const PW = 1123, PH = 792, M = 44;
     const page = cls => { const p = document.createElement("div"); p.className = "pg " + (cls || ""); out.appendChild(p); return p; };
-    const foot = (p, txt) => p.insertAdjacentHTML("beforeend", `<div class="pg-foot">${BDCore.stripTags(META.title)}${txt ? " · " + txt : ""}</div>`);
+    const credit = SPEC.settings.credit !== false ? `<span class="pg-credit">Made with Blueprint Deck Kit</span>` : "";
+    const foot = (p, txt) => p.insertAdjacentHTML("beforeend", `<div class="pg-foot">${BDCore.stripTags(META.title)}${txt ? " · " + txt : ""}${credit}</div>`);
     const mapInto = (p, box, area) => {
       const c = world.cloneNode(true);
       c.removeAttribute("id");

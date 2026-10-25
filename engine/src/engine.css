@@ -308,6 +308,9 @@
   .pillars + .hero-btns { margin-top: 0; }
   .hero-btns .btn { padding: 13px 22px; font-size: 15px; border-radius: var(--r-ui); }
   .hero-foot { margin-top: 22px; font-size: 12px; color: var(--faint); }
+  .hero-credit { margin-top: 10px; font-size: 11px; letter-spacing: .02em; }
+  .hero-credit a { color: var(--faint); text-decoration: none; opacity: .8; }
+  .hero-credit a:hover { color: var(--muted); opacity: 1; }
 
   /* ---------- overlays (options sheets, roadmap) ---------- */
   #ov { position: fixed; inset: 0; z-index: 35; overflow-x: hidden; overflow-y: auto; opacity: 0; visibility: hidden; transition: opacity .4s, visibility .4s; background: radial-gradient(ellipse at center, rgba(var(--bg-rgb), 0.84), rgba(var(--bg-rgb), 0.96)); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
@@ -444,7 +447,8 @@
   .pg-side h2 { margin: 0; font-size: 19pt; line-height: 1.2; color: var(--fg); }
   .pg-side p { margin: 0; font-size: 11pt; line-height: 1.5; color: var(--body); }
   .pg-side .t-sum { grid-template-columns: 1fr; gap: 2mm; } .pg-side .t-sum div { font-size: 9pt; padding: 2mm 3mm; }
-  .pg-foot { position: absolute; left: 12mm; bottom: 7mm; font-size: 8pt; color: var(--faint); }
+  .pg-foot { position: absolute; left: 12mm; right: 12mm; bottom: 7mm; font-size: 8pt; color: var(--faint); }
+  .pg-credit { float: right; opacity: .75; }
   .pg-cover { display: grid; place-items: center; text-align: center; }
   .pg-cover .hero-card { animation: none; }
   .pg-ov { padding: 14mm 16mm; } .pg-ov h1 { margin: 2mm 0; font-size: 22pt; } .pg-ov .lead { font-size: 10.5pt; color: var(--muted); margin: 0; }

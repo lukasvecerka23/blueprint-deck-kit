@@ -296,6 +296,7 @@ const BDEditor = (() => {
         ["settings.edges.particles", "Moving dots", "select", { options: [["main", "On the main flow"], ["focus", "Only in tabs and steps"], ["off", "Off"]], def: "main" }],
         ["settings.tour.position", "Tour card", "select", { options: [["auto", "Side on wide screens, else bottom"], ["right", "Always on the side"], ["bottom", "Always at the bottom"]], def: "auto" }],
         ["settings.hero", "Start screen", "check", { def: true, text: "Show the start screen" }],
+        ["settings.credit", "Credit", "check", { def: true, text: "Show “Made with Blueprint Deck Kit” (start screen, ⋯ menu, PDF)" }],
       ], own, "settings"))) +
       section("Start screen", grp("own4", fields([["hero.eyebrow", "Eyebrow"], ["hero.title", "Headline"], ["hero.lead", "Lead", "area", { rows: 3 }], ["hero.footnote", "Footnote"]], own, "hero"))) +
       section("Areas", `<button type="button" class="mini" id="addZone">+ Add an area</button><small>Click an area's title on the map to edit it.</small>`) +
