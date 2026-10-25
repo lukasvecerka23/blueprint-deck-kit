@@ -43,13 +43,6 @@ const features = [
 
 const kinds = ["Architecture blueprints", "Product blueprints", "Service maps", "Data flows", "Processes", "Customer journeys", "Ecosystems", "Org maps"];
 const homeFaq = FAQ.filter(f => f.home);
-
-// the star count, read once at build time (no request from visitors' browsers); shown from 25 stars up
-let stars = 0;
-try {
-  const r = await fetch("https://api.github.com/repos/lukasvecerka23/blueprint-deck-kit", { headers: { Accept: "application/vnd.github+json" }, signal: AbortSignal.timeout(5000) });
-  if (r.ok) stars = (await r.json()).stargazers_count ?? 0;
-} catch { /* offline build: no count */ }
 ---
 <Base>
   <!-- ============================================================ hero -->
@@ -76,7 +69,7 @@ try {
           <a href="/configurator/" class="btn" data-size="lg">Configure your deck <Icon name="arrow-right" /></a>
           <a href="#install" class="btn" data-size="lg" data-variant="outline"><Icon name="terminal" /> Install the skill</a>
           <a href={SITE.repo} class="btn" data-size="lg" data-variant="ghost"><Icon name="github" /> Star on GitHub
-            {stars >= 25 && <span class="badge ml-0.5 font-mono" data-variant="secondary">★ {stars}</span>}</a>
+            <span class="badge ml-0.5 font-mono" data-variant="secondary" data-stars hidden></span></a>
         </div>
         <div class="mx-auto mt-8 max-w-2xl text-center">
           <InstallTabs id="hero-install" variant="hero" />
@@ -140,11 +133,15 @@ try {
       ))}
     </ol>
     <figure id="video" class="mx-auto mt-14 max-w-5xl" data-reveal>
-      <div class="browser-frame overflow-hidden rounded-xl border bg-card">
-        <video class="block aspect-video w-full bg-[#050914]" controls preload="none" playsinline poster="/video/poster.jpg"
+      <div class="browser-frame video-player group relative overflow-hidden rounded-xl border bg-card" data-video>
+        <video class="block aspect-video w-full bg-[#050914]" preload="none" playsinline muted poster="/video/poster.jpg"
           aria-label="Blueprint Deck Kit in one minute: from docs to an interactive deck">
           <source src="/video/blueprint-deck.mp4" type="video/mp4" />
         </video>
+        <button type="button" class="video-play" aria-label="Play the one-minute video">
+          <span class="video-play-ring"><Icon name="play" class="size-8 translate-x-0.5" /></span>
+          <span class="video-play-label">Watch · 1 min</span>
+        </button>
       </div>
       <figcaption class="mt-4 text-center text-sm text-muted-foreground">The whole flow in one minute: your docs, the configurator, the agent, the deck.</figcaption>
     </figure>
@@ -262,6 +259,30 @@ try {
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
     items.forEach(el => io.observe(el));
   } else items.forEach(el => el.classList.add("in"));
+  // the star count comes from our own /api/stars (a Cloudflare Pages Function that caches GitHub's answer), so
+  // visitors' browsers never call GitHub; shown from 25 stars up
+  const starBadge = document.querySelector<HTMLElement>("[data-stars]");
+  if (starBadge) fetch("/api/stars").then(r => (r.ok ? r.json() : null)).then(d => {
+    if (d && typeof d.stars === "number" && d.stars >= 25) { starBadge.textContent = `★ ${d.stars}`; starBadge.hidden = false; }
+  }).catch(() => {});
+  // the video: a muted preview while the pointer is over it (not on touch screens, not with reduced motion);
+  // a click plays it from the start with the controls
+  const player = document.querySelector<HTMLElement>("[data-video]");
+  if (player) {
+    const video = player.querySelector("video")!, button = player.querySelector<HTMLButtonElement>(".video-play")!;
+    let started = false;
+    const hover = matchMedia("(hover: hover) and (pointer: fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (hover) {
+      player.addEventListener("pointerenter", () => { if (!started) { video.loop = true; video.play().catch(() => {}); player.classList.add("previewing"); } });
+      player.addEventListener("pointerleave", () => { if (!started) { video.pause(); video.currentTime = 0; player.classList.remove("previewing"); } });
+    }
+    const start = () => {
+      started = true; player.classList.remove("previewing"); player.classList.add("started");
+      video.loop = false; video.currentTime = 0; video.controls = true; video.play().catch(() => {});
+    };
+    button.addEventListener("click", start);
+    video.addEventListener("ended", () => { video.currentTime = 0; });
+  }
   // the cards' glow follows the pointer
   document.querySelectorAll<HTMLElement>(".glow-card").forEach(card => {
     card.addEventListener("pointermove", ev => {

@@ -69,8 +69,8 @@ gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --pat
 [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip)
 and upload it unchanged.
 - **Claude** (Desktop or claude.ai, paid plans): **Customize → Skills**, upload, turn it on (code execution must be on).
-- **ChatGPT** on the web (paid plans): **Plugins → Skills → Create → Upload**. In the desktop app, add the plugin
-  instead: **Plugins** → add the marketplace `lukasvecerka23/blueprint-deck-kit`, then install Blueprint Deck.
+- **ChatGPT** on the web (paid plans): **Plugins → Skills → Create → Upload**. The desktop app uses Codex's skills:
+  install it as for Codex above and it shows up there too.
 - **Gemini** (web or Mac app, personal accounts): **Customize → Skills**, upload.
 
 Then attach your docs to a chat and ask for a Blueprint Deck.
