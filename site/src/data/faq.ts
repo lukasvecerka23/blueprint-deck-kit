@@ -74,10 +74,10 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
   },
   {
     q: "Can I use it at work or for clients?",
-    a: "Yes. The MIT licence allows commercial use: generate decks for your company or your clients, keep them private, or build on the kit. Just keep the licence notice in the files.",
+    a: "Yes. The MIT License allows commercial use: generate decks for your company or your clients, keep them private, or build on the kit. Just keep the licence notice in the files.",
   },
   {
     q: "What does it cost?",
-    a: "Nothing. Blueprint Deck Kit is open source under the MIT licence. Generating a diagram uses your agent, so it counts against your own agent subscription or API usage like any other task. If it saves you time, you can <a href=\"https://github.com/sponsors/lukasvecerka23\">sponsor the project on GitHub</a>, once or monthly.",
+    a: "Nothing. Blueprint Deck Kit is open source under the MIT License. Generating a diagram uses your agent, so it counts against your own agent subscription or API usage like any other task. If it saves you time, you can <a href=\"https://github.com/sponsors/lukasvecerka23\">sponsor the project on GitHub</a>, once or monthly.",
   },
 ];

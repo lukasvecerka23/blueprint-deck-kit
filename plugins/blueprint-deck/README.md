@@ -29,4 +29,4 @@ and checks the result. Every box cites the file it came from, and an extraction 
   them, and the engine sanitizes all content before showing it.
 
 Docs: https://blueprint-deck.lukasvecerka.dev/docs/ · Source: https://github.com/lukasvecerka23/blueprint-deck-kit ·
-Licence: MIT (`skills/blueprint-deck/LICENSE.md`).
+License: MIT (`skills/blueprint-deck/LICENSE.md`).

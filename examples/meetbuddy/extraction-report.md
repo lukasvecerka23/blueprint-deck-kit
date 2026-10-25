@@ -1,6 +1,6 @@
 # Extraction report: meetBuddy, two views
 
-Unofficial diagram of **meetBuddy** (Meeting Buddy) by mnovak99, MIT licence: https://github.com/mnovak99/meetBuddy.
+Unofficial diagram of **meetBuddy** (Meeting Buddy) by mnovak99, MIT License: https://github.com/mnovak99/meetBuddy.
 Not affiliated with the author.
 
 - **Commit read:** `8875a4adaf7a54c8edcb144e80ce05dc127e724a` (shallow clone, 2026-10-24). Every source in the

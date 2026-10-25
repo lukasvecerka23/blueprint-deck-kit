@@ -207,6 +207,6 @@ Made by [Lukáš Večerka](https://github.com/lukasvecerka23), with
 
 Issues and pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md) for how the engine is built and tested.
 
-## Licence
+## License
 
 [MIT](LICENSE). Icons from [Lucide](https://lucide.dev) (ISC); see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
