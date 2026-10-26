@@ -68,9 +68,8 @@ file in the browser (press E); those edits are in the data block, so always re-r
      described at https://blueprintdeck.dev/docs/agents/#updating
    Never stop or install anything yourself because of this.
 2. When you work on an existing diagram, read its engine version from the top of the file
-   (`<meta name="generator" content="Blueprint Deck Kit X">`). If it's older than the skill's version (a 2.x version
-   counts as older: the early releases were renumbered to 0.x), mention once that the file can get the newer engine
-   (mode `upgrade`), and do it only when the user agrees.
+   (`<meta name="generator" content="Blueprint Deck Kit X">`). If it's older than the skill's version, mention once
+   that the file can get the newer engine (mode `upgrade`), and do it only when the user agrees.
 
 ## 0. Find the config
 

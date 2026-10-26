@@ -6,13 +6,9 @@ the install command again; to give an existing diagram the new engine, ask your 
 `node tools/insert.mjs --upgrade <file>`). All releases and their files:
 https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
-The early releases were first numbered 2.x and renumbered to 0.x in 0.6.0 (2.0.0 → 0.1.0, 2.1.0 → 0.2.0, 2.2.0 → 0.3.0,
-2.3.x → 0.4.x, 2.4.x → 0.5.x). A deck whose `<meta name="generator">` says 2.x has an engine older than 0.6.0.
-
 ## 0.6.0 (2026-10-26)
 
-- **Beta, renumbered.** Blueprint Deck Kit is in beta until 1.0.0. The earlier releases were renumbered from 2.x to
-  0.x (see above); their tags and releases on GitHub use the new numbers.
+- **Beta.** Blueprint Deck Kit is in beta until 1.0.0, the first stable release.
 - **GitHub Copilot:** the Copilot CLI installs the plugin from this repository's marketplace
   (`copilot plugin marketplace add lukasvecerka23/blueprint-deck-kit && copilot plugin install blueprint-deck@blueprint-deck-kit`);
   Copilot in VS Code and Visual Studio gets the skill with `gh skill install lukasvecerka23/blueprint-deck-kit blueprint-deck --agent github-copilot --scope user`.
