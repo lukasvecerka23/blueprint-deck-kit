@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/Docs.astro
 title: Agents
-description: How the skill works, its modes (generate, change, update, upgrade, init) and how to install and use it in Claude Code, Codex, Gemini CLI, the Claude, ChatGPT and Gemini apps and other agents.
+description: How the skill works, its modes (generate, change, update, upgrade, init) and how to install and use it in Claude Code, Codex, Gemini CLI, GitHub Copilot, the Claude, ChatGPT and Gemini apps and other agents.
 ---
 
 ## How the skill works
@@ -139,6 +139,32 @@ curl -fsSL https://blueprintdeck.dev/install.sh | sh -s -- --agent gemini
 
 Check with `/skills list` in a Gemini CLI session, then ask for a Blueprint Deck in your project folder.
 
+## GitHub Copilot
+
+GitHub Copilot reads Agent Skills in the Copilot CLI, agent mode in VS Code and Visual Studio, and the Copilot cloud
+agent. The Copilot CLI takes this repository as a plugin marketplace:
+
+```bash
+copilot plugin marketplace add lukasvecerka23/blueprint-deck-kit && copilot plugin install blueprint-deck@blueprint-deck-kit
+```
+
+Updates: `copilot plugin update blueprint-deck`. For VS Code or Visual Studio (or without the Copilot CLI), install
+the skill with the GitHub CLI (2.90 or later) into `~/.copilot/skills`, which every Copilot reads:
+
+```bash
+gh skill install lukasvecerka23/blueprint-deck-kit blueprint-deck --agent github-copilot --scope user
+```
+
+Updates: `gh skill update blueprint-deck`. The install script works too (`--agent copilot`; with `--project` it
+installs into the repository's `.github/skills`, which also the Copilot cloud agent reads):
+
+```bash
+curl -fsSL https://blueprintdeck.dev/install.sh | sh -s -- --agent copilot
+```
+
+Then open Copilot Chat in agent mode (or a Copilot CLI session) in your project folder and paste the prompt from the
+configurator.
+
 ## Chat apps: Claude, ChatGPT, Gemini
 
 The chat apps and Claude's desktop app need no terminal and no repository: you attach your docs to a chat. Most take
@@ -194,19 +220,21 @@ updates anything by itself). How to update depends on how you installed it:
 | the Claude Code plugin | `claude plugin update blueprint-deck@blueprint-deck-kit`, or auto-update under `/plugin` → Marketplaces |
 | the Codex / ChatGPT desktop plugin | `codex plugin marketplace upgrade`, or update it in the Plugins Directory |
 | a zip upload (Claude, ChatGPT on the web, Gemini) | delete the skill and upload the newer zip |
+| the GitHub Copilot CLI plugin | `copilot plugin update blueprint-deck` |
+| `gh skill install` | `gh skill update blueprint-deck` |
 | the install script, Codex's skill installer or Gemini CLI | run the install script again: it replaces the skill and says which version it replaced |
 
 What changed is in the [changelog](/changelog/). To install a specific release with the script:
 
 ```bash
-curl -fsSL https://blueprintdeck.dev/install.sh | sh -s -- --version 2.1.0
+curl -fsSL https://blueprintdeck.dev/install.sh | sh -s -- --version 0.5.1
 ```
 
 In PowerShell:
 
 ```powershell
 $installer = irm "https://blueprintdeck.dev/install.ps1"
-& ([scriptblock]::Create($installer)) -Version 2.1.0
+& ([scriptblock]::Create($installer)) -Version 0.5.1
 ```
 
 Every release and its files are on [GitHub Releases](https://github.com/lukasvecerka23/blueprint-deck-kit/releases).

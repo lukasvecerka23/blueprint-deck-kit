@@ -8,7 +8,7 @@
 
 ▶ **[Watch the 1-minute video](https://blueprintdeck.dev/#video)** · **[Try a live deck](https://blueprintdeck.dev/examples/acme/index.html)**
 
-Your coding agent (Claude Code, Codex or any agent that supports skills) reads your docs or your code and writes a
+Your coding agent (Claude Code, Codex, GitHub Copilot or any agent that supports skills) reads your docs or your code and writes a
 *Blueprint Deck*: a pan-and-zoom map of your product, process or system that is also a slide deck.
 
 - **Click any box** for a side panel: what it is, why it matters, the technology, its sources.
@@ -67,6 +67,13 @@ $skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tr
 gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --path plugins/blueprint-deck/skills/blueprint-deck
 ```
 
+**GitHub Copilot** (Copilot CLI): as a plugin:
+```
+copilot plugin marketplace add lukasvecerka23/blueprint-deck-kit && copilot plugin install blueprint-deck@blueprint-deck-kit
+```
+For Copilot in VS Code or Visual Studio, with the GitHub CLI (2.90+):
+`gh skill install lukasvecerka23/blueprint-deck-kit blueprint-deck --agent github-copilot --scope user`.
+
 **Chat apps** (no terminal):
 - **Claude** (web and desktop app, paid plans): **Customize → Skills**, upload
   [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip) unchanged, turn it on (code execution must be on).
@@ -81,7 +88,7 @@ then ask it to publish the deck as an artifact, which gives you a link anyone ca
 
 **Install script**: for any other agent, several at once, Windows or a specific version. It installs the latest
 [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) for the agents it finds (`~/.claude/skills`,
-`~/.codex/skills`, `~/.gemini/skills`, `~/.agents/skills`) and asks which when there are several.
+`~/.codex/skills`, `~/.gemini/skills`, `~/.copilot/skills`, `~/.agents/skills`) and asks which when there are several.
 
 macOS / Linux:
 ```bash
@@ -91,12 +98,12 @@ Windows (PowerShell):
 ```powershell
 irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex
 ```
-Options: `--agent claude|codex|gemini|agents|all`, `--dir <folder>` (any other agent's skills folder), `--project` (into the
-current project), `--version 2.1.0` (a specific release), `--yes` (don't ask), `--uninstall`; pass them with
+Options: `--agent claude|codex|gemini|copilot|agents|all`, `--dir <folder>` (any other agent's skills folder), `--project` (into the
+current project), `--version 0.5.1` (a specific release), `--yes` (don't ask), `--uninstall`; pass them with
 `sh -s --`. With PowerShell, `-Agent`, `-Version` … by running the script like this:
 ```powershell
 $installer = irm "https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1"
-& ([scriptblock]::Create($installer)) -Version 2.1.0
+& ([scriptblock]::Create($installer)) -Version 0.5.1
 ```
 Run it again to update.
 
@@ -145,9 +152,10 @@ Paste the prompt into your agent, in your project folder: a code repository, or 
 
 - **The skill** mentions it when a newer version is out ([what's new](https://github.com/lukasvecerka23/blueprint-deck-kit/releases)).
   To update: Claude Code plugin: `claude plugin update blueprint-deck@blueprint-deck-kit` (or auto-update);
-  Codex/ChatGPT desktop plugin: `codex plugin marketplace upgrade`; Claude, ChatGPT (web) or Gemini: delete the skill
+  Codex/ChatGPT desktop plugin: `codex plugin marketplace upgrade`; Copilot CLI plugin: `copilot plugin update blueprint-deck`;
+  `gh skill install`: `gh skill update blueprint-deck`; Claude, ChatGPT (web) or Gemini: delete the skill
   and upload the newer zip; install script (also for Codex): run it again, it says
-  which version it replaced. A specific release: add `--version 2.1.0` (PowerShell: `-Version 2.1.0`).
+  which version it replaced. A specific release: add `--version 0.5.1` (PowerShell: `-Version 0.5.1`).
 - **Your diagrams** keep working as they are: each file carries its own engine. To give a file the new features,
   ask your agent to "upgrade diagrams/index.html to the newest engine"; your content stays as it is. The editor
   (E → Diagram) shows which engine a file has.
@@ -188,7 +196,7 @@ Details in [SECURITY.md](SECURITY.md).
 
 ## Requirements
 
-- A coding agent that supports Agent Skills (`SKILL.md`), such as Claude Code or Codex.
+- A coding agent that supports Agent Skills (`SKILL.md`), such as Claude Code, Codex or GitHub Copilot.
   Other agents can be pointed at `SKILL.md` as instructions.
 - A modern browser (Chrome, Edge, Safari, Firefox; phones included).
 - Optional: a browser tool in your agent (e.g. Playwright MCP) so it can look at the result itself, and Node 18+ for

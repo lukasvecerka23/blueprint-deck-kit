@@ -22,7 +22,7 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
   },
   {
     q: "Which agents does it work with?",
-    a: "Claude Code and Codex (as a plugin), Gemini CLI, the Claude, ChatGPT and Gemini apps (upload the skill as a zip; the ChatGPT desktop app takes the plugin), and any other agent that supports Agent Skills (a folder with a <code>SKILL.md</code>; the install script puts it into its skills folder). Agents without skill support can still follow <code>SKILL.md</code> as plain instructions: point them at the file.",
+    a: "Claude Code, Codex and the GitHub Copilot CLI (as a plugin), Copilot in VS Code, Gemini CLI, the Claude, ChatGPT and Gemini apps (upload the skill as a zip; the ChatGPT desktop app takes the plugin), and any other agent that supports Agent Skills (a folder with a <code>SKILL.md</code>; the install script puts it into its skills folder). Agents without skill support can still follow <code>SKILL.md</code> as plain instructions: point them at the file.",
     home: true,
   },
   {

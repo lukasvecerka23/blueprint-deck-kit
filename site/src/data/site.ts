@@ -22,6 +22,8 @@ export const INSTALL = {
   codexSkill: "$skill-installer install https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck",
   codexMarketplace: "codex plugin marketplace add lukasvecerka23/blueprint-deck-kit",
   codexPlugin: "codex plugin marketplace add lukasvecerka23/blueprint-deck-kit && codex plugin add blueprint-deck@blueprint-deck-kit",
+  copilotPlugin: "copilot plugin marketplace add lukasvecerka23/blueprint-deck-kit && copilot plugin install blueprint-deck@blueprint-deck-kit",
+  copilotGh: "gh skill install lukasvecerka23/blueprint-deck-kit blueprint-deck --agent github-copilot --scope user",
   geminiSkill: "gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --path plugins/blueprint-deck/skills/blueprint-deck",
 };
 

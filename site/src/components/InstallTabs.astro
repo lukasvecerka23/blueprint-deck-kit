@@ -15,6 +15,7 @@ const tabs = [
   { id: "claude", label: "Claude Code", brand: "claude" },
   { id: "codex", label: "Codex", brand: "openai" },
   { id: "gemini", label: "Gemini CLI", brand: "gemini" },
+  { id: "copilot", label: "GitHub Copilot", icon: "github" },
   { id: "apps", label: "Chat apps", icon: "message-square" },
   { id: "other", label: "Install script", icon: "terminal" },
   ...(hero ? [] : [{ id: "manual", label: "Manual", icon: "download" }]),
@@ -79,6 +80,24 @@ const link = "underline underline-offset-4 hover:text-foreground";
     )}
   </div>
 
+  <!-- GitHub Copilot: the Copilot CLI reads our marketplace; VS Code and Visual Studio read ~/.copilot/skills -->
+  <div role="tabpanel" id={`${id}-panel-copilot`} aria-labelledby={`${id}-tab-copilot`} tabindex="-1" class="space-y-3" hidden>
+    <Command code={INSTALL.copilotPlugin} />
+    {hero ? (
+      <p class={hint}>For the Copilot CLI. In VS Code or Visual Studio: <code class={code}>{INSTALL.copilotGh}</code>. Then ask Copilot (agent mode) for a deck.</p>
+    ) : (
+      <>
+        <p class={hint}>For the Copilot CLI: it adds this repository as a plugin marketplace and installs Blueprint Deck. Updates:{" "}
+          <code class={code}>copilot plugin update blueprint-deck</code>. For Copilot in VS Code or Visual Studio, install the skill into{" "}
+          <code class={code}>~/.copilot/skills</code> with the GitHub CLI (2.90 or later; updates: <code class={code}>gh skill update blueprint-deck</code>):</p>
+        <Command code={INSTALL.copilotGh} />
+        <p class={hint}>Or with the script (<code class={code}>--project</code> puts it into the repository's <code class={code}>.github/skills</code>, which the Copilot cloud agent reads too):</p>
+        <Command code={INSTALL.shAgent("copilot")} />
+        <Command code={INSTALL.psAgent("copilot")} prompt="PS>" />
+      </>
+    )}
+  </div>
+
   <!-- the chat apps: Claude and ChatGPT (web) take the zip, Gemini a zip without tools/, the ChatGPT desktop app the Codex plugin -->
   <div role="tabpanel" id={`${id}-panel-apps`} aria-labelledby={`${id}-tab-apps`} tabindex="-1" class="space-y-3" hidden>
     <div class:list={["flex flex-wrap items-center gap-3", hero && "justify-center"]}>
@@ -108,13 +127,13 @@ const link = "underline underline-offset-4 hover:text-foreground";
     <Command code={INSTALL.sh} />
     <Command code={INSTALL.ps} prompt="PS>" />
     {hero ? (
-      <p class={hint}>The install script (macOS/Linux, then Windows): installs for Claude Code, Codex, Gemini CLI and other Agent Skills agents it finds, and asks which.{" "}
+      <p class={hint}>The install script (macOS/Linux, then Windows): installs for Claude Code, Codex, Gemini CLI, GitHub Copilot and other Agent Skills agents it finds, and asks which.{" "}
         <a class={link} href="#install">All options</a>.</p>
     ) : (
       <p class={hint}>The install script, for macOS/Linux and for Windows PowerShell. It installs the latest release for the agents it finds
-        (<code class={code}>~/.claude/skills</code>, <code class={code}>~/.codex/skills</code>, <code class={code}>~/.gemini/skills</code>, <code class={code}>~/.agents/skills</code>) and asks which when there are several.
-        Options: <code class={code}>--agent claude|codex|gemini|agents|all</code>, <code class={code}>--dir &lt;skills folder&gt;</code> for any other agent,{" "}
-        <code class={code}>--project</code> (into the current project), <code class={code}>--version 2.1.0</code>, <code class={code}>--yes</code>, <code class={code}>--uninstall</code>;
+        (<code class={code}>~/.claude/skills</code>, <code class={code}>~/.codex/skills</code>, <code class={code}>~/.gemini/skills</code>, <code class={code}>~/.copilot/skills</code>, <code class={code}>~/.agents/skills</code>) and asks which when there are several.
+        Options: <code class={code}>--agent claude|codex|gemini|copilot|agents|all</code>, <code class={code}>--dir &lt;skills folder&gt;</code> for any other agent,{" "}
+        <code class={code}>--project</code> (into the current project), <code class={code}>--version 0.5.1</code>, <code class={code}>--yes</code>, <code class={code}>--uninstall</code>;
         pass them with <code class={code}>sh -s --</code> (PowerShell: <code class={code}>-Agent</code>, <code class={code}>-Version</code> …). Run it again to update.
         It only copies files. Read the <a class={link} href="/install.sh">shell</a> or <a class={link} href="/install.ps1">PowerShell</a> script.
         Agents without skill support can follow <code class={code}>blueprint-deck/SKILL.md</code> as instructions: tell them to read it first.</p>

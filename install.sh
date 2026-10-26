@@ -3,15 +3,16 @@
 #
 #   curl -fsSL https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.sh | sh
 #   … | sh -s -- --agent codex
-#   … | sh -s -- --version 2.1.0      (a specific release; the list: https://github.com/lukasvecerka23/blueprint-deck-kit/releases)
+#   … | sh -s -- --version 0.5.1      (a specific release; the list: https://github.com/lukasvecerka23/blueprint-deck-kit/releases)
 #   (the website's short URL https://blueprintdeck.dev/install.sh serves this same script)
 #   ./install.sh                      (from a clone of the repository: installs that copy)
 #
 # Options:
-#   --agent claude|codex|gemini|agents|all   where to install (default: the agents found on this computer; with more
+#   --agent claude|codex|gemini|copilot|agents|all   where to install (default: the agents found on this computer; with more
 #                                     than one it asks which, Enter = all)
 #   --dir <path>                      install into this skills folder instead
-#   --project                         install into the current project (./.claude/skills, ./.codex/skills, …)
+#   --project                         install into the current project (./.claude/skills, ./.codex/skills, …;
+#                                     Copilot: ./.github/skills)
 #   --version <x.y.z>                 install that release (default: the latest published release)
 #   --ref <branch or tag>             install the skill as it is on a branch or tag (e.g. main: unreleased work)
 #   --uninstall                       remove the skill again
@@ -51,6 +52,8 @@ base() { if [ "$PROJECT" = 1 ]; then printf '%s' "$PWD"; else printf '%s' "$HOME
 # where to install
 TARGETS=""
 add() { TARGETS="$TARGETS $1"; }
+# an agent's skills folder; GitHub Copilot uses ~/.copilot/skills, but .github/skills inside a project
+dir_of() { if [ "$1" = copilot ] && [ "$PROJECT" = 1 ]; then printf '%s' "$B/.github/skills"; else printf '%s' "$B/.$1/skills"; fi; }
 if [ -n "$DIR" ]; then
   add "$DIR"
 else
@@ -59,17 +62,19 @@ else
     claude) add "$B/.claude/skills" ;;
     codex) add "$B/.codex/skills" ;;
     gemini) add "$B/.gemini/skills" ;;
+    copilot) add "$(dir_of copilot)" ;;
     agents) add "$B/.agents/skills" ;;
-    all) add "$B/.claude/skills"; add "$B/.codex/skills"; add "$B/.gemini/skills"; add "$B/.agents/skills" ;;
+    all) add "$B/.claude/skills"; add "$B/.codex/skills"; add "$B/.gemini/skills"; add "$(dir_of copilot)"; add "$B/.agents/skills" ;;
     "")
       # every agent found on this computer
       FOUND=""
       { [ -d "$B/.claude" ] || command -v claude >/dev/null 2>&1; } && FOUND="$FOUND claude"
       { [ -d "$B/.codex" ] || command -v codex >/dev/null 2>&1; } && FOUND="$FOUND codex"
       { [ -d "$B/.gemini" ] || command -v gemini >/dev/null 2>&1; } && FOUND="$FOUND gemini"
+      { [ -d "$HOME/.copilot" ] || command -v copilot >/dev/null 2>&1; } && FOUND="$FOUND copilot"
       [ -d "$B/.agents" ] && FOUND="$FOUND agents"
       [ -z "$FOUND" ] && FOUND="agents"
-      label() { case "$1" in claude) printf 'Claude Code' ;; codex) printf 'Codex' ;; gemini) printf 'Gemini CLI' ;; agents) printf 'other agents (~/.agents)' ;; esac; }
+      label() { case "$1" in claude) printf 'Claude Code' ;; codex) printf 'Codex' ;; gemini) printf 'Gemini CLI' ;; copilot) printf 'GitHub Copilot' ;; agents) printf 'other agents (~/.agents)' ;; esac; }
       set -- $FOUND
       # more than one: ask which (Enter = all). Only with a terminal; never in CI, with --yes or when uninstalling.
       # The answer is read from /dev/tty, so this also works with curl … | sh.
@@ -91,9 +96,9 @@ else
             else say "unknown choice '$CHOICE'" >&2; exit 2; fi ;;
         esac
       fi
-      for a in "$@"; do add "$B/.$a/skills"; done
+      for a in "$@"; do add "$(dir_of "$a")"; done
       ;;
-    *) say "unknown agent '$AGENT' (claude, codex, gemini, agents or all)" >&2; exit 2 ;;
+    *) say "unknown agent '$AGENT' (claude, codex, gemini, copilot, agents or all)" >&2; exit 2 ;;
   esac
 fi
 
@@ -132,7 +137,7 @@ fi
 
 NEW="$(cat "$SRC/VERSION.txt" 2>/dev/null || cat "$SRC/VERSION" 2>/dev/null || echo "?")"
 for t in $TARGETS; do
-  OLD="$(cat "$t/$NAME/VERSION.txt" 2>/dev/null || cat "$t/$NAME/VERSION" 2>/dev/null || true)"   # VERSION before 2.3.0
+  OLD="$(cat "$t/$NAME/VERSION.txt" 2>/dev/null || cat "$t/$NAME/VERSION" 2>/dev/null || true)"   # VERSION before 0.4.0
   mkdir -p "$t"
   rm -rf "${t:?}/$NAME"
   cp -R "$SRC" "$t/$NAME"

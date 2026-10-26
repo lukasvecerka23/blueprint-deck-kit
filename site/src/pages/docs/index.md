@@ -4,7 +4,7 @@ title: Getting started
 description: Install the skill, describe your diagram, let your agent write it, then present, edit and share the file.
 ---
 
-Blueprint Deck Kit is an **agent skill**. You install it once; afterwards your coding agent (Claude Code, Codex or any
+Blueprint Deck Kit is an **agent skill**. You install it once; afterwards your coding agent (Claude Code, Codex, GitHub Copilot or any
 agent that supports Agent Skills) can turn your docs or code (a codebase, a folder of Markdown, text or PDF files, wiki exports or web pages) into a **Blueprint Deck**: one self-contained HTML file
 with a pan-and-zoom map, clickable boxes with side panels, tabs, personas with their paths, a guided tour, roadmap and
 option sheets, a built-in editor and a PDF export.
@@ -35,6 +35,12 @@ Install it where you work:
   gemini skills install https://github.com/lukasvecerka23/blueprint-deck-kit --path plugins/blueprint-deck/skills/blueprint-deck
   ```
 
+- **GitHub Copilot**: the Copilot CLI as a plugin (Copilot in VS Code: `gh skill install`, see [Agents](/docs/agents/#github-copilot)):
+
+  ```text
+  copilot plugin marketplace add lukasvecerka23/blueprint-deck-kit && copilot plugin install blueprint-deck@blueprint-deck-kit
+  ```
+
 - **Chat apps**: upload [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip) as a skill in Claude or ChatGPT on the web,
   [blueprint-deck-skill-gemini.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill-gemini.zip) in Gemini; the ChatGPT desktop app takes the Codex plugin
   ([how, per app](/docs/agents/#chat-apps-claude-chatgpt-gemini)).
@@ -56,12 +62,12 @@ irm https://blueprintdeck.dev/install.ps1 | iex
 
 The installer downloads the latest [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) from GitHub
 and copies the `blueprint-deck` skill folder into the skills folder of the agents it finds (`~/.claude/skills`,
-`~/.codex/skills`, `~/.gemini/skills`, `~/.agents/skills`). When it finds more than one, it asks which (press Enter for all of them).
+`~/.codex/skills`, `~/.gemini/skills`, `~/.copilot/skills`, `~/.agents/skills`). When it finds more than one, it asks which (press Enter for all of them).
 It installs nothing else. Run it again to update.
 
 | option (sh) | option (PowerShell) | what it does |
 |---|---|---|
-| `--agent claude\|codex\|gemini\|agents\|all` | `-Agent …` | install for one agent only (or all) |
+| `--agent claude\|codex\|gemini\|copilot\|agents\|all` | `-Agent …` | install for one agent only (or all) |
 | `--project` | `-Project` | install into the current project (`./.claude/skills`, …) |
 | `--dir <path>` | `-Dir <path>` | install into any skills folder |
 | `--version <x.y.z>` | `-Version <x.y.z>` | a specific release (default: the latest) |

@@ -2,16 +2,16 @@
 #
 #   irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex
 #   $installer = irm "https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1"
-#   & ([scriptblock]::Create($installer)) -Version 2.1.0
+#   & ([scriptblock]::Create($installer)) -Version 0.5.1
 #   (the website's short URL https://blueprintdeck.dev/install.ps1 serves this same script)
 #   .\install.ps1                     (from a clone of the repository: installs that copy)
 #
-# Parameters: -Agent claude|codex|gemini|agents|all (default: the agents found; with more than one it asks which, Enter = all),
+# Parameters: -Agent claude|codex|gemini|copilot|agents|all (default: the agents found; with more than one it asks which, Enter = all),
 #             -Dir <skills folder>, -Project, -Version <x.y.z> (a specific release),
 #             -Ref <branch or tag> (the skill as it is on a branch, e.g. main), -Uninstall, -Yes (don't ask, all found)
 # It only copies files: no Node, no Python, nothing else is installed.
 param(
-  [ValidateSet("", "claude", "codex", "gemini", "agents", "all")][string]$Agent = "",
+  [ValidateSet("", "claude", "codex", "gemini", "copilot", "agents", "all")][string]$Agent = "",
   [string]$Dir = "",
   [switch]$Project,
   [string]$Ref = $(if ($env:BLUEPRINT_DECK_REF) { $env:BLUEPRINT_DECK_REF } else { "" }),
@@ -25,6 +25,9 @@ $GitHub = "https://github.com/$Repo"
 $Name = "blueprint-deck"
 $Base = if ($Project) { (Get-Location).Path } else { $HOME }
 
+# an agent's skills folder; GitHub Copilot uses ~\.copilot\skills, but .github\skills inside a project
+function Get-SkillsDir($id) { if ($id -eq "copilot" -and $Project) { Join-Path $Base ".github\skills" } else { Join-Path $Base ".$id\skills" } }
+
 $targets = @()
 if ($Dir) { $targets += $Dir }
 else {
@@ -32,14 +35,16 @@ else {
     "claude" { $targets += Join-Path $Base ".claude\skills" }
     "codex"  { $targets += Join-Path $Base ".codex\skills" }
     "gemini" { $targets += Join-Path $Base ".gemini\skills" }
+    "copilot" { $targets += Get-SkillsDir "copilot" }
     "agents" { $targets += Join-Path $Base ".agents\skills" }
-    "all"    { $targets += @((Join-Path $Base ".claude\skills"), (Join-Path $Base ".codex\skills"), (Join-Path $Base ".gemini\skills"), (Join-Path $Base ".agents\skills")) }
+    "all"    { $targets += @((Join-Path $Base ".claude\skills"), (Join-Path $Base ".codex\skills"), (Join-Path $Base ".gemini\skills"), (Get-SkillsDir "copilot"), (Join-Path $Base ".agents\skills")) }
     default {
       # every agent found on this computer
       $found = @()
       if ((Test-Path (Join-Path $Base ".claude")) -or (Get-Command claude -ErrorAction SilentlyContinue)) { $found += @{ Id = "claude"; Label = "Claude Code" } }
       if ((Test-Path (Join-Path $Base ".codex")) -or (Get-Command codex -ErrorAction SilentlyContinue)) { $found += @{ Id = "codex"; Label = "Codex" } }
       if ((Test-Path (Join-Path $Base ".gemini")) -or (Get-Command gemini -ErrorAction SilentlyContinue)) { $found += @{ Id = "gemini"; Label = "Gemini CLI" } }
+      if ((Test-Path (Join-Path $HOME ".copilot")) -or (Get-Command copilot -ErrorAction SilentlyContinue)) { $found += @{ Id = "copilot"; Label = "GitHub Copilot" } }
       if (Test-Path (Join-Path $Base ".agents")) { $found += @{ Id = "agents"; Label = "other agents (~\.agents)" } }
       if ($found.Count -eq 0) { $found += @{ Id = "agents"; Label = "other agents (~\.agents)" } }
       # more than one: ask which (Enter = all). Only in an interactive console; never in CI, with -Yes or when uninstalling.
@@ -54,7 +59,7 @@ else {
           $found = @($found[$n - 2])
         }
       }
-      foreach ($f in $found) { $targets += Join-Path $Base (".$($f.Id)\skills") }
+      foreach ($f in $found) { $targets += Get-SkillsDir $f.Id }
     }
   }
 }
@@ -90,7 +95,7 @@ if ($here -and (Test-Path (Join-Path $here "plugins\$Name\skills\$Name\SKILL.md"
 }
 
 try {
-  # VERSION.txt since 2.3.0, VERSION before
+  # VERSION.txt since 0.4.0, VERSION before
   $readVersion = { param($dir) foreach ($f in "VERSION.txt", "VERSION") { $p = Join-Path $dir $f; if (Test-Path $p) { return (Get-Content $p -Raw).Trim() } }; return "" }
   $new = & $readVersion $src; if (-not $new) { $new = "?" }
   $updated = $false

@@ -49,23 +49,28 @@ file in the browser (press E); those edits are in the data block, so always re-r
 
 ## Before you start: versions (a few seconds, skip it if there's no network)
 
-1. Read `SKILL_DIR/VERSION.txt` (e.g. `2.1.0`; older installs: `SKILL_DIR/VERSION`). Fetch
+1. Read `SKILL_DIR/VERSION.txt` (e.g. `0.6.0`; older installs: `SKILL_DIR/VERSION`). Fetch
    `https://api.github.com/repos/lukasvecerka23/blueprint-deck-kit/releases/latest` (a plain GET of a public URL; no
-   credentials, nothing sent) and read `tag_name` (e.g. `v2.2.0`). If it's newer, tell the user in one line, then carry on:
+   credentials, nothing sent) and read `tag_name` (e.g. `v0.7.0`). If it's newer, tell the user in one line, then carry on:
    "Blueprint Deck Kit X is available (you have Y); what's new: https://github.com/lukasvecerka23/blueprint-deck-kit/releases.
    To update: …", with the way that matches where the skill is installed:
    - `SKILL_DIR` inside `~/.claude/plugins/` (Claude Code plugin): run
      `claude plugin update blueprint-deck@blueprint-deck-kit`, or turn on auto-update under /plugin → Marketplaces
    - `SKILL_DIR` inside `~/.codex/plugins/` (Codex or ChatGPT desktop plugin): run `codex plugin marketplace upgrade`,
      or update it in the Plugins Directory
+   - `SKILL_DIR` inside `~/.copilot/installed-plugins/` (GitHub Copilot CLI plugin): run
+     `copilot plugin update blueprint-deck`
+   - `SKILL.md` has `github-repo` in its frontmatter `metadata` (installed with `gh skill install`): run
+     `gh skill update blueprint-deck`
    - a chat app (claude.ai, Claude Desktop, ChatGPT on the web, Gemini; no project folder): delete the skill and upload the newer
      zip from the releases page (`blueprint-deck-skill-gemini.zip` in Gemini)
-   - anywhere else (Claude Code, Codex or Gemini CLI skills folder, other agents): run the install script again, as
+   - anywhere else (Claude Code, Codex, Gemini CLI or Copilot skills folder, other agents): run the install script again, as
      described at https://blueprintdeck.dev/docs/agents/#updating
    Never stop or install anything yourself because of this.
 2. When you work on an existing diagram, read its engine version from the top of the file
-   (`<meta name="generator" content="Blueprint Deck Kit X">`). If it's older than the skill's version, mention once
-   that the file can get the newer engine (mode `upgrade`), and do it only when the user agrees.
+   (`<meta name="generator" content="Blueprint Deck Kit X">`). If it's older than the skill's version (a 2.x version
+   counts as older: the early releases were renumbered to 0.x), mention once that the file can get the newer engine
+   (mode `upgrade`), and do it only when the user agrees.
 
 ## 0. Find the config
 
@@ -222,4 +227,5 @@ order stable. List what changed.
 - Never edit below the `BD-ENGINE` line or write diagram-specific HTML/JS. If the engine can't express something, say
   so and propose the closest option in the spec.
 - Never invent numbers, customers, dates, statuses or personas.
-- Never publish the file anywhere; it is a local file the user shares.
+- Never publish the file anywhere on your own; it is a local file the user shares. The one exception is the Claude
+  artifact above, and only after the user says yes.
