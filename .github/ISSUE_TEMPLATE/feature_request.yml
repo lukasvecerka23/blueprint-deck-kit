@@ -1,0 +1,36 @@
+name: Feature request
+description: A diagram type, an option or a workflow that's missing
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: What do you want to show or do?
+      description: The situation, not the solution yet. Who is the deck for and what should they get from it?
+    validations:
+      required: true
+  - type: textarea
+    id: today
+    attributes:
+      label: Why can't you do it today?
+      description: What did you try (config options, the editor, asking the agent)?
+    validations:
+      required: true
+  - type: textarea
+    id: good
+    attributes:
+      label: What would good look like?
+      description: A sketch, a screenshot of something similar or an example deck helps a lot.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part would it change?
+      multiple: true
+      options:
+        - The deck (what viewers see)
+        - The editor
+        - PDF export
+        - The configurator
+        - The skill (how the agent reads and writes)
+        - Installing, other agents or apps
+        - Not sure

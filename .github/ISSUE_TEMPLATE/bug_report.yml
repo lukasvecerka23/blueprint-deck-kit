@@ -1,0 +1,84 @@
+name: Bug report
+description: Something in a deck, the editor, the PDF export, the configurator, the installer or the website doesn't work
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. If the agent *made a poor deck* (wrong boxes, made-up facts, missing parts), use
+        **Deck quality** instead. Security problems: report them privately (see the links on the previous page).
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where is the problem?
+      options:
+        - A deck in the browser (map, panels, tabs, tour, personas)
+        - The editor (E)
+        - PDF export (P)
+        - Saving or sharing a deck (save into the file, read-only copy, artifact)
+        - The configurator
+        - Installing or updating the skill
+        - The website or the docs
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Include the exact error message if there is one. A screenshot helps.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to reproduce
+      description: Steps, or a deep link such as `index.html#tour=4`. If you can, attach the deck or its data block (remove anything confidential first).
+      placeholder: |
+        1. Open the deck
+        2. Press E, then …
+        3. …
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Blueprint Deck Kit version
+      description: In a deck, press E → Diagram → This file, or look for `<meta name="generator">` at the top of the HTML. For the skill, `VERSION.txt` in its folder.
+      placeholder: "0.6.0"
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and operating system
+      placeholder: Chrome 141 on macOS 26, Safari on iOS, Teams preview …
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Agent, if it's about installing or generating
+      options:
+        - Not about an agent
+        - Claude Code
+        - Claude (web or desktop app)
+        - Codex
+        - ChatGPT
+        - Gemini CLI
+        - Gemini app
+        - GitHub Copilot
+        - Other
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you send
+      options:
+        - label: I searched the existing issues and this isn't one of them.
+          required: true
+        - label: Anything I attached contains nothing confidential.
+          required: true

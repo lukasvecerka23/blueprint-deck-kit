@@ -1,0 +1,72 @@
+name: Deck quality
+description: The skill ran, but the deck it made is wrong or weak (missing parts, made-up facts, poor structure or layout)
+labels: ["skill"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        These reports make the skill better for everyone. The most useful thing you can attach is the config
+        (`diagram.config.yaml`) and the **extraction report** the agent wrote next to the deck.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What's wrong?
+      multiple: true
+      options:
+        - Something important is missing
+        - Something is wrong or made up (not in the sources)
+        - Wrong structure (areas, grouping, what's a box)
+        - Too technical or not technical enough for the audience
+        - Layout (overlaps, crossing lines, cramped or empty areas)
+        - Tour, tabs or personas don't tell the story
+        - It ignored part of my config
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: Describe it
+      description: What did the deck say or show, and what should it have been? Name the boxes, tour steps or tabs.
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: What did the agent read?
+      description: A public repository, a folder of Markdown, PDFs, web pages … A link if they're public.
+    validations:
+      required: true
+  - type: textarea
+    id: files
+    attributes:
+      label: Config, extraction report, deck
+      description: Drag the files in or paste them (remove anything confidential first).
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Agent
+      options:
+        - Claude Code
+        - Claude (web or desktop app)
+        - Codex
+        - ChatGPT
+        - Gemini CLI
+        - Gemini app
+        - GitHub Copilot
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Model, if you know it
+      placeholder: as your agent shows it
+  - type: input
+    id: version
+    attributes:
+      label: Blueprint Deck Kit version
+      description: "`VERSION.txt` in the skill folder, or `<meta name=\"generator\">` in the deck."
+      placeholder: "0.6.0"
+    validations:
+      required: true
