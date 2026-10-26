@@ -56,7 +56,8 @@ SVG markup: every file blocks network requests (Content Security Policy). Coordi
   (`settings.panel.tech`) and how the content is written (style guide). Product = what it does for whom;
   technical = components, protocols, technology choices and exit paths.
 - `logo`: `icon:<name>`, an inline `<svg …>`, a `data:` URI (PNG/SVG/JPG, stored in the file), or 1–3 letters.
-- `url`: clicking the logo opens it (company or product website).
+- `url`: the company or product website, kept as information only: the deck doesn't link it (links belong in a
+  box's `sources`).
 
 ## hero
 
@@ -279,7 +280,7 @@ The roadmap button starts a tour through the phases (`buttonOpens: "overlay"` op
 
 ```jsonc
 {
-  "meta":  { "title": "Acme Commerce", "logo": "icon:shopping-cart", "url": "https://acme.example" },  // shared: title of the collection, logo, link
+  "meta":  { "title": "Acme Commerce", "logo": "icon:shopping-cart", "url": "https://acme.example" },  // shared: title of the collection, logo, website
   "theme": { "preset": "midnight" },                              // shared by all diagrams
   "settings": { "legend": "collapsed" },                           // shared defaults; a diagram's own settings win
   "hero": "first",                                                 // first | all | none: which diagrams show their start screen

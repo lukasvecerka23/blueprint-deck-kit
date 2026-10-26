@@ -283,8 +283,7 @@ const BDEditor = (() => {
       section("Branding" + (multi ? " <small>(all diagrams)</small>" : ""), `
         <div class="fld"><label>Logo</label><div class="logof"><span class="lg">${logoPreview()}</span>
           <button type="button" class="mini" id="lgUp">Upload image…</button><button type="button" class="mini" id="lgIcon">Use an icon…</button>${getPath(brandObj(), "meta.logo") ? `<button type="button" class="mini" id="lgClr">Remove</button>` : ""}</div>
-          <small>PNG, SVG or JPG. It is stored inside the file.</small></div>` +
-        grp("brand", fields([["meta.url", "Link (opens when the logo is clicked)", "text", { ph: "https://…" }]], brandObj, "brand"))) +
+          <small>PNG, SVG or JPG. It is stored inside the file.</small></div>`) +
       section("Content", grp("own2", fields([
         ["meta.type", "Diagram type", "select", { options: Object.keys(BDCore.TYPE_LABELS).map(k => [k, k]), def: "architecture" }],
         ["meta.viewpoint", "Viewpoint", "seg", { options: [["product", "Product"], ["mixed", "Mixed"], ["technical", "Technical"]], def: "mixed", hint: "Product: what it does for whom. Technical: components and technology." }],
@@ -302,7 +301,6 @@ const BDEditor = (() => {
       section("Areas", `<button type="button" class="mini" id="addZone">+ Add an area</button><small>Click an area's title on the map to edit it.</small>`) +
       section("This file", `<p class="ed-note">Blueprint Deck Kit engine <b>${escA(BDCore.VERSION)}</b>. For a newer engine, update the skill (run the install command again) and ask your agent to upgrade this file; your content stays as it is. <a href="https://github.com/lukasvecerka23/blueprint-deck-kit/releases" target="_blank" rel="noopener">What's new</a></p>`));
     wire(p.querySelector("[data-g=theme]"), th, "theme");
-    wire(p.querySelector("[data-g=brand]"), brandObj, "brand");
     ["own", "own2", "own3", "own4"].forEach(g => wire(p.querySelector(`[data-g=${g}]`), own, g));
     // legend "false" is the boolean false
     const lg = p.querySelector('[data-path="settings.legend"]');

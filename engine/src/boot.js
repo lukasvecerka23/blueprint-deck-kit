@@ -1,4 +1,4 @@
-/* Blueprint Deck shell: reads the diagram data from this file, restores unsaved edits, mounts the diagram (or the
+/* Blueprint Deck loader: reads the diagram data from this file, restores unsaved edits, mounts the diagram (or the
    switcher for several), and saves: into the file itself (Chrome, Edge), in this browser, or as a downloaded copy. */
 const BD = (() => {
   // the page as it was loaded, used as the template when saving (taken before anything is rendered)

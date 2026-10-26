@@ -108,7 +108,6 @@ function createDiagram(SPEC, host = {}, opts = {}) {
   else {
     const lg = logoOf();
     brand.innerHTML = `<div class="logo${lg.img ? " img" : ""}">${lg.html}</div><div class="txt"><div class="bt">${META.title}</div>${META.subtitle ? `<div class="bs">${META.subtitle}</div>` : ""}</div>`;
-    if (META.url) { brand.style.cursor = "pointer"; brand.title = META.url; brand.onclick = () => window.open(META.url, "_blank", "noopener"); }
   }
 
   /* frame around the "inside" zones */

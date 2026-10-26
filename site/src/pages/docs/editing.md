@@ -14,8 +14,7 @@ Open the file and press <kbd class="kbd">E</kbd> (or use the ⋯ menu → *Edit 
 - **edit texts:** click a box or an area to change its title, subtitle and panel texts (what it is, why, sources);
 - **move boxes:** drag them on the map;
 - **change the look:** theme (midnight, blueprint, graphite, forest, ember, light, paper), main and second colour, shape
-  (rounded, square, pill), the logo (upload a PNG/SVG/JPG or pick an icon; it is stored inside the file) and the link
-  the logo opens;
+  (rounded, square, pill), the logo (upload a PNG/SVG/JPG or pick an icon; it is stored inside the file);
 - **edit the story:** tabs, tour steps and personas, the start screen (eyebrow, headline, lead, footnote);
 - **tune behaviour:** legend, connections in the overview, moving dots, where the tour card sits;
 - **check it:** the *Check* tab runs the same checks as the agent (text that doesn't fit, overlaps, highlighted
