@@ -6,9 +6,15 @@ the install command again; to give an existing diagram the new engine, ask your 
 `node tools/insert.mjs --upgrade <file>`). All releases and their files:
 https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
+Where a release has both, **Skill and decks** is what you get by updating the skill (and upgrading a deck);
+**Website and project** is already live on blueprintdeck.dev and GitHub, with nothing to update.
+
 ## 0.6.0 (2026-10-26)
 
-- **Beta.** Blueprint Deck Kit is in beta until 1.0.0, the first stable release.
+Blueprint Deck Kit is in beta until 1.0.0, the first stable release.
+
+**Skill and decks**
+
 - **GitHub Copilot:** the Copilot CLI installs the plugin from this repository's marketplace
   (`copilot plugin marketplace add lukasvecerka23/blueprint-deck-kit && copilot plugin install blueprint-deck@blueprint-deck-kit`);
   Copilot in VS Code and Visual Studio gets the skill with `gh skill install lukasvecerka23/blueprint-deck-kit blueprint-deck --agent github-copilot --scope user`.
@@ -16,11 +22,15 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
   Copilot on its own. The skill's update hint knows both ways.
 - **The logo no longer opens a link.** Clicking the logo box in the top-left corner did open `meta.url`; links now
   live only in a box's sources in the side panel. `meta.url` stays in the data as the product's website.
+
+**Website and project**
+
 - **Light by default:** the website and the configurator start in light mode (the toggle remembers dark). The
   configurator uses the website's colours and logo.
+- **Landing page:** the one-minute video is at the top; it loops while it's on screen, with controls to pause and
+  seek. The kit's own deck, regenerated with this version, is the live example, and the examples come before the
+  install section.
 - **Issue forms** on GitHub: bug report, feature request and a new *Deck quality* form for decks the agent got wrong.
-- The kit's own example deck is regenerated with this version and is the live demo on the landing page; the video
-  moved to the top of the page.
 
 ## 0.5.1 (2026-10-25)
 
@@ -63,6 +73,8 @@ Ready for the Claude plugin directory.
 
 Install it from inside the agent or app you already use.
 
+**Skill and decks**
+
 - **Claude Code plugin.** `/plugin install blueprint-deck --marketplace lukasvecerka23/blueprint-deck-kit`, then
   `/blueprint-deck`. The repository is its own plugin marketplace; updates come through Claude Code.
 - **Codex plugin**, also in the ChatGPT desktop app:
@@ -81,17 +93,25 @@ Install it from inside the agent or app you already use.
   quoted, because the Gemini app refuses files without an extension and parses YAML strictly. The installers read the
   old `VERSION` of earlier installs.
 - The skill's "newer version" notice names the right way to update for each kind of install.
+
+**Website and project**
+
 - New example: `meetbuddy`, a macOS meeting recorder read from its code, with a product and a technical diagram.
 
 ## 0.3.0 (2026-10-24)
 
+**Skill and decks**
+
 - **Diagrams from code.** The style guide has a "From code" section: services, contracts, clients and deployment
   files become the map, every connection needs evidence in the code, docs and code conflicts are reported. The
   configurator has a "What to read" choice (docs, code, both) that fills in the source lists.
-- New example: `online-boutique`, Google's microservices demo built from its code alone.
 - **Short, clickable sources.** A source URL shows as its path in the repo (`src/frontend/main.go#L80-L120`) or as
   `host/…/page.html`, linked to the full URL; local paths stay as they are. Side panels, sheets and the tour card
   never scroll sideways: long text wraps.
+
+**Website and project**
+
+- New example: `online-boutique`, Google's microservices demo built from its code alone.
 
 ## 0.2.0 (2026-10-24)
 
