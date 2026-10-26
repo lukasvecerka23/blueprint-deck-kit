@@ -25,7 +25,7 @@ const code = "font-mono text-xs";
 const link = "underline underline-offset-4 hover:text-foreground";
 ---
 <div class:list={["tabs w-full", hero ? "gap-3" : "gap-4"]} id={`${id}-tabs`}>
-  <nav role="tablist" aria-orientation="horizontal" class:list={["max-w-full overflow-x-auto justify-start", hero && "mx-auto"]}>
+  <nav role="tablist" aria-orientation="horizontal" class:list={["h-auto max-w-full", hero ? "mx-auto flex-wrap justify-center" : "grid w-full grid-cols-2 sm:grid-cols-4"]}>
     {tabs.map((t, i) => (
       <button type="button" role="tab" id={`${id}-tab-${t.id}`} aria-controls={`${id}-panel-${t.id}`}
         aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} class="gap-1.5">
