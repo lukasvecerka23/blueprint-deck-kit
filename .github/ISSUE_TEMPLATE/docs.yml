@@ -1,7 +1,7 @@
 name: Docs or website
 description: Something in the docs, the README or on blueprintdeck.dev is wrong, missing or unclear
 title: "docs(): "
-labels: ["documentation"]
+labels: ["docs"]
 body:
   - type: markdown
     attributes:

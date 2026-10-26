@@ -1,6 +1,6 @@
 name: Deck quality
 description: The skill ran, but the deck it made is wrong or weak (missing parts, made-up facts, poor structure or layout)
-labels: ["skill"]
+labels: ["quality"]
 title: "quality(): "
 body:
   - type: markdown

@@ -90,12 +90,14 @@ title for you. Titles follow the same pattern as our commits:
 type(area): what's wrong or wanted
 ```
 
-| type | for | label |
-|---|---|---|
-| `bug` | something is broken | bug |
-| `feat` | something new: a diagram type, an option, a workflow | enhancement |
-| `quality` | the skill ran, but the deck it made is wrong or weak | skill |
-| `docs` | the docs, the README or the website text | documentation |
+| type (and label) | for |
+|---|---|
+| `bug` | something is broken |
+| `feat` | something new: a diagram type, an option, a workflow |
+| `quality` | the skill ran, but the deck it made is wrong or weak |
+| `docs` | the docs, the README or the website text |
+
+The form adds the label with the same name as the type.
 
 **Area**, one of: `deck` (what viewers see), `editor`, `pdf`, `configurator`, `skill`, `install`, `site` (the
 website), `docs`, `examples`.

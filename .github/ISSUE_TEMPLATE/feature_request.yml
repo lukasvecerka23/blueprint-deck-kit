@@ -1,6 +1,6 @@
 name: Feature request
 description: A diagram type, an option or a workflow that's missing
-labels: ["enhancement"]
+labels: ["feat"]
 title: "feat(): "
 body:
   - type: markdown
