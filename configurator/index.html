@@ -9,12 +9,11 @@
 <!-- Basecoat UI (MIT, https://basecoatui.com), vendored so the page works offline from file:// -->
 <link rel="stylesheet" href="vendor/basecoat/basecoat.cdn.min.css">
 <script>
-  // Set light/dark before the first paint: the saved choice, else the system setting.
+  // Set light/dark before the first paint: light, unless the user switched to dark with the toggle.
   (function () {
     var saved = null;
     try { saved = localStorage.getItem("blueprint-deck-configurator-scheme"); } catch (e) {}
-    var dark = saved ? saved === "dark" : !!(window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
-    document.documentElement.classList.toggle("dark", dark);
+    document.documentElement.classList.toggle("dark", saved === "dark");
   })();
 </script>
 <script src="vendor/basecoat/basecoat.min.js" defer></script>
@@ -22,7 +21,18 @@
 <script src="vendor/basecoat/toast.min.js" defer></script>
 <style>
   /* Layout and a few app-specific pieces. Colours come from Basecoat's tokens (--background, --muted-foreground …). */
-  :root { --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  :root { --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  /* The website's palette (site/src/styles/palette-classic.css): main buttons and focus rings in the brand blue. */
+  :root {
+    --primary: oklch(0.623 0.188 259.8);
+    --primary-foreground: oklch(0.99 0 0);
+    --ring: oklch(0.623 0.188 259.8 / 0.5);
+  }
+  .dark {
+    --primary: oklch(0.623 0.188 259.8);
+    --primary-foreground: oklch(0.99 0 0);
+    --ring: oklch(0.7 0.16 258 / 0.5);
+  }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
   a { color: inherit; }
@@ -33,7 +43,7 @@
   .topbar { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(10px); background: color-mix(in oklab, var(--background) 85%, transparent); border-bottom: 1px solid var(--border); }
   .topbar-in { max-width: 1560px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; gap: 8px; }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; margin-right: auto; }
-  .brand-mark { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: var(--primary); color: var(--primary-foreground); }
+  .brand-mark { width: 28px; height: 28px; display: block; flex: none; }
   .brand small { font-weight: 400; color: var(--muted-foreground); }
   .topbar .btn { white-space: nowrap; }
   @media (max-width: 640px) { .brand small, .hide-sm { display: none; } .topbar-in { padding: 10px 14px; } }
@@ -167,7 +177,7 @@
 <header class="topbar">
   <div class="topbar-in">
     <div class="brand">
-      <span class="brand-mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="8.5" y="14" width="7" height="7" rx="1.5"/><path d="M6.5 10v2h11v-2M12 12v2"/></svg></span>
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bd-mark-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#6d28d9"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="url(#bd-mark-g)"/><rect x="10" y="6" width="16" height="12.5" rx="2.6" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.5"/><rect x="6" y="10.5" width="18" height="15" rx="3" fill="#fff"/><path d="M10.6 16.2h8.6M10.6 16.2l4.3 5.2M19.2 16.2l-4.3 5.2" stroke="#4f46e5" stroke-width="1.4" stroke-linecap="round" fill="none"/><circle cx="10.6" cy="16.2" r="2" fill="#2563eb"/><circle cx="19.2" cy="16.2" r="2" fill="#2563eb"/><circle cx="14.9" cy="21.4" r="2" fill="#7c3aed"/></svg>
       <span>Blueprint Deck <small>configurator</small></span>
     </div>
     <button type="button" class="btn" data-variant="ghost" data-size="sm" id="btnImport" title="Paste a diagram.config.yaml to continue editing it">
@@ -183,7 +193,7 @@
 <div class="app">
   <div class="intro">
     <h1>Configure your Blueprint Deck</h1>
-    <p>Describe the interactive diagram you want: one offline HTML file with a pan-and-zoom map, clickable boxes, tabs, personas, a guided tour and a built-in editor. This form writes the <code>diagram.config.yaml</code> and the prompt for your coding agent (Claude Code, Codex or any other agent with the skill installed). The defaults are sensible; change what matters to you. Your answers stay in this browser.</p>
+    <p>Describe the interactive diagram you want: one offline HTML file with a pan-and-zoom map, clickable boxes, tabs, personas, a guided tour and a built-in editor. This form writes the <code>diagram.config.yaml</code> and the prompt for your coding agent (Claude Code, Codex, GitHub Copilot or any other agent with the skill installed). The defaults are sensible; change what matters to you. Your answers stay in this browser.</p>
   </div>
 
   <main class="form" id="form" aria-label="Configuration form"></main>
@@ -1275,11 +1285,6 @@ function init() {
     toast("Reset to defaults", "", "info");
   });
   document.getElementById("btnScheme").addEventListener("click", () => setScheme(!document.documentElement.classList.contains("dark"), true));
-  if (window.matchMedia) {
-    const mq = matchMedia("(prefers-color-scheme: dark)");
-    const follow = e => { let saved = null; try { saved = localStorage.getItem(SCHEME_KEY); } catch (x) { /* ignore */ } if (!saved) setScheme(e.matches, false); };
-    if (mq.addEventListener) mq.addEventListener("change", follow);
-  }
 
   document.getElementById("btnImport").addEventListener("click", openImport);
   document.getElementById("importCancel").addEventListener("click", closeImport);

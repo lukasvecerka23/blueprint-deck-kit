@@ -22,8 +22,7 @@ const ogImage = new URL(image, Astro.site);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="author" content={SITE.author} />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={fullTitle} />
@@ -62,16 +61,10 @@ const ogImage = new URL(image, Astro.site);
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("reveal");
     </script>
     <script is:inline>
-      // theme before first paint: the saved choice, else the system setting
+      // theme before first paint: light, unless the visitor switched to dark with the toggle
       (() => {
-        const root = document.documentElement;
         const saved = (() => { try { return localStorage.getItem("themeMode"); } catch { return null; } })();
-        const mq = matchMedia("(prefers-color-scheme: dark)");
-        root.classList.toggle("dark", saved ? saved === "dark" : mq.matches);
-        mq.addEventListener("change", e => {
-          try { if (localStorage.getItem("themeMode")) return; } catch {}
-          root.classList.toggle("dark", e.matches);
-        });
+        document.documentElement.classList.toggle("dark", saved === "dark");
       })();
     </script>
   </head>
