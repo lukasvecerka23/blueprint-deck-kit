@@ -69,24 +69,19 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
           Your coding agent reads your docs or code and writes one interactive HTML file: a map with a guided tour, tabs and
           personas. Present it, edit it, send it to anyone.
         </p>
-        <p class="mx-auto mt-3 max-w-2xl text-sm text-balance text-muted-foreground">
-          No terminal? Attach your docs in <span class="font-medium text-foreground">Claude, ChatGPT or Gemini</span> instead, and share the deck as a link
-          from Claude.
-        </p>
         <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <a href="/configurator/" class="btn" data-size="lg">Configure your deck <Icon name="arrow-right" /></a>
-          <a href="#install" class="btn" data-size="lg" data-variant="outline"><Icon name="terminal" /> Install the skill</a>
+          <a href="#install" class="btn" data-size="lg"><Icon name="terminal" /> Install the skill</a>
+          <a href="/configurator/" class="btn" data-size="lg" data-variant="outline">Configure your deck <Icon name="arrow-right" /></a>
           <a href={SITE.repo} class="btn" data-size="lg" data-variant="ghost"><Icon name="github" /> Star on GitHub
             <span class="badge ml-0.5 font-mono" data-variant="secondary" data-stars hidden></span></a>
         </div>
         <div class="mx-auto mt-8 max-w-2xl text-center">
           <InstallTabs id="hero-install" variant="hero" />
         </div>
-        <p class="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+        <p class="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-sm text-muted-foreground">
           <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> Free forever, MIT License</span>
           <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> No account, no tracking</span>
           <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> Runs on your own agent subscription</span>
-          <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> Nothing else to install</span>
         </p>
       </div>
 
