@@ -44,7 +44,9 @@
   /* top bar */
   .topbar { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(10px); background: color-mix(in oklab, var(--background) 85%, transparent); border-bottom: 1px solid var(--border); }
   .topbar-in { max-width: 1560px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; gap: 8px; }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; margin-right: auto; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; margin-right: auto; text-decoration: none; border-radius: 8px; }
+  .brand:hover .brand-mark { filter: brightness(1.08); }
+  .brand:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
   .brand-mark { width: 28px; height: 28px; display: block; flex: none; }
   .brand small { font-weight: 400; color: var(--muted-foreground); }
   .topbar .btn { white-space: nowrap; }
@@ -179,10 +181,12 @@
 
 <header class="topbar">
   <div class="topbar-in">
-    <div class="brand">
+    <a class="brand" href="https://blueprintdeck.dev/" data-site-link title="Blueprint Deck Kit website">
       <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bd-mark-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#6d28d9"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="url(#bd-mark-g)"/><rect x="10" y="6" width="16" height="12.5" rx="2.6" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.5"/><rect x="6" y="10.5" width="18" height="15" rx="3" fill="#fff"/><path d="M10.6 16.2h8.6M10.6 16.2l4.3 5.2M19.2 16.2l-4.3 5.2" stroke="#4f46e5" stroke-width="1.4" stroke-linecap="round" fill="none"/><circle cx="10.6" cy="16.2" r="2" fill="#2563eb"/><circle cx="19.2" cy="16.2" r="2" fill="#2563eb"/><circle cx="14.9" cy="21.4" r="2" fill="#7c3aed"/></svg>
       <span>Blueprint Deck <small>configurator</small></span>
-    </div>
+    </a>
+    <a class="btn" data-variant="ghost" data-size="sm" href="https://blueprintdeck.dev/docs/" data-site-link>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg><span class="hide-sm">Docs</span></a>
     <button type="button" class="btn" data-variant="ghost" data-size="sm" id="btnImport" title="Paste a diagram.config.yaml to continue editing it">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg><span class="hide-sm">Import</span><span class="sr-only"> a configuration</span></button>
     <button type="button" class="btn" data-variant="ghost" data-size="sm" id="btnReset" title="Clear all answers and start again">
@@ -258,7 +262,7 @@
         <p>Once per machine, for Claude Code, Codex, Gemini CLI, GitHub Copilot or the Claude, ChatGPT and Gemini apps.</p>
       </header>
       <section>
-        <a class="btn" data-variant="outline" href="https://blueprintdeck.dev/#install" target="_blank" rel="noopener">All install options
+        <a class="btn" data-variant="outline" href="https://blueprintdeck.dev/#install" data-site-link>All install options
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
         <p class="note" style="margin-top:10px">From a clone of the repository: run <code>./install.sh</code> (Windows: <code>.\install.ps1</code>), with no download.</p>
       </section>
@@ -1285,6 +1289,14 @@ function init() {
     toast("Reset to defaults", "", "info");
   });
   document.getElementById("btnScheme").addEventListener("click", () => setScheme(!document.documentElement.classList.contains("dark"), true));
+  // Links to the website: on blueprintdeck.dev (and its Cloudflare preview deploys) they stay in the same tab as plain
+  // site paths; opened from disk or any other server they open the full address in a new tab, so the answers on this
+  // page stay open.
+  const onSite = /(^|\.)blueprintdeck\.dev$|\.pages\.dev$/.test(location.hostname);
+  document.querySelectorAll("a[data-site-link]").forEach(a => {
+    if (onSite) { const u = new URL(a.href); a.setAttribute("href", u.pathname + u.hash); }
+    else { a.target = "_blank"; a.rel = "noopener"; }
+  });
 
   document.getElementById("btnImport").addEventListener("click", openImport);
   document.getElementById("importCancel").addEventListener("click", closeImport);
