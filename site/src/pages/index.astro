@@ -92,15 +92,11 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
 
       <!-- the one-minute video -->
       <figure id="video" class="demo-stage mx-auto mt-14 max-w-6xl">
-        <div class="browser-frame video-player group relative overflow-hidden rounded-xl border bg-card" data-video>
-          <video class="block aspect-video w-full bg-[#050914]" preload="none" playsinline muted poster="/video/poster.jpg"
-            aria-label="Blueprint Deck Kit in one minute: from docs to an interactive deck">
+        <div class="browser-frame overflow-hidden rounded-xl border bg-card">
+          <video class="block aspect-video w-full bg-[#050914]" preload="metadata" playsinline muted loop controls poster="/video/poster.jpg"
+            aria-label="Blueprint Deck Kit in one minute: from docs to an interactive deck" data-video>
             <source src="/video/blueprint-deck.mp4" type="video/mp4" />
           </video>
-          <button type="button" class="video-play" aria-label="Play the one-minute video">
-            <span class="video-play-ring"><Icon name="play" class="size-8 translate-x-0.5" /></span>
-            <span class="video-play-label">Watch · 1 min</span>
-          </button>
         </div>
         <figcaption class="mt-4 text-center text-sm text-muted-foreground">The whole flow in one minute: your docs, the configurator, the agent, the deck.</figcaption>
       </figure>
@@ -275,23 +271,17 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
   if (starBadge) fetch("/api/stars").then(r => (r.ok ? r.json() : null)).then(d => {
     if (d && typeof d.stars === "number" && d.stars >= 25) { starBadge.textContent = `★ ${d.stars}`; starBadge.hidden = false; }
   }).catch(() => {});
-  // the video: a muted preview while the pointer is over it (not on touch screens, not with reduced motion);
-  // a click plays it from the start with the controls
-  const player = document.querySelector<HTMLElement>("[data-video]");
-  if (player) {
-    const video = player.querySelector("video")!, button = player.querySelector<HTMLButtonElement>(".video-play")!;
-    let started = false;
-    const hover = matchMedia("(hover: hover) and (pointer: fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (hover) {
-      player.addEventListener("pointerenter", () => { if (!started) { video.loop = true; video.play().catch(() => {}); player.classList.add("previewing"); } });
-      player.addEventListener("pointerleave", () => { if (!started) { video.pause(); video.currentTime = 0; player.classList.remove("previewing"); } });
-    }
-    const start = () => {
-      started = true; player.classList.remove("previewing"); player.classList.add("started");
-      video.loop = false; video.currentTime = 0; video.controls = true; video.play().catch(() => {});
-    };
-    button.addEventListener("click", start);
-    video.addEventListener("ended", () => { video.currentTime = 0; });
+  // the video loops, muted, while it's on screen (not with reduced motion); the controls pause, seek and unmute it.
+  // Once the visitor pauses it, it stays paused.
+  const video = document.querySelector<HTMLVideoElement>("[data-video]");
+  if (video && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let ours = false, userPaused = false;
+    video.addEventListener("pause", () => { if (!ours) userPaused = true; ours = false; });
+    video.addEventListener("play", () => { userPaused = false; });
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { if (!userPaused && video.paused) video.play().catch(() => {}); }
+      else if (!video.paused) { ours = true; video.pause(); }
+    }, { threshold: 0.4 }).observe(video);
   }
   // the cards' glow follows the pointer
   document.querySelectorAll<HTMLElement>(".glow-card").forEach(card => {

@@ -139,16 +139,3 @@ a.glow-card:hover { transform: translateY(-3px); }
   .hero-glow span, .text-gradient, .demo-stage .browser-frame { animation: none !important; }
   .glow-card, a.glow-card:hover { transition: none; transform: none; }
 }
-
-/* landing: the video's own play button over the poster; a muted preview runs while hovering */
-.video-play { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .75rem;
-  background: radial-gradient(ellipse at center, oklch(0 0 0 / .25), oklch(0 0 0 / .45)); color: #fff; cursor: pointer; transition: background .3s, opacity .3s; }
-.video-play-ring { display: grid; place-items: center; width: 5rem; height: 5rem; border-radius: 9999px;
-  background: linear-gradient(135deg, var(--brand), var(--brand-2)); box-shadow: 0 10px 40px -8px color-mix(in oklch, var(--brand) 70%, transparent), 0 0 0 8px oklch(1 0 0 / .12);
-  transition: transform .3s cubic-bezier(.2,.7,.2,1), box-shadow .3s; }
-.video-play-label { font-size: .875rem; font-weight: 600; letter-spacing: .01em; text-shadow: 0 1px 8px oklch(0 0 0 / .6); }
-.video-play:hover .video-play-ring, .video-play:focus-visible .video-play-ring { transform: scale(1.08); box-shadow: 0 14px 50px -6px color-mix(in oklch, var(--brand) 80%, transparent), 0 0 0 12px oklch(1 0 0 / .14); }
-.video-player.previewing .video-play { background: oklch(0 0 0 / .08); }
-.video-player.previewing .video-play-label { opacity: .9; }
-.video-player.started .video-play { opacity: 0; pointer-events: none; }
-@media (prefers-reduced-motion: reduce) { .video-play, .video-play-ring { transition: none; } }
