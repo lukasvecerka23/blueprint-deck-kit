@@ -1,0 +1,31 @@
+name: Docs or website
+description: Something in the docs, the README or on blueprintdeck.dev is wrong, missing or unclear
+title: "docs(): "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Title:** `docs(area): what's wrong or wanted`, lowercase and specific, for example
+        `docs(install): explain how the output folder is chosen`. Areas: `deck`, `editor`, `pdf`, `configurator`, `skill`, `install`, `site`, `docs`, `examples`.
+        ([Issue titles](https://github.com/lukasvecerka23/blueprint-deck-kit/blob/main/CONTRIBUTING.md#issues))
+  - type: input
+    id: where
+    attributes:
+      label: Where?
+      description: A link to the page or the file.
+      placeholder: https://blueprintdeck.dev/docs/agents/#github-copilot
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What's wrong or missing?
+      description: What did you look for, and what did you find instead?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: What should it say?
+      description: Optional. A sentence or a rough draft is enough.

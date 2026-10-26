@@ -81,6 +81,34 @@ The skill is plain Markdown. If an agent got something wrong, the best fix is us
 the style guide, plus a check in `core.js` that catches it. Test changes by generating a diagram with at least one
 agent and say which in the pull request.
 
+## Issues
+
+Open an issue with one of the forms (bug report, feature request, deck quality, docs or website); each one starts the
+title for you. Titles follow the same pattern as our commits:
+
+```text
+type(area): what's wrong or wanted
+```
+
+| type | for | label |
+|---|---|---|
+| `bug` | something is broken | bug |
+| `feat` | something new: a diagram type, an option, a workflow | enhancement |
+| `quality` | the skill ran, but the deck it made is wrong or weak | skill |
+| `docs` | the docs, the README or the website text | documentation |
+
+**Area**, one of: `deck` (what viewers see), `editor`, `pdf`, `configurator`, `skill`, `install`, `site` (the
+website), `docs`, `examples`.
+
+**Summary**: lowercase, specific, short enough to read in a list. Say what happens, not just where.
+
+- `bug(deck): switching diagrams throws errors when opened from SharePoint`
+- `feat(pdf): black and white export`
+- `quality(skill): invents a database that isn't in the docs`
+- `docs(install): explain how the output folder is chosen`
+
+Security problems never go into an issue: see [SECURITY.md](SECURITY.md).
+
 ## Pull requests
 
 - One topic per pull request; describe what you changed and how you checked it (which examples, which browsers).

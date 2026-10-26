@@ -1,12 +1,17 @@
 name: Bug report
 description: Something in a deck, the editor, the PDF export, the configurator, the installer or the website doesn't work
 labels: ["bug"]
+title: "bug(): "
 body:
   - type: markdown
     attributes:
       value: |
         Thanks for reporting. If the agent *made a poor deck* (wrong boxes, made-up facts, missing parts), use
         **Deck quality** instead. Security problems: report them privately (see the links on the previous page).
+
+        **Title:** `bug(area): what's wrong or wanted`, lowercase and specific, for example
+        `bug(deck): switching diagrams throws errors when opened from SharePoint`. Areas: `deck`, `editor`, `pdf`, `configurator`, `skill`, `install`, `site`, `docs`, `examples`.
+        ([Issue titles](https://github.com/lukasvecerka23/blueprint-deck-kit/blob/main/CONTRIBUTING.md#issues))
   - type: dropdown
     id: area
     attributes:

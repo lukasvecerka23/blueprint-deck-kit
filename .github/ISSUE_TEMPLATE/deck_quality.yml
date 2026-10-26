@@ -1,12 +1,17 @@
 name: Deck quality
 description: The skill ran, but the deck it made is wrong or weak (missing parts, made-up facts, poor structure or layout)
 labels: ["skill"]
+title: "quality(): "
 body:
   - type: markdown
     attributes:
       value: |
         These reports make the skill better for everyone. The most useful thing you can attach is the config
         (`diagram.config.yaml`) and the **extraction report** the agent wrote next to the deck.
+
+        **Title:** `quality(area): what's wrong or wanted`, lowercase and specific, for example
+        `quality(skill): invents a database that isn't in the docs`. Areas: `deck`, `editor`, `pdf`, `configurator`, `skill`, `install`, `site`, `docs`, `examples`.
+        ([Issue titles](https://github.com/lukasvecerka23/blueprint-deck-kit/blob/main/CONTRIBUTING.md#issues))
   - type: dropdown
     id: kind
     attributes:

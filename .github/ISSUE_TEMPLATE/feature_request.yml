@@ -1,7 +1,14 @@
 name: Feature request
 description: A diagram type, an option or a workflow that's missing
 labels: ["enhancement"]
+title: "feat(): "
 body:
+  - type: markdown
+    attributes:
+      value: |
+        **Title:** `feat(area): what's wrong or wanted`, lowercase and specific, for example
+        `feat(pdf): black and white export`. Areas: `deck`, `editor`, `pdf`, `configurator`, `skill`, `install`, `site`, `docs`, `examples`.
+        ([Issue titles](https://github.com/lukasvecerka23/blueprint-deck-kit/blob/main/CONTRIBUTING.md#issues))
   - type: textarea
     id: goal
     attributes:
