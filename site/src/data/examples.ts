@@ -10,10 +10,20 @@ export interface Example {
   accent: string;
   accent2: string;
   diagrams: number;
-  home?: boolean; // false: only in the gallery, not on the landing page (it shows four)
+  home?: boolean; // false: only in the gallery, not on the landing page (it shows the first one live and four cards)
 }
 
 export const EXAMPLES: Example[] = [
+  {
+    slug: "blueprint-deck",
+    title: "Blueprint Deck Kit",
+    description: "The kit's own architecture: the skill, the engine, the configurator and how a deck is made, generated from this repository.",
+    tags: ["Architecture", "Mixed viewpoint"],
+    theme: "dark",
+    accent: "#8b5cf6",
+    accent2: "#22d3ee",
+    diagrams: 1,
+  },
   {
     slug: "acme",
     title: "Acme Commerce",
@@ -32,17 +42,6 @@ export const EXAMPLES: Example[] = [
     theme: "dark",
     accent: "#ec4899",
     accent2: "#38bdf8",
-    diagrams: 1,
-  },
-  {
-    slug: "blueprint-deck",
-    home: false,
-    title: "Blueprint Deck Kit",
-    description: "The kit's own architecture: the skill, the engine, the configurator and how a deck is made, generated from this repository.",
-    tags: ["Architecture", "Mixed viewpoint"],
-    theme: "dark",
-    accent: "#8b5cf6",
-    accent2: "#22d3ee",
     diagrams: 1,
   },
   {
