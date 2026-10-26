@@ -152,6 +152,7 @@
   .dtools select.select { width: auto; max-width: 220px; }
   .vp-note { font-size: 12.5px; padding: 8px 10px; margin-bottom: 8px; border-radius: 8px; background: color-mix(in oklab, var(--primary) 8%, transparent); border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent); }
   .vp-note code { font-size: 11.5px; }
+  .vp-note a { font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
 
   /* right column */
   .card > header h2 { margin: 0; }
@@ -230,6 +231,7 @@
           </nav>
           <div role="tabpanel" id="outPanel-prompt" aria-labelledby="outTab-prompt" tabindex="-1">
             <div class="stack">
+              <p class="vp-note" style="margin:0">The prompt needs the <code>blueprint-deck</code> skill in your agent. Not installed yet? <a href="#installCard">Install it first</a>, once per machine.</p>
               <button type="button" class="btn cta" data-size="lg" id="btnCopyPrompt">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 Copy prompt</button>
@@ -253,7 +255,7 @@
       </section>
     </section>
 
-    <section class="card" data-size="sm">
+    <section class="card" data-size="sm" id="installCard">
       <header>
         <h2>Install the skill</h2>
         <p>Once per machine: installs the <code>blueprint-deck</code> skill for your agents.</p>
