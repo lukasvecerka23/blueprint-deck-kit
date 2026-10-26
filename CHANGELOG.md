@@ -1,18 +1,39 @@
 # Changelog
 
-Versions: a new minor version (2.1, 2.2 …) adds features and keeps every older diagram working; a new major version
-(3.0) may need diagrams to be upgraded. To update, run the install command again; to give an existing diagram the new
-engine, ask your agent to upgrade it (or `node tools/insert.mjs --upgrade <file>`). All releases and their files:
+**Blueprint Deck Kit is in beta (0.x).** We are still adding features quickly; 1.0.0 will be the first stable
+release. Until then a new minor version (0.6, 0.7 …) adds features and keeps every older diagram working. To update, run
+the install command again; to give an existing diagram the new engine, ask your agent to upgrade it (or
+`node tools/insert.mjs --upgrade <file>`). All releases and their files:
 https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 
-## 2.4.1 (2026-10-25)
+The early releases were first numbered 2.x and renumbered to 0.x in 0.6.0 (2.0.0 → 0.1.0, 2.1.0 → 0.2.0, 2.2.0 → 0.3.0,
+2.3.x → 0.4.x, 2.4.x → 0.5.x). A deck whose `<meta name="generator">` says 2.x has an engine older than 0.6.0.
+
+## 0.6.0 (2026-10-26)
+
+- **Beta, renumbered.** Blueprint Deck Kit is in beta until 1.0.0. The earlier releases were renumbered from 2.x to
+  0.x (see above); their tags and releases on GitHub use the new numbers.
+- **GitHub Copilot:** the Copilot CLI installs the plugin from this repository's marketplace
+  (`copilot plugin marketplace add lukasvecerka23/blueprint-deck-kit && copilot plugin install blueprint-deck@blueprint-deck-kit`);
+  Copilot in VS Code and Visual Studio gets the skill with `gh skill install lukasvecerka23/blueprint-deck-kit blueprint-deck --agent github-copilot --scope user`.
+  The install script has `--agent copilot` (`~/.copilot/skills`, or `.github/skills` with `--project`) and finds
+  Copilot on its own. The skill's update hint knows both ways.
+- **The logo no longer opens a link.** Clicking the logo box in the top-left corner did open `meta.url`; links now
+  live only in a box's sources in the side panel. `meta.url` stays in the data as the product's website.
+- **Light by default:** the website and the configurator start in light mode (the toggle remembers dark). The
+  configurator uses the website's colours and logo.
+- **Issue forms** on GitHub: bug report, feature request and a new *Deck quality* form for decks the agent got wrong.
+- The kit's own example deck is regenerated with this version and is the live demo on the landing page; the video
+  moved to the top of the page.
+
+## 0.5.1 (2026-10-25)
 
 - **New address: blueprintdeck.dev.** The website, the install commands, the docs, the plugin manifests and the
   credit in every deck use it; the old address keeps redirecting.
 - **A link from Claude:** in Claude Desktop and claude.ai the skill now offers, after making a deck, to publish it as
   an artifact (a link anyone can open, no hosting). It only publishes when you say yes.
 
-## 2.4.0 (2026-10-25)
+## 0.5.0 (2026-10-25)
 
 - **PDF deck in colour or black and white:** P (or ⋯ → *Export a PDF deck…*) asks which; black and white is white
   paper, black text, grey boxes and connections, for printing. Shift+P exports black and white directly.
@@ -31,7 +52,7 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
   security error. These viewers sandbox the file, so the address bar can't follow the view and the browser can't keep
   edits; the deck now carries on without them.
 
-## 2.3.1 (2026-10-25)
+## 0.4.1 (2026-10-25)
 
 Ready for the Claude plugin directory.
 
@@ -42,7 +63,7 @@ Ready for the Claude plugin directory.
 - Names in the engine and the skill that the directory's scanner read as credentials (a storage key, a shortcut
   label, `curl` for the version check) are renamed or reworded; nothing changes in how they work.
 
-## 2.3.0 (2026-10-25)
+## 0.4.0 (2026-10-25)
 
 Install it from inside the agent or app you already use.
 
@@ -66,7 +87,7 @@ Install it from inside the agent or app you already use.
 - The skill's "newer version" notice names the right way to update for each kind of install.
 - New example: `meetbuddy`, a macOS meeting recorder read from its code, with a product and a technical diagram.
 
-## 2.2.0 (2026-10-24)
+## 0.3.0 (2026-10-24)
 
 - **Diagrams from code.** The style guide has a "From code" section: services, contracts, clients and deployment
   files become the map, every connection needs evidence in the code, docs and code conflicts are reported. The
@@ -76,7 +97,7 @@ Install it from inside the agent or app you already use.
   `host/…/page.html`, linked to the full URL; local paths stay as they are. Side panels, sheets and the tour card
   never scroll sideways: long text wraps.
 
-## 2.1.0 (2026-10-24)
+## 0.2.0 (2026-10-24)
 
 - **Personas on the map.** A persona with a `zone` is also a box next to the applications it uses; clicking it opens
   the Personas panel and lights its path from the box. `boxSub` for a short subtitle on the box.
@@ -94,7 +115,7 @@ Install it from inside the agent or app you already use.
 - The editor follows the diagram switcher; "Copy a link to this view" only for hosted files.
 - Works with any docs (a repository, a folder of Markdown, text or PDF files, wiki exports, web pages).
 
-## 2.0.0 (2026-10-24)
+## 0.1.0 (2026-10-24)
 
 First public version, renamed from the internal "diagram-kit". Thanks to Pavel Sládek for the early feedback and
 ideas behind many of these changes.
@@ -117,9 +138,9 @@ ideas behind many of these changes.
   carries the whole config.
 - Optional `tools/check.mjs` validates a file from the command line (Node 18+).
 
-## 1.0.0 (2026-10-20, internal)
+## 0.0.1 (2026-10-20, internal)
 
-The first version, called **diagram-kit**, built inside a client project and never published. 2.0.0 is its public
+The first version, called **diagram-kit**, built inside a client project and never published. 0.1.0 is its public
 rewrite.
 
 - A Claude Code plugin (`/diagram-kit:diagram`) or a personal skill; Claude only.

@@ -1,5 +1,5 @@
 name: Release
-# Push a tag that matches the version in engine/src/core.js (e.g. v2.1.0): this creates a DRAFT GitHub release with
+# Push a tag that matches the version in engine/src/core.js (e.g. v0.6.0): this creates a DRAFT GitHub release with
 # the CHANGELOG section as notes and the skill + install scripts as files. Publish the draft when you're ready: from
 # then on the install scripts (…/releases/latest/download/…) give users this version. See CONTRIBUTING.md → Releasing.
 on:

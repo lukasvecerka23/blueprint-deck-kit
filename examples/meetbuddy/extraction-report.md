@@ -6,7 +6,7 @@ Not affiliated with the author.
 - **Commit read:** `8875a4adaf7a54c8edcb144e80ce05dc127e724a` (shallow clone, 2026-10-24). Every source in the
   diagram is a GitHub permalink pinned to this commit.
 - **Output:** `index.html` (two diagrams, switcher in the logo box), config `diagram.config.yaml`.
-- **Engine:** Blueprint Deck Kit 2.2.0 (latest release v2.2.0, so nothing to upgrade).
+- **Engine:** Blueprint Deck Kit 0.3.0 (latest release v0.3.0, so nothing to upgrade).
 - **Checks:** `check.mjs` 0 errors and 0 warnings for both diagrams. `dev/browser-check.mjs` (Chrome, 1600×950,
   51 views) prints `ok`, also with `--strict`. An extra run with `letter-spacing: 0.08em` on all text (about 12 %
   wider text, to stand in for Linux fonts) showed no screen problems either.

@@ -60,7 +60,7 @@ redirect to the latest GitHub release).
 The version lives in one place: `VERSION` in `engine/src/core.js` (`dev/assemble.mjs` copies it into the engine and
 `plugins/blueprint-deck/skills/blueprint-deck/VERSION.txt` and both plugin manifests).
 
-1. Bump `VERSION` (minor for features, major if old diagrams would need an upgrade) and add a `## x.y.z (date)` section
+1. Bump `VERSION` (while in beta, 0.x: minor for features, patch for fixes; 1.0.0 is the first stable release) and add a `## x.y.z (date)` section
    at the top of `CHANGELOG.md`.
 2. `node dev/assemble.mjs && node dev/assemble.mjs --upgrade examples/*/index.html`, commit, push to `main`.
 3. `git tag vX.Y.Z && git push origin vX.Y.Z`. The Release workflow checks that the tag matches `VERSION` and that
@@ -72,7 +72,7 @@ The version lives in one place: `VERSION` in `engine/src/core.js` (`dev/assemble
 
 Rolling back: mark the bad release as a pre-release (or delete it); "latest" goes back to the previous one.
 
-Install other versions: `--version 2.1.0` (PowerShell `-Version 2.1.0`); unreleased work: `./install.sh` from a clone,
+Install other versions: `--version 0.5.1` (PowerShell `-Version 0.5.1`); unreleased work: `./install.sh` from a clone,
 or `--ref main`.
 
 ## Working on the skill
