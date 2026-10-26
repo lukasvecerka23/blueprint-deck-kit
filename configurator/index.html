@@ -55,8 +55,11 @@
   .intro { grid-column: 1 / -1; }
   .intro h1 { margin: 0 0 6px; font-size: 26px; letter-spacing: -.02em; line-height: 1.2; }
   .intro p { margin: 0; max-width: 860px; color: var(--muted-foreground); }
-  .side { position: sticky; top: 72px; display: grid; gap: 16px; max-height: calc(100vh - 88px); overflow: auto; padding-bottom: 4px; scrollbar-width: thin; }
-  @media (max-width: 1100px) { .app { grid-template-columns: minmax(0, 1fr); } .side { position: static; max-height: none; overflow: visible; } }
+  /* the column scrolls on its own: a few px of padding (taken back with negative margins) so the cards' borders and
+     shadows aren't clipped, and a lane of its own for the scrollbar so it never covers the cards */
+  .side { position: sticky; top: 72px; display: grid; gap: 16px; max-height: calc(100vh - 88px); overflow: auto; scrollbar-width: thin; scrollbar-gutter: stable;
+    padding: 3px 6px 8px 3px; margin: -3px -6px 0 -3px; }
+  @media (max-width: 1100px) { .app { grid-template-columns: minmax(0, 1fr); } .side { position: static; max-height: none; overflow: visible; padding: 0; margin: 0; } }
   @media (max-width: 640px) { .app { padding: 14px; gap: 18px; } .intro h1 { font-size: 22px; } }
 
   /* form sections (collapsible cards) */
