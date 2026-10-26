@@ -272,16 +272,23 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
     if (d && typeof d.stars === "number" && d.stars >= 25) { starBadge.textContent = `★ ${d.stars}`; starBadge.hidden = false; }
   }).catch(() => {});
   // the video loops, muted, while it's on screen (not with reduced motion); the controls pause, seek and unmute it.
-  // Once the visitor pauses it, it stays paused.
+  // It never starts on page load (also not when a reload restores the scroll position): only after the visitor
+  // scrolls. Once the visitor pauses it, it stays paused.
   const video = document.querySelector<HTMLVideoElement>("[data-video]");
   if (video && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    let ours = false, userPaused = false;
+    let ours = false, userPaused = false, inView = false, scrolled = false;
+    const update = () => {
+      if (inView && scrolled) { if (!userPaused && video.paused) video.play().catch(() => {}); }
+      else if (!inView && !video.paused) { ours = true; video.pause(); }
+    };
     video.addEventListener("pause", () => { if (!ours) userPaused = true; ours = false; });
     video.addEventListener("play", () => { userPaused = false; });
-    new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { if (!userPaused && video.paused) video.play().catch(() => {}); }
-      else if (!video.paused) { ours = true; video.pause(); }
-    }, { threshold: 0.6 }).observe(video);
+    new IntersectionObserver(([e]) => { inView = e.isIntersecting; update(); }, { threshold: 0.6 }).observe(video);
+    const arm = () => { if (scrolled) return; scrolled = true; update(); };
+    for (const ev of ["wheel", "touchmove"]) addEventListener(ev, arm, { passive: true, once: true });
+    addEventListener("keydown", e => { if (["ArrowDown", "PageDown", " ", "End"].includes(e.key)) arm(); });
+    // scrollbar drags and anchor links only fire "scroll"; the browser's own restore happens right at load
+    setTimeout(() => addEventListener("scroll", arm, { passive: true, once: true }), 800);
   }
   // the cards' glow follows the pointer
   document.querySelectorAll<HTMLElement>(".glow-card").forEach(card => {
