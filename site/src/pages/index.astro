@@ -106,7 +106,7 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
           </div>
           <div class="mt-auto">
             {s.code && <code class="block truncate rounded-md border bg-code px-3 py-2 font-mono text-xs" title={s.code}>{s.code}</code>}
-            {s.link && <a href={s.link.href} class="btn w-full" data-variant="outline" data-size="sm">{s.link.label} <Icon name="arrow-right" class="size-3.5" /></a>}
+            {s.link && <a href={s.link.href} class="btn w-full" data-size="sm">{s.link.label} <Icon name="arrow-right" class="size-3.5" /></a>}
             {s.keys && <div class="flex gap-1.5">{s.keys.map(k => <kbd class="kbd">{k}</kbd>)}</div>}
           </div>
         </li>
