@@ -196,7 +196,7 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
 
   <!-- ============================================================ install -->
   <section id="install" class="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
-    <div class="grid items-start gap-12 lg:grid-cols-[1fr_1.4fr]">
+    <div class="grid items-start gap-x-12 gap-y-8 lg:grid-cols-[1fr_1.4fr] lg:grid-rows-[auto_1fr]">
       <div data-reveal>
         <p class="text-sm font-medium text-brand">Install</p>
         <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">One command, then ask your agent</h2>
@@ -206,16 +206,14 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
           <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /> Your agent runs locally with your own subscription</li>
           <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /><span>Updates through your agent, or re-run the install script</span></li>
         </ul>
-        <a href="/docs/" class="btn mt-8" data-variant="outline">Read the getting started guide <Icon name="arrow-right" /></a>
       </div>
-      <div class="min-w-0" data-reveal style="--i:1">
-        <div class="card glow-card p-5 sm:p-6">
-          <InstallTabs />
-        </div>
-        <p class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
-          Installed? Next, describe your diagram:
-          <a href="/configurator/" class="btn" data-size="sm">Configure your deck <Icon name="arrow-right" class="size-3.5" /></a>
-        </p>
+      <div class="card glow-card min-w-0 p-5 sm:p-6 lg:row-span-2" data-reveal style="--i:1">
+        <InstallTabs />
+      </div>
+      <!-- the next step: under the text on wide screens, after the install options on phones -->
+      <div class="flex flex-wrap gap-3 lg:col-start-1 lg:row-start-2" data-reveal>
+        <a href="/configurator/" class="btn">Configure your deck <Icon name="arrow-right" /></a>
+        <a href="/docs/" class="btn" data-variant="outline">Read the getting started guide <Icon name="arrow-right" /></a>
       </div>
     </div>
   </section>
