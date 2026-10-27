@@ -28,6 +28,13 @@
     overflow: hidden; -webkit-font-smoothing: antialiased; user-select: none;
   }
   button { font: inherit; color: inherit; }
+  /* where scripts don't run (app previews), the page explains itself instead of staying empty */
+  #bd-nojs { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 24px; user-select: text; }
+  #bd-nojs > div { max-width: 460px; padding: 24px 26px; border: 1px solid var(--stroke-strong); border-radius: var(--r-panel);
+    background: var(--glass-strong); line-height: 1.5; font-size: 15px; color: var(--body); }
+  #bd-nojs strong { display: block; margin-bottom: 8px; font-size: 18px; color: var(--fg); }
+  #bd-nojs p { margin: 8px 0 0; }
+  #bd-nojs b { color: var(--text); }
   /* text in an element's own colour (--c), darkened on light themes so yellow and cyan stay readable */
   .zone, .node, #panel, .link, .pillar, .stage, .lg-sw { --cx: color-mix(in srgb, var(--c, var(--accent)) calc(100% - var(--tone)), #000); }
 

@@ -1579,6 +1579,13 @@
     overflow: hidden; -webkit-font-smoothing: antialiased; user-select: none;
   }
   button { font: inherit; color: inherit; }
+  /* where scripts don't run (app previews), the page explains itself instead of staying empty */
+  #bd-nojs { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 24px; user-select: text; }
+  #bd-nojs > div { max-width: 460px; padding: 24px 26px; border: 1px solid var(--stroke-strong); border-radius: var(--r-panel);
+    background: var(--glass-strong); line-height: 1.5; font-size: 15px; color: var(--body); }
+  #bd-nojs strong { display: block; margin-bottom: 8px; font-size: 18px; color: var(--fg); }
+  #bd-nojs p { margin: 8px 0 0; }
+  #bd-nojs b { color: var(--text); }
   /* text in an element's own colour (--c), darkened on light themes so yellow and cyan stay readable */
   .zone, .node, #panel, .link, .pillar, .stage, .lg-sw { --cx: color-mix(in srgb, var(--c, var(--accent)) calc(100% - var(--tone)), #000); }
 
@@ -2143,6 +2150,15 @@
 <style id="dyn-css"></style>
 </head>
 <body class="intro">
+<!-- shown only where scripts don't run, e.g. the file previews in WhatsApp, Mail or Files: the deck needs a browser -->
+<div id="bd-nojs" role="note"><div>
+  <strong>This preview can't show the deck</strong>
+  <p>This file is an interactive Blueprint Deck. It needs a web browser; previews inside apps (WhatsApp, Mail, Files,
+    Quick Look) only show a still page.</p>
+  <p><b>On a computer:</b> save the file and open it in your browser (double-click it).<br>
+    <b>On a phone:</b> ask the sender for a link, or open it on a computer.</p>
+</div></div>
+<script>document.getElementById("bd-nojs").remove();</script>
 <div id="viewport"><div id="world"><div class="grid"></div></div></div>
 <div id="brand" class="hud glass"></div>
 <div id="lenses" class="hud glass"></div>
