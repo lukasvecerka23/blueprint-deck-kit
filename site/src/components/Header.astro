@@ -24,8 +24,8 @@ const links = [
       ))}
     </nav>
     <div class="ml-auto flex items-center gap-1">
-      <a href={SITE.repo} class="btn" data-variant="ghost" data-size="icon" aria-label="GitHub repository" title="GitHub">
-        <Icon name="github" class="size-[18px]" />
+      <a href={SITE.repo} class="btn gap-1.5 px-2.5" data-variant="ghost" aria-label="GitHub repository" title="Star on GitHub">
+        <Icon name="github" class="size-[18px]" /><span class="font-mono text-xs" data-stars hidden></span>
       </a>
       <button type="button" class="btn" data-variant="ghost" data-size="icon" data-theme-toggle aria-label="Toggle dark mode" title="Toggle dark mode">
         <Icon name="sun" class="size-[18px] hidden dark:block" />
@@ -48,4 +48,10 @@ const links = [
   const header = document.getElementById("site-header");
   const onScroll = () => header?.toggleAttribute("data-scrolled", scrollY > 8);
   addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  // the star count comes from our own /api/stars (a Cloudflare Pages Function that caches GitHub's answer), so
+  // visitors' browsers never call GitHub; shown from 25 stars up
+  const starCount = document.querySelector<HTMLElement>("[data-stars]");
+  if (starCount) fetch("/api/stars").then(r => (r.ok ? r.json() : null)).then(d => {
+    if (d && typeof d.stars === "number" && d.stars >= 25) { starCount.textContent = `★ ${d.stars}`; starCount.hidden = false; }
+  }).catch(() => {});
 </script>

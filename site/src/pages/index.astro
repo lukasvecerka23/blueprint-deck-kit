@@ -1,7 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
-import Command from "../components/Command.astro";
 import InstallTabs from "../components/InstallTabs.astro";
 import FaqList from "../components/FaqList.astro";
 import ExamplePreview from "../components/ExamplePreview.astro";
@@ -52,9 +51,6 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
     <div class="relative mx-auto max-w-7xl px-4 pt-16 pb-12 sm:px-6 sm:pt-24">
       <div class="mx-auto max-w-3xl text-center" data-reveal>
         <div class="mb-6 flex flex-wrap items-center justify-center gap-2">
-          <span class="badge badge-gloss gap-1.5 rounded-full px-3 py-1 text-xs font-semibold" data-variant="outline">
-            <Icon name="heart" class="size-3.5 text-warm" /> 100% free · open source
-          </span>
           <a href="/changelog/" class="badge badge-gloss gap-1.5 rounded-full px-3 py-1 text-xs" data-variant="outline" title="Still in beta: new features every week. 1.0 will be the first stable release.">
             <Icon name="flask-conical" class="size-3.5 text-brand" /> Beta · 0.x
           </a>
@@ -70,20 +66,11 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
           personas. Present it, edit it, send it to anyone.
         </p>
         <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <a href="#video" class="btn" data-size="lg" data-variant="outline" data-watch><Icon name="circle-play" /> Watch the demo</a>
-          <a href={SITE.repo} class="btn" data-size="lg" data-variant="ghost"><Icon name="github" /> Star on GitHub
-            <span class="badge ml-0.5 font-mono" data-variant="secondary" data-stars hidden></span></a>
-        </div>
-        <div class="mx-auto mt-8 max-w-2xl text-center">
-          <InstallTabs id="hero-install" variant="hero" />
-        </div>
-        <div class="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-          <span>Installed?</span>
-          <a href="/configurator/" class="btn" data-size="lg">Configure your deck <Icon name="arrow-right" /></a>
-          <a href="#install" class="font-medium text-foreground underline underline-offset-4 hover:text-brand">All install options</a>
+          <a href="#install" class="btn" data-size="lg"><Icon name="terminal" /> Install the skill</a>
+          <a href="#how" class="btn" data-size="lg" data-variant="outline">How it works <Icon name="arrow-down" /></a>
         </div>
         <p class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-sm text-muted-foreground">
-          <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> Free forever, MIT License</span>
+          <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> Free and open source, MIT License</span>
           <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> No account, no tracking</span>
           <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> Runs on your own agent subscription</span>
         </p>
@@ -221,8 +208,14 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
         </ul>
         <a href="/docs/" class="btn mt-8" data-variant="outline">Read the getting started guide <Icon name="arrow-right" /></a>
       </div>
-      <div class="card glow-card p-5 sm:p-6" data-reveal style="--i:1">
-        <InstallTabs />
+      <div class="min-w-0" data-reveal style="--i:1">
+        <div class="card glow-card p-5 sm:p-6">
+          <InstallTabs />
+        </div>
+        <p class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
+          Installed? Next, describe your diagram:
+          <a href="/configurator/" class="btn" data-size="sm">Configure your deck <Icon name="arrow-right" class="size-3.5" /></a>
+        </p>
       </div>
     </div>
   </section>
@@ -265,12 +258,6 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
     items.forEach(el => io.observe(el));
   } else items.forEach(el => el.classList.add("in"));
-  // the star count comes from our own /api/stars (a Cloudflare Pages Function that caches GitHub's answer), so
-  // visitors' browsers never call GitHub; shown from 25 stars up
-  const starBadge = document.querySelector<HTMLElement>("[data-stars]");
-  if (starBadge) fetch("/api/stars").then(r => (r.ok ? r.json() : null)).then(d => {
-    if (d && typeof d.stars === "number" && d.stars >= 25) { starBadge.textContent = `★ ${d.stars}`; starBadge.hidden = false; }
-  }).catch(() => {});
   // the video loops, muted, while it's on screen (not with reduced motion); the controls pause, seek and unmute it.
   // It never starts on page load (also not when a reload restores the scroll position): only after the visitor
   // scrolls. Once the visitor pauses it, it stays paused.
@@ -290,14 +277,6 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
     // scrollbar drags and anchor links only fire "scroll"; the browser's own restore happens right at load
     setTimeout(() => addEventListener("scroll", arm, { passive: true, once: true }), 800);
   }
-  // "Watch the demo" brings the whole video on screen and plays it (asked for, so also with reduced motion)
-  document.querySelector("[data-watch]")?.addEventListener("click", e => {
-    if (!video) return;
-    e.preventDefault();
-    const smooth = !matchMedia("(prefers-reduced-motion: reduce)").matches;
-    video.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "center" });
-    video.play().catch(() => {});
-  });
   // the cards' glow follows the pointer
   document.querySelectorAll<HTMLElement>(".glow-card").forEach(card => {
     card.addEventListener("pointermove", ev => {
