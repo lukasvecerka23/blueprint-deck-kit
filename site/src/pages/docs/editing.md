@@ -63,6 +63,9 @@ effects less well. The black-and-white deck avoids them almost entirely.
 - **Teams, SharePoint and mail previews** open the file in a protected frame. The deck works there (diagrams, tabs,
   tour, PDF), but the address bar doesn't follow your view and edits can't be kept in the browser; to edit, download
   the file and open it in a browser.
+- **WhatsApp, Mail, Files and Quick Look previews** (iPhone and Mac) show the file without running it, so the deck
+  can't start there; the file says so and asks to open it in a browser. On a computer, save the file and double-click
+  it. For phones, send a link (Claude artifact or a hosted file) instead of the file.
 - **Send a read-only copy.** In the file, open **⋯ → Download a copy to share** (or **Share…** in the editor bar),
   name it, and pick **Read-only**. The copy has the same diagram, tour, tabs and PDF export, but no editor at all:
   the editing code isn't in the file, so it can't be switched back on in the browser. Your own file stays editable;

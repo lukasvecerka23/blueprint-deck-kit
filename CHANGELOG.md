@@ -19,6 +19,9 @@ Where a release has both, **Skill and decks** is what you get by updating the sk
   one of the others.
 - **"Update the Blueprint Deck skill":** when you ask, the agent runs the update command that matches how the skill is
   installed, then tells you to start a new session.
+- **App previews explain themselves:** previews that show a file without running it (WhatsApp, Mail, Files and Quick
+  Look on iPhone and Mac) used to show an empty screen. A deck now says that it needs a browser and how to open it.
+  Upgrade a deck to get it.
 
 **Website and project**
 
