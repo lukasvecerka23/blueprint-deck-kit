@@ -38,7 +38,7 @@ const features = [
   { icon: "pencil", title: "Edit it, send it read-only", text: "Press E to change texts, colours, boxes, tabs and the tour, with no agent and no rebuild. Send a read-only copy when people shouldn't change it." },
   { icon: "file-check", title: "One file, opens anywhere", text: "A single offline HTML file: email it, host it, open it on a phone. It makes no network requests, so it's safe to open. Several diagrams in one file, and P for a PDF deck." },
   { icon: "palette", title: "Your brand, your audience", text: "Light and dark themes, your colours and logo. A product view for executives or a technical view for engineers." },
-  { icon: "file-search", title: "From docs or code, by any agent", text: "Works with Claude Code, Codex, GitHub Copilot and other agents. It reads your docs or your codebase; every box links to its source, and a report lists conflicts and gaps." },
+  { icon: "file-search", title: "From docs or code, by any agent", text: "Works with Claude Code, Codex, GitHub Copilot, Cursor, Grok Build and other agents. It reads your docs or your codebase; every box links to its source, and a report lists conflicts and gaps." },
 ];
 
 const kinds = ["Architecture blueprints", "Product blueprints", "Service maps", "Data flows", "Processes", "Customer journeys", "Ecosystems", "Org maps"];
@@ -70,15 +70,19 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
           personas. Present it, edit it, send it to anyone.
         </p>
         <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <a href="#install" class="btn" data-size="lg" data-variant="outline"><Icon name="terminal" /> Install the skill</a>
-          <a href="/configurator/" class="btn" data-size="lg">Configure your deck <Icon name="arrow-right" /></a>
+          <a href="#how" class="btn" data-size="lg" data-variant="outline"><Icon name="list-ordered" /> How it works</a>
           <a href={SITE.repo} class="btn" data-size="lg" data-variant="ghost"><Icon name="github" /> Star on GitHub
             <span class="badge ml-0.5 font-mono" data-variant="secondary" data-stars hidden></span></a>
         </div>
         <div class="mx-auto mt-8 max-w-2xl text-center">
           <InstallTabs id="hero-install" variant="hero" />
         </div>
-        <p class="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-sm text-muted-foreground">
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
+          <span>Installed?</span>
+          <a href="/configurator/" class="btn" data-size="lg">Configure your deck <Icon name="arrow-right" /></a>
+          <a href="#install" class="font-medium text-foreground underline underline-offset-4 hover:text-brand">All install options</a>
+        </div>
+        <p class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-sm text-muted-foreground">
           <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> Free forever, MIT License</span>
           <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> No account, no tracking</span>
           <span class="inline-flex items-center gap-1.5"><Icon name="circle-check" class="size-4 text-warm" /> Runs on your own agent subscription</span>
@@ -211,7 +215,7 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
         <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">One command, then ask your agent</h2>
         <p class="mt-4 text-muted-foreground">The skill is a folder: <code class="font-mono text-sm">SKILL.md</code>, the engine, the format reference and the style guide. Install it from inside your agent, upload it to the Claude, ChatGPT or Gemini app, or use the install script for any other agent. It only copies files.</p>
         <ul class="mt-6 space-y-2.5 text-sm">
-          <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /> Claude Code, Codex, Gemini CLI, GitHub Copilot, the Claude, ChatGPT and Gemini apps, and other Agent Skills agents</li>
+          <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /> Claude Code, Codex, Gemini CLI, GitHub Copilot, Cursor, Grok Build, the Claude, ChatGPT and Gemini apps, and other Agent Skills agents</li>
           <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /> Your agent runs locally with your own subscription</li>
           <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /><span>Updates through your agent, or re-run the install script</span></li>
         </ul>
@@ -237,14 +241,15 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
   <section class="px-4 pt-6 pb-20 sm:px-6 sm:pb-28">
     <div class="cta-card relative mx-auto max-w-5xl overflow-hidden rounded-2xl border bg-card px-6 py-14 text-center sm:px-12" data-reveal>
       <div class="relative">
-        <h2 class="text-3xl font-semibold tracking-tight text-balance">Describe your diagram in two minutes</h2>
-        <p class="mx-auto mt-3 max-w-xl text-muted-foreground">The configurator turns your answers into a prompt for your agent. It runs in your browser; nothing is sent anywhere.</p>
+        <h2 class="text-3xl font-semibold tracking-tight text-balance">Your first deck in a few minutes</h2>
+        <p class="mx-auto mt-3 max-w-xl text-muted-foreground">Install the skill with one command, describe your diagram in the configurator, and paste the prompt into your agent. Everything runs on your computer; nothing is sent anywhere.</p>
         <div class="mt-8 flex flex-wrap justify-center gap-3">
-          <a href="/configurator/" class="btn" data-size="lg">Configure your deck <Icon name="arrow-right" /></a>
-          <a href={SITE.repo} class="btn" data-size="lg" data-variant="outline"><Icon name="github" /> Star on GitHub</a>
+          <a href="#install" class="btn" data-size="lg"><Icon name="terminal" /> Install the skill</a>
+          <a href="/configurator/" class="btn" data-size="lg" data-variant="outline">Configure your deck <Icon name="arrow-right" /></a>
         </div>
         <p class="mt-6 text-sm text-muted-foreground">
-          Free forever. If it saves you time, <a class="font-medium text-foreground underline underline-offset-4 hover:text-brand" href={SITE.sponsor}>sponsor the project <span aria-hidden="true" class="text-pink-500">♥</span></a>
+          Free forever. If it saves you time, <a class="font-medium text-foreground underline underline-offset-4 hover:text-brand" href={SITE.repo}>star it on GitHub</a>
+          or <a class="font-medium text-foreground underline underline-offset-4 hover:text-brand" href={SITE.sponsor}>sponsor the project <span aria-hidden="true" class="text-pink-500">♥</span></a>
         </p>
       </div>
     </div>
