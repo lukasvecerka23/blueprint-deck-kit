@@ -56,7 +56,7 @@ body:
     attributes:
       label: Blueprint Deck Kit version
       description: In a deck, press E → Diagram → This file, or look for `<meta name="generator">` at the top of the HTML. For the skill, `VERSION.txt` in its folder.
-      placeholder: "0.7.0"
+      placeholder: "0.7.1"
     validations:
       required: true
   - type: input

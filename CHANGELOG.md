@@ -9,6 +9,14 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 Where a release has both, **Skill and decks** is what you get by updating the skill (and upgrading a deck);
 **Website and project** is already live on blueprintdeck.dev and GitHub, with nothing to update.
 
+## 0.7.1 (2026-10-27)
+
+**Skill and decks**
+
+- **Saved decks keep the app-preview notice.** Since 0.7.0 a deck explains in previews that can't run it (WhatsApp,
+  Mail, Files, Quick Look) that it needs a browser. A copy saved or downloaded from the browser lost that notice and
+  logged an error; the notice now stays in every copy. Upgrade a deck to get the fix.
+
 ## 0.7.0 (2026-10-27)
 
 **Skill and decks**
