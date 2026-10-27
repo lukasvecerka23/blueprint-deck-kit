@@ -9,6 +9,29 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 Where a release has both, **Skill and decks** is what you get by updating the skill (and upgrading a deck);
 **Website and project** is already live on blueprintdeck.dev and GitHub, with nothing to update.
 
+## Unreleased
+
+**Skill and decks**
+
+- **Cursor and Grok Build:** both already read the Claude Code skills folder (Cursor the Codex one and `~/.agents`
+  too), so an existing install covers them. The install script has `--agent cursor` (`~/.cursor/skills`) and
+  `--agent grok` (`~/.grok/skills`), finds both on its own, and doesn't give them a second copy when they already read
+  one of the others.
+- **"Update the Blueprint Deck skill":** when you ask, the agent runs the update command that matches how the skill is
+  installed, then tells you to start a new session.
+
+**Website and project**
+
+- **Generating** in the docs, between Configuring and Editing & sharing: starting a run, what the agent does, where
+  the files go (`workflow.output`, the report, the read-only copy), and what you can ask afterwards: changes, an update
+  when the docs change, a newer engine, a newer skill. The Agents page now only covers installing and updating, with
+  new sections for Cursor and Grok Build.
+- **Landing page:** the install commands are the main action in the hero, with *Configure your deck* right below
+  them; the top bar and the last section lead with *Install the skill*.
+- **An Idea issue form** for general ideas that aren't a concrete feature yet, with an `idea` label.
+- **The configurator** links back to the website (its logo, Docs and All install options) and reminds you to install
+  the skill before you copy the prompt.
+
 ## 0.6.0 (2026-10-26)
 
 Blueprint Deck Kit is in beta until 1.0.0, the first stable release.
