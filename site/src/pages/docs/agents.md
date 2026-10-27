@@ -1,61 +1,12 @@
 ---
 layout: ../../layouts/Docs.astro
 title: Agents
-description: How the skill works, its modes (generate, change, update, upgrade, init) and how to install and use it in Claude Code, Codex, Gemini CLI, GitHub Copilot, the Claude, ChatGPT and Gemini apps and other agents.
+description: How to install, start and update the skill in Claude Code, Codex, Gemini CLI, GitHub Copilot, Cursor, Grok Build, the Claude, ChatGPT and Gemini apps and other agents.
 ---
 
-## How the skill works
-
-The skill is a folder, `blueprint-deck/`, with a `SKILL.md` that tells the agent what to do, and the files it needs.
-Installed, it sits in your agent's skills folder (e.g. `~/.claude/skills/blueprint-deck/SKILL.md`, or inside the
-plugin); in the repository it lives at
-[`plugins/blueprint-deck/skills/blueprint-deck/`](https://github.com/lukasvecerka23/blueprint-deck-kit/tree/main/plugins/blueprint-deck/skills/blueprint-deck).
-
-| file | what it is |
-|---|---|
-| `SKILL.md` | the instructions: modes, steps, rules |
-| `blueprint-deck.html` | the engine with an empty data block; copied for every new diagram |
-| `reference/spec.md` | the JSON format ([Diagram format](/docs/format/)) |
-| `reference/style-guide.md` | content, structure, viewpoint, layout and tour rules ([Style guide](/docs/style-guide/)) |
-| `reference/icons.md`, `reference/lucide-a-l.json`, `reference/lucide-m-z.json` | the icon names, and every Lucide icon for extras |
-| `templates/diagram.config.yaml` | the annotated config ([Configuring](/docs/configuring/)) |
-| `templates/example.json` | a finished example |
-| `tools/check.mjs` | an optional command-line check (needs Node 18+, nothing to install) |
-
-The agent **never writes HTML, CSS or JavaScript**. It copies the engine, replaces the placeholder data block
-(`{ "blueprintDeck": "empty" }`) with the JSON it wrote, and never touches anything below the `BD-ENGINE` line.
-That keeps every deck consistent, keeps the agent's work small, and makes the editor possible.
-
-What it does on a first run:
-
-1. **Find the config:** the path you gave, else `diagrams/diagram.config.yaml`, else `diagram.config.yaml`, or the
-   config pasted into the prompt (it saves it first).
-2. **Read the sources** the config lists, minus `exclude`; for big repos it may delegate reading to sub-agents. With
-   `derive_status_from` it reads manifests to see what actually runs. With `branding.website` it takes the logo,
-   colours and product name from your site.
-3. **Propose the structure** (when `workflow.confirm_structure` is on): 5 to 9 areas, personas and their paths, the
-   tabs, and the tour as one line per step. You correct it; it continues.
-4. **Write the content** following the spec and the style guide. Every box and area gets `sources`.
-5. **Put it into the file** and **check it**: with Node, `node tools/check.mjs`; with a browser tool, it opens the
-   file, walks every tab, tour step, persona and sheet, and fixes what doesn't fit. Without either it tells you to
-   press E → Check.
-6. **Report:** the output path, the structure and tour, conflicts and gaps, what it took from your website and what
-   it could not verify. The details go into `extraction-report.md`.
-
-## Modes
-
-The agent picks the mode from what you ask:
-
-| mode | when | what it does |
-|---|---|---|
-| **generate** | the first time, or `/blueprint-deck <config>` | the full run above |
-| **change** | any change request on an existing file ("move X", "add a persona", "step 7 should …", "lighter theme") | edits the data block, re-checks, says what changed |
-| **update** | the sources changed | re-reads the sources, changes only what changed, keeps manual edits and `"locked": true` boxes |
-| **upgrade** | you want the newest engine in an existing file | copies the new engine and moves the old data block into it |
-| **init** | no config exists yet | copies the template config, fills in what it can infer, asks you about audience, viewpoint and the tour story |
-
-Change requests are the normal way to iterate. Lasting preferences ("always say Acme Group", "no moving dots") are
-also written into the config so a later update keeps them.
+How to install the skill in each agent, start it, and keep it up to date. Install it one way per agent: two copies
+make the agent list the skill twice. What happens once it runs, where the files go and how to keep working with the
+agent is in [Generating](/docs/generating/).
 
 ## Claude Code
 
@@ -165,6 +116,33 @@ curl -fsSL https://blueprintdeck.dev/install.sh | sh -s -- --agent copilot
 Then open Copilot Chat in agent mode (or a Copilot CLI session) in your project folder and paste the prompt from the
 configurator.
 
+## Cursor
+
+Cursor reads Agent Skills in the editor's agent and in the Cursor CLI, and it also reads the Claude Code and Codex
+skill folders and `~/.agents/skills`. **If you installed the skill for Claude Code or Codex, Cursor already has it.**
+Otherwise, use the install script, which puts it into `~/.cursor/skills` (with `--project`, the repository's
+`.cursor/skills`):
+
+```bash
+curl -fsSL https://blueprintdeck.dev/install.sh | sh -s -- --agent cursor
+```
+
+When the script finds Cursor next to Claude Code, Codex or `~/.agents`, it doesn't make a second copy for it. Then ask
+the agent in your project folder for a Blueprint Deck, or type `/blueprint-deck`. Updates: run the script again.
+
+## Grok Build
+
+Grok Build, xAI's coding agent, reads Claude Code skills without any setup, and also `~/.grok/skills` and
+`~/.agents/skills`. **If you installed the skill for Claude Code, Grok Build already has it.** Otherwise, the install
+script puts it into `~/.grok/skills` (with `--project`, the repository's `.grok/skills`):
+
+```bash
+curl -fsSL https://blueprintdeck.dev/install.sh | sh -s -- --agent grok
+```
+
+Check with `/skills` in a Grok Build session, then ask for a Blueprint Deck in your project folder. Updates: run the
+script again.
+
 ## Chat apps: Claude, ChatGPT, Gemini
 
 The chat apps and Claude's desktop app need no terminal and no repository: you attach your docs to a chat. Most take
@@ -202,18 +180,11 @@ Read blueprint-deck/SKILL.md and follow it. SKILL_DIR is the folder that file is
 Then make a Blueprint Deck from diagrams/diagram.config.yaml.
 ```
 
-## Tips
-
-- Keep `workflow.confirm_structure: true` for the first run. Most of a deck's quality comes from the areas and their
-  names, and correcting an outline is cheaper than correcting 30 boxes.
-- Point `sources.include` at the docs that matter for this audience; less noise gives a clearer map.
-- Write what the last version got wrong into `comments`. The agent treats every comment and note as an instruction.
-- Big repos: agents with sub-agents read in parallel and hand back structured facts, which keeps the main context free.
-
 ## Updating
 
 When the skill runs, it asks GitHub for the latest release and tells you when a newer version is out (it never
-updates anything by itself). How to update depends on how you installed it:
+updates anything by itself). Ask the agent to *update the Blueprint Deck skill* and it runs the right command for you;
+or run it yourself. It depends on how you installed it:
 
 | installed with | to update |
 |---|---|
@@ -222,7 +193,7 @@ updates anything by itself). How to update depends on how you installed it:
 | a zip upload (Claude, ChatGPT on the web, Gemini) | delete the skill and upload the newer zip |
 | the GitHub Copilot CLI plugin | `copilot plugin update blueprint-deck` |
 | `gh skill install` | `gh skill update blueprint-deck` |
-| the install script, Codex's skill installer or Gemini CLI | run the install script again: it replaces the skill and says which version it replaced |
+| the install script (also for Cursor and Grok Build), Codex's skill installer or Gemini CLI | run the install script again: it replaces the skill and says which version it replaced |
 
 What changed is in the [changelog](/changelog/). To install a specific release with the script:
 
@@ -240,6 +211,6 @@ $installer = irm "https://blueprintdeck.dev/install.ps1"
 Every release and its files are on [GitHub Releases](https://github.com/lukasvecerka23/blueprint-deck-kit/releases).
 
 Diagrams you already made keep working: each file carries its own engine. To give a file the new features, ask your
-agent to *upgrade* it (or run `node tools/insert.mjs --upgrade diagrams/index.html`). The content stays as it is.
+agent to *upgrade* it (see [Generating](/docs/generating/#keep-working-with-the-agent)), or run `node tools/insert.mjs --upgrade diagrams/index.html`. The content stays as it is.
 The editor shows a file's engine version under **E → Diagram → This file**.
 

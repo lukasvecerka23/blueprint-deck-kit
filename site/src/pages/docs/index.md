@@ -4,7 +4,7 @@ title: Getting started
 description: Install the skill, describe your diagram, let your agent write it, then present, edit and share the file.
 ---
 
-Blueprint Deck Kit is an **agent skill**. You install it once; afterwards your coding agent (Claude Code, Codex, GitHub Copilot or any
+Blueprint Deck Kit is an **agent skill**. You install it once; afterwards your coding agent (Claude Code, Codex, GitHub Copilot, Cursor or any
 agent that supports Agent Skills) can turn your docs or code (a codebase, a folder of Markdown, text or PDF files, wiki exports or web pages) into a **Blueprint Deck**: one self-contained HTML file
 with a pan-and-zoom map, clickable boxes with side panels, tabs, personas with their paths, a guided tour, roadmap and
 option sheets, a built-in editor and a PDF export.
@@ -44,6 +44,8 @@ Install it where you work:
 - **Chat apps**: upload [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip) as a skill in Claude or ChatGPT on the web,
   [blueprint-deck-skill-gemini.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill-gemini.zip) in Gemini; the ChatGPT desktop app takes the Codex plugin
   ([how, per app](/docs/agents/#chat-apps-claude-chatgpt-gemini)).
+- **Cursor and Grok Build** read the Claude Code skills folder, so a Claude Code install covers them; otherwise the install script below
+  with `--agent cursor` or `--agent grok` ([Agents](/docs/agents/#cursor)).
 - **Any other agent, or several at once**: the install script below.
 
 ### The install script
@@ -62,12 +64,13 @@ irm https://blueprintdeck.dev/install.ps1 | iex
 
 The installer downloads the latest [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) from GitHub
 and copies the `blueprint-deck` skill folder into the skills folder of the agents it finds (`~/.claude/skills`,
-`~/.codex/skills`, `~/.gemini/skills`, `~/.copilot/skills`, `~/.agents/skills`). When it finds more than one, it asks which (press Enter for all of them).
+`~/.codex/skills`, `~/.gemini/skills`, `~/.copilot/skills`, `~/.cursor/skills`, `~/.grok/skills`, `~/.agents/skills`). When it finds more than one, it asks which (press Enter for all of them).
+Cursor and Grok Build get no copy of their own when they can already read one of the others.
 It installs nothing else. Run it again to update.
 
 | option (sh) | option (PowerShell) | what it does |
 |---|---|---|
-| `--agent claude\|codex\|gemini\|copilot\|agents\|all` | `-Agent …` | install for one agent only (or all) |
+| `--agent claude\|codex\|gemini\|copilot\|cursor\|grok\|agents\|all` | `-Agent …` | install for one agent only (or all) |
 | `--project` | `-Project` | install into the current project (`./.claude/skills`, …) |
 | `--dir <path>` | `-Dir <path>` | install into any skills folder |
 | `--version <x.y.z>` | `-Version <x.y.z>` | a specific release (default: the latest) |
@@ -115,6 +118,9 @@ Start a new agent session in your project folder and paste the prompt. In Claude
 3. proposes the structure (the areas, personas, tabs and the tour in one line per step) and waits for your OK;
 4. writes `diagrams/index.html` and an `extraction-report.md` next to it (sources read, conflicts, gaps, assumptions);
 5. checks the result (with Node or a browser tool if it has one) and reports what it made.
+
+Afterwards you keep talking to it: ask for changes, an update when the docs change, or a newer engine. See
+[Generating](/docs/generating/) for what you can ask and where the files go.
 
 ## 4. Present, edit, share
 

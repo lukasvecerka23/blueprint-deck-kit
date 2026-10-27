@@ -37,13 +37,10 @@ edits that are in the file are kept.
 
 ## Bigger changes: ask the agent
 
-The normal way to iterate is a change request in your agent session: "move the audit log into Governance", "add a
-persona for the support team", "step 7 should explain retention", "lighter theme". The agent edits only what you
-asked, keeps ids stable, re-checks the file and tells you what changed. If the request is a lasting preference
-("always say Acme Group"), it also writes it into the config so a later update keeps it.
-
-When the docs change, ask it to **update** the deck: it re-reads the sources and changes only what changed, keeping
-your manual edits and any box marked `"locked": true`. See [Agents](/docs/agents/) for all modes.
+For anything more than a quick fix, ask your agent in plain words: "move the audit log into Governance", "add a
+persona for the support team", "the docs changed, update the deck". It reads the data block first, so the edits you
+saved into the file are kept. What you can ask, and what the agent does, is in
+[Generating](/docs/generating/#keep-working-with-the-agent).
 
 ## PDF deck (press P)
 

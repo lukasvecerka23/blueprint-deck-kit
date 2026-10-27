@@ -30,6 +30,7 @@ export const INSTALL = {
 export const DOCS_NAV = [
   { title: "Getting started", href: "/docs/" },
   { title: "Configuring", href: "/docs/configuring/" },
+  { title: "Generating", href: "/docs/generating/" },
   { title: "Editing & sharing", href: "/docs/editing/" },
   { title: "Agents", href: "/docs/agents/" },
   { title: "Diagram format", href: "/docs/format/", group: "Reference" },

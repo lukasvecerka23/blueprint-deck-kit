@@ -127,12 +127,12 @@ const link = "underline underline-offset-4 hover:text-foreground";
     <Command code={INSTALL.sh} />
     <Command code={INSTALL.ps} prompt="PS>" />
     {hero ? (
-      <p class={hint}>The install script (macOS/Linux, then Windows): installs for Claude Code, Codex, Gemini CLI, GitHub Copilot and other Agent Skills agents it finds, and asks which.{" "}
+      <p class={hint}>The install script (macOS/Linux, then Windows): installs for Claude Code, Codex, Gemini CLI, GitHub Copilot, Cursor, Grok Build and other Agent Skills agents it finds, and asks which.{" "}
         <a class={link} href="#install">All options</a>.</p>
     ) : (
       <p class={hint}>The install script, for macOS/Linux and for Windows PowerShell. It installs the latest release for the agents it finds
-        (<code class={code}>~/.claude/skills</code>, <code class={code}>~/.codex/skills</code>, <code class={code}>~/.gemini/skills</code>, <code class={code}>~/.copilot/skills</code>, <code class={code}>~/.agents/skills</code>) and asks which when there are several.
-        Options: <code class={code}>--agent claude|codex|gemini|copilot|agents|all</code>, <code class={code}>--dir &lt;skills folder&gt;</code> for any other agent,{" "}
+        (<code class={code}>~/.claude/skills</code>, <code class={code}>~/.codex/skills</code>, <code class={code}>~/.gemini/skills</code>, <code class={code}>~/.copilot/skills</code>, <code class={code}>~/.cursor/skills</code>, <code class={code}>~/.grok/skills</code>, <code class={code}>~/.agents/skills</code>) and asks which when there are several; Cursor and Grok Build also read the Claude Code copy, so they don't get a second one.
+        Options: <code class={code}>--agent claude|codex|gemini|copilot|cursor|grok|agents|all</code>, <code class={code}>--dir &lt;skills folder&gt;</code> for any other agent,{" "}
         <code class={code}>--project</code> (into the current project), <code class={code}>--version 0.5.1</code>, <code class={code}>--yes</code>, <code class={code}>--uninstall</code>;
         pass them with <code class={code}>sh -s --</code> (PowerShell: <code class={code}>-Agent</code>, <code class={code}>-Version</code> …). Run it again to update.
         It only copies files. Read the <a class={link} href="/install.sh">shell</a> or <a class={link} href="/install.ps1">PowerShell</a> script.

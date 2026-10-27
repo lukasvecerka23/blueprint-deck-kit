@@ -8,7 +8,7 @@
 
 ▶ **[Watch the 1-minute video](https://blueprintdeck.dev/#video)** · **[Try a live deck](https://blueprintdeck.dev/examples/acme/index.html)**
 
-Your coding agent (Claude Code, Codex, GitHub Copilot or any agent that supports skills) reads your docs or your code and writes a
+Your coding agent (Claude Code, Codex, GitHub Copilot, Cursor or any agent that supports skills) reads your docs or your code and writes a
 *Blueprint Deck*: a pan-and-zoom map of your product, process or system that is also a slide deck.
 
 - **Click any box** for a side panel: what it is, why it matters, the technology, its sources.
@@ -74,6 +74,10 @@ copilot plugin marketplace add lukasvecerka23/blueprint-deck-kit && copilot plug
 For Copilot in VS Code or Visual Studio, with the GitHub CLI (2.90+):
 `gh skill install lukasvecerka23/blueprint-deck-kit blueprint-deck --agent github-copilot --scope user`.
 
+**Cursor** and **Grok Build** also read the Claude Code skills folder (Cursor the Codex one too), so a Claude Code or
+Codex install already covers them. Otherwise use the install script below with `--agent cursor` (into `~/.cursor/skills`)
+or `--agent grok` (into `~/.grok/skills`).
+
 **Chat apps** (no terminal):
 - **Claude** (web and desktop app, paid plans): **Customize → Skills**, upload
   [blueprint-deck-skill.zip](https://github.com/lukasvecerka23/blueprint-deck-kit/releases/latest/download/blueprint-deck-skill.zip) unchanged, turn it on (code execution must be on).
@@ -88,7 +92,8 @@ then ask it to publish the deck as an artifact, which gives you a link anyone ca
 
 **Install script**: for any other agent, several at once, Windows or a specific version. It installs the latest
 [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) for the agents it finds (`~/.claude/skills`,
-`~/.codex/skills`, `~/.gemini/skills`, `~/.copilot/skills`, `~/.agents/skills`) and asks which when there are several.
+`~/.codex/skills`, `~/.gemini/skills`, `~/.copilot/skills`, `~/.cursor/skills`, `~/.grok/skills`, `~/.agents/skills`) and asks which when
+there are several. Cursor and Grok Build get no second copy when they already read one of the others.
 
 macOS / Linux:
 ```bash
@@ -98,7 +103,7 @@ Windows (PowerShell):
 ```powershell
 irm https://raw.githubusercontent.com/lukasvecerka23/blueprint-deck-kit/main/install.ps1 | iex
 ```
-Options: `--agent claude|codex|gemini|copilot|agents|all`, `--dir <folder>` (any other agent's skills folder), `--project` (into the
+Options: `--agent claude|codex|gemini|copilot|cursor|grok|agents|all`, `--dir <folder>` (any other agent's skills folder), `--project` (into the
 current project), `--version 0.5.1` (a specific release), `--yes` (don't ask), `--uninstall`; pass them with
 `sh -s --`. With PowerShell, `-Agent`, `-Version` … by running the script like this:
 ```powershell
@@ -131,6 +136,10 @@ Paste the prompt into your agent, in your project folder: a code repository, or 
    assumptions),
 4. checks every tab and tour step, and fixes what doesn't fit.
 
+The deck goes to `workflow.output` in the config, relative to the config file's folder (by default `diagrams/index.html`).
+Then keep talking to the agent: ask for changes, *"the docs changed, update the deck"*, *"upgrade the deck to the new
+version"* or *"update the Blueprint Deck skill"*. More in [Generating](https://blueprintdeck.dev/docs/generating/).
+
 ### 4. Present, change, share
 
 - Open `diagrams/index.html`. `←` `→` / Space walk the tour, `Esc` closes, `F` fits the map, `1`–`9` switch
@@ -154,8 +163,8 @@ Paste the prompt into your agent, in your project folder: a code repository, or 
   To update: Claude Code plugin: `claude plugin update blueprint-deck@blueprint-deck-kit` (or auto-update);
   Codex/ChatGPT desktop plugin: `codex plugin marketplace upgrade`; Copilot CLI plugin: `copilot plugin update blueprint-deck`;
   `gh skill install`: `gh skill update blueprint-deck`; Claude, ChatGPT (web) or Gemini: delete the skill
-  and upload the newer zip; install script (also for Codex): run it again, it says
-  which version it replaced. A specific release: add `--version 0.5.1` (PowerShell: `-Version 0.5.1`).
+  and upload the newer zip; install script (also for Codex, Cursor and Grok Build): run it again, it says
+  which version it replaced. Or ask your agent to update the Blueprint Deck skill: it runs the right command. A specific release: add `--version 0.5.1` (PowerShell: `-Version 0.5.1`).
 - **Your diagrams** keep working as they are: each file carries its own engine. To give a file the new features,
   ask your agent to "upgrade diagrams/index.html to the newest engine"; your content stays as it is. The editor
   (E → Diagram) shows which engine a file has.
