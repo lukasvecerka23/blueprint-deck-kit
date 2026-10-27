@@ -83,7 +83,7 @@ agent and say which in the pull request.
 
 ## Issues
 
-Open an issue with one of the forms (bug report, feature request, deck quality, docs or website); each one starts the
+Open an issue with one of the forms (bug report, feature request, idea, deck quality, docs or website); each one starts the
 title for you. Titles follow the same pattern as our commits:
 
 ```text
@@ -94,6 +94,7 @@ type(area): what's wrong or wanted
 |---|---|
 | `bug` | something is broken |
 | `feat` | something new: a diagram type, an option, a workflow |
+| `idea` | a general idea or a direction, before it's a concrete feature |
 | `quality` | the skill ran, but the deck it made is wrong or weak |
 | `docs` | the docs, the README or the website text |
 
@@ -106,6 +107,7 @@ website), `docs`, `examples`.
 
 - `bug(deck): switching diagrams throws errors when opened from SharePoint`
 - `feat(pdf): black and white export`
+- `idea(deck): a timeline view for roadmaps`
 - `quality(skill): invents a database that isn't in the docs`
 - `docs(install): explain how the output folder is chosen`
 

@@ -1,0 +1,30 @@
+name: Idea
+description: A general idea or a direction, not a concrete feature yet
+labels: ["idea"]
+title: "idea(): "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Title:** `idea(area): what you have in mind`, lowercase and specific, for example
+        `idea(deck): a timeline view for roadmaps`. Areas: `deck`, `editor`, `pdf`, `configurator`, `skill`, `install`, `site`, `docs`, `examples`.
+        ([Issue titles](https://github.com/lukasvecerka23/blueprint-deck-kit/blob/main/CONTRIBUTING.md#issues))
+
+        Something specific that's missing? The **Feature request** form fits better.
+  - type: textarea
+    id: idea
+    attributes:
+      label: What's the idea?
+      description: A few sentences are enough. Rough is fine.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would it help?
+      description: Who would use it, and what would it make easier or possible?
+  - type: textarea
+    id: more
+    attributes:
+      label: Anything else?
+      description: Links, sketches, other tools that do something similar, open questions.
