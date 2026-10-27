@@ -64,9 +64,11 @@ file in the browser (press E); those edits are in the data block, so always re-r
      `gh skill update blueprint-deck`
    - a chat app (claude.ai, Claude Desktop, ChatGPT on the web, Gemini; no project folder): delete the skill and upload the newer
      zip from the releases page (`blueprint-deck-skill-gemini.zip` in Gemini)
-   - anywhere else (Claude Code, Codex, Gemini CLI or Copilot skills folder, other agents): run the install script again, as
-     described at https://blueprintdeck.dev/docs/agents/#updating
-   Never stop or install anything yourself because of this.
+   - anywhere else (Claude Code, Codex, Gemini CLI, Copilot, Cursor or Grok Build skills folder, other agents): run the install
+     script again, as described at https://blueprintdeck.dev/docs/agents/#updating
+   Never stop or install anything yourself because of this. If the user asks you to update the skill, run that command
+   for them (the install script with `--agent` for the agent you are, or `--dir` with the folder that contains `SKILL_DIR`), then
+   tell them to start a new session so the new version is loaded.
 2. When you work on an existing diagram, read its engine version from the top of the file
    (`<meta name="generator" content="Blueprint Deck Kit X">`). If it's older than the skill's version, mention once
    that the file can get the newer engine (mode `upgrade`), and do it only when the user agrees.
