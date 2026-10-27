@@ -6,12 +6,14 @@
 #   (the website's short URL https://blueprintdeck.dev/install.ps1 serves this same script)
 #   .\install.ps1                     (from a clone of the repository: installs that copy)
 #
-# Parameters: -Agent claude|codex|gemini|copilot|agents|all (default: the agents found; with more than one it asks which, Enter = all),
+# Parameters: -Agent claude|codex|gemini|copilot|cursor|grok|agents|all (default: the agents found; with more than one it asks which,
+#             Enter = all; Cursor and Grok Build also read the Claude Code and ~\.agents skills, Cursor the Codex ones too,
+#             so next to those they get no second copy),
 #             -Dir <skills folder>, -Project, -Version <x.y.z> (a specific release),
 #             -Ref <branch or tag> (the skill as it is on a branch, e.g. main), -Uninstall, -Yes (don't ask, all found)
 # It only copies files: no Node, no Python, nothing else is installed.
 param(
-  [ValidateSet("", "claude", "codex", "gemini", "copilot", "agents", "all")][string]$Agent = "",
+  [ValidateSet("", "claude", "codex", "gemini", "copilot", "cursor", "grok", "agents", "all")][string]$Agent = "",
   [string]$Dir = "",
   [switch]$Project,
   [string]$Ref = $(if ($env:BLUEPRINT_DECK_REF) { $env:BLUEPRINT_DECK_REF } else { "" }),
@@ -29,6 +31,7 @@ $Base = if ($Project) { (Get-Location).Path } else { $HOME }
 function Get-SkillsDir($id) { if ($id -eq "copilot" -and $Project) { Join-Path $Base ".github\skills" } else { Join-Path $Base ".$id\skills" } }
 
 $targets = @()
+$shared = @()
 if ($Dir) { $targets += $Dir }
 else {
   switch ($Agent) {
@@ -36,6 +39,8 @@ else {
     "codex"  { $targets += Join-Path $Base ".codex\skills" }
     "gemini" { $targets += Join-Path $Base ".gemini\skills" }
     "copilot" { $targets += Get-SkillsDir "copilot" }
+    "cursor" { $targets += Join-Path $Base ".cursor\skills" }
+    "grok"   { $targets += Join-Path $Base ".grok\skills" }
     "agents" { $targets += Join-Path $Base ".agents\skills" }
     "all"    { $targets += @((Join-Path $Base ".claude\skills"), (Join-Path $Base ".codex\skills"), (Join-Path $Base ".gemini\skills"), (Get-SkillsDir "copilot"), (Join-Path $Base ".agents\skills")) }
     default {
@@ -45,6 +50,8 @@ else {
       if ((Test-Path (Join-Path $Base ".codex")) -or (Get-Command codex -ErrorAction SilentlyContinue)) { $found += @{ Id = "codex"; Label = "Codex" } }
       if ((Test-Path (Join-Path $Base ".gemini")) -or (Get-Command gemini -ErrorAction SilentlyContinue)) { $found += @{ Id = "gemini"; Label = "Gemini CLI" } }
       if ((Test-Path (Join-Path $HOME ".copilot")) -or (Get-Command copilot -ErrorAction SilentlyContinue)) { $found += @{ Id = "copilot"; Label = "GitHub Copilot" } }
+      if ((Test-Path (Join-Path $HOME ".cursor")) -or (Get-Command cursor-agent -ErrorAction SilentlyContinue) -or (Get-Command cursor -ErrorAction SilentlyContinue)) { $found += @{ Id = "cursor"; Label = "Cursor" } }
+      if ((Test-Path (Join-Path $HOME ".grok")) -or (Get-Command grok -ErrorAction SilentlyContinue)) { $found += @{ Id = "grok"; Label = "Grok Build" } }
       if (Test-Path (Join-Path $Base ".agents")) { $found += @{ Id = "agents"; Label = "other agents (~\.agents)" } }
       if ($found.Count -eq 0) { $found += @{ Id = "agents"; Label = "other agents (~\.agents)" } }
       # more than one: ask which (Enter = all). Only in an interactive console; never in CI, with -Yes or when uninstalling.
@@ -59,7 +66,15 @@ else {
           $found = @($found[$n - 2])
         }
       }
-      foreach ($f in $found) { $targets += Get-SkillsDir $f.Id }
+      # Cursor reads the Claude Code, Codex and ~\.agents skills, Grok Build the Claude Code and ~\.agents ones: with one of
+      # those installed too they would see the skill twice, so they get their own copy only when they're the only choice
+      # (uninstalling removes every copy)
+      $ids = @($found | ForEach-Object { $_.Id })
+      $readsShared = @{ cursor = @("claude", "codex", "agents"); grok = @("claude", "agents") }
+      foreach ($f in $found) {
+        if (-not $Uninstall -and $readsShared.ContainsKey($f.Id) -and ($readsShared[$f.Id] | Where-Object { $ids -contains $_ })) { $shared += @($f.Label); continue }
+        $targets += Get-SkillsDir $f.Id
+      }
     }
   }
 }
@@ -110,6 +125,7 @@ try {
     elseif ($old -eq $new) { Write-Host "Blueprint Deck Kit $new is up to date in $dest (reinstalled)" }
     else { Write-Host "updated Blueprint Deck Kit $old -> $new in $dest"; $updated = $true }
   }
+  if ($shared.Count) { Write-Host ("Skipped " + ($shared -join " and ") + ": already reading the skill installed above.") }
   if ($updated) {
     Write-Host "What's new: $GitHub/releases"
     Write-Host "Existing diagrams keep their engine; to give one the new features, ask your agent to upgrade it."

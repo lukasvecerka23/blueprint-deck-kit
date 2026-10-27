@@ -8,8 +8,11 @@
 #   ./install.sh                      (from a clone of the repository: installs that copy)
 #
 # Options:
-#   --agent claude|codex|gemini|copilot|agents|all   where to install (default: the agents found on this computer; with more
-#                                     than one it asks which, Enter = all)
+#   --agent claude|codex|gemini|copilot|cursor|grok|agents|all
+#                                     where to install (default: the agents found on this computer; with more
+#                                     than one it asks which, Enter = all). Cursor and Grok Build also read the
+#                                     Claude Code and ~/.agents skills (Cursor the Codex ones too), so next to
+#                                     those they get no second copy; all = the shared folders, which they read
 #   --dir <path>                      install into this skills folder instead
 #   --project                         install into the current project (./.claude/skills, ./.codex/skills, …;
 #                                     Copilot: ./.github/skills)
@@ -41,7 +44,7 @@ while [ $# -gt 0 ]; do
     --version) VERSION="${2#v}"; shift 2 ;;
     --uninstall) UNINSTALL=1; shift ;;
     -y|--yes) YES=1; shift ;;
-    -h|--help) sed -n '2,19p' "$0" 2>/dev/null || echo "see https://github.com/$REPO"; exit 0 ;;
+    -h|--help) sed -n '2,22p' "$0" 2>/dev/null || echo "see https://github.com/$REPO"; exit 0 ;;
     *) echo "unknown option: $1" >&2; exit 2 ;;
   esac
 done
@@ -63,6 +66,8 @@ else
     codex) add "$B/.codex/skills" ;;
     gemini) add "$B/.gemini/skills" ;;
     copilot) add "$(dir_of copilot)" ;;
+    cursor) add "$B/.cursor/skills" ;;
+    grok) add "$B/.grok/skills" ;;
     agents) add "$B/.agents/skills" ;;
     all) add "$B/.claude/skills"; add "$B/.codex/skills"; add "$B/.gemini/skills"; add "$(dir_of copilot)"; add "$B/.agents/skills" ;;
     "")
@@ -72,9 +77,11 @@ else
       { [ -d "$B/.codex" ] || command -v codex >/dev/null 2>&1; } && FOUND="$FOUND codex"
       { [ -d "$B/.gemini" ] || command -v gemini >/dev/null 2>&1; } && FOUND="$FOUND gemini"
       { [ -d "$HOME/.copilot" ] || command -v copilot >/dev/null 2>&1; } && FOUND="$FOUND copilot"
+      { [ -d "$HOME/.cursor" ] || command -v cursor-agent >/dev/null 2>&1 || command -v cursor >/dev/null 2>&1; } && FOUND="$FOUND cursor"
+      { [ -d "$HOME/.grok" ] || command -v grok >/dev/null 2>&1; } && FOUND="$FOUND grok"
       [ -d "$B/.agents" ] && FOUND="$FOUND agents"
       [ -z "$FOUND" ] && FOUND="agents"
-      label() { case "$1" in claude) printf 'Claude Code' ;; codex) printf 'Codex' ;; gemini) printf 'Gemini CLI' ;; copilot) printf 'GitHub Copilot' ;; agents) printf 'other agents (~/.agents)' ;; esac; }
+      label() { case "$1" in claude) printf 'Claude Code' ;; codex) printf 'Codex' ;; gemini) printf 'Gemini CLI' ;; copilot) printf 'GitHub Copilot' ;; cursor) printf 'Cursor' ;; grok) printf 'Grok Build' ;; agents) printf 'other agents (~/.agents)' ;; esac; }
       set -- $FOUND
       # more than one: ask which (Enter = all). Only with a terminal; never in CI, with --yes or when uninstalling.
       # The answer is read from /dev/tty, so this also works with curl … | sh.
@@ -96,9 +103,21 @@ else
             else say "unknown choice '$CHOICE'" >&2; exit 2; fi ;;
         esac
       fi
-      for a in "$@"; do add "$(dir_of "$a")"; done
+      # Cursor reads the Claude Code, Codex and ~/.agents skills, Grok Build the Claude Code and ~/.agents ones: with one of
+      # those installed too they would see the skill twice, so they get their own copy only when they're the only choice
+      # (uninstalling removes every copy)
+      CHOSEN=" $* "
+      for a in "$@"; do
+        if [ "$UNINSTALL" = 0 ]; then
+          case "$a:$CHOSEN" in
+            cursor:*" claude "*|cursor:*" codex "*|cursor:*" agents "*|grok:*" claude "*|grok:*" agents "*)
+              SHARED="${SHARED:+$SHARED and }$(label "$a")"; continue ;;
+          esac
+        fi
+        add "$(dir_of "$a")"
+      done
       ;;
-    *) say "unknown agent '$AGENT' (claude, codex, gemini, copilot, agents or all)" >&2; exit 2 ;;
+    *) say "unknown agent '$AGENT' (claude, codex, gemini, copilot, cursor, grok, agents or all)" >&2; exit 2 ;;
   esac
 fi
 
@@ -146,6 +165,7 @@ for t in $TARGETS; do
   elif [ "$OLD" = "$NEW" ]; then say "Blueprint Deck Kit $NEW is up to date in $t/$NAME (reinstalled)"
   else say "updated Blueprint Deck Kit $OLD -> $NEW in $t/$NAME"; UPDATED=1; fi
 done
+if [ -n "${SHARED:-}" ]; then say "Skipped $SHARED: already reading the skill installed above."; fi
 if [ "${UPDATED:-0}" = 1 ]; then
   say "What's new: $GITHUB/releases"
   say "Existing diagrams keep their engine; to give one the new features, ask your agent to upgrade it."
