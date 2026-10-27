@@ -124,6 +124,6 @@ diagrams:
 
 comments: |
   Audience: developers and presenters who are evaluating the tool.
-  Versioning: the kit is in beta, version 0.x (currently 0.6.0); 1.0.0 will be the first stable release.
+  Versioning: the kit is in beta, version 0.x (currently 0.7.0); 1.0.0 will be the first stable release.
   meta.url is the GitHub repository (https://github.com/lukasvecerka23/blueprint-deck-kit); the website is blueprintdeck.dev.
   Sources are GitHub links (blob/main) to the files in this repository.
