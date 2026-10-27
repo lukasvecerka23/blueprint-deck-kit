@@ -27,7 +27,8 @@ Where a release has both, **Skill and decks** is what you get by updating the sk
   when the docs change, a newer engine, a newer skill. The Agents page now only covers installing and updating, with
   new sections for Cursor and Grok Build.
 - **Landing page:** the install commands are the main action in the hero, with *Configure your deck* right below
-  them; the top bar and the last section lead with *Install the skill*.
+  them, and *Watch the demo* scrolls to the video and plays it; the top bar and the last section lead with *Install the
+  skill*.
 - **An Idea issue form** for general ideas that aren't a concrete feature yet, with an `idea` label.
 - **The configurator** links back to the website (its logo, Docs and All install options) and reminds you to install
   the skill before you copy the prompt.

@@ -70,7 +70,7 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
           personas. Present it, edit it, send it to anyone.
         </p>
         <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <a href="#how" class="btn" data-size="lg" data-variant="outline"><Icon name="list-ordered" /> How it works</a>
+          <a href="#video" class="btn" data-size="lg" data-variant="outline" data-watch><Icon name="circle-play" /> Watch the demo</a>
           <a href={SITE.repo} class="btn" data-size="lg" data-variant="ghost"><Icon name="github" /> Star on GitHub
             <span class="badge ml-0.5 font-mono" data-variant="secondary" data-stars hidden></span></a>
         </div>
@@ -290,6 +290,14 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
     // scrollbar drags and anchor links only fire "scroll"; the browser's own restore happens right at load
     setTimeout(() => addEventListener("scroll", arm, { passive: true, once: true }), 800);
   }
+  // "Watch the demo" brings the whole video on screen and plays it (asked for, so also with reduced motion)
+  document.querySelector("[data-watch]")?.addEventListener("click", e => {
+    if (!video) return;
+    e.preventDefault();
+    const smooth = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+    video.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "center" });
+    video.play().catch(() => {});
+  });
   // the cards' glow follows the pointer
   document.querySelectorAll<HTMLElement>(".glow-card").forEach(card => {
     card.addEventListener("pointermove", ev => {
