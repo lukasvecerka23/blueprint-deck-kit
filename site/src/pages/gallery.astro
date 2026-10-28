@@ -21,7 +21,7 @@ import { SITE } from "../data/site";
         return (
           <article class="card glow-card overflow-hidden p-0 gap-0">
             <div class="relative aspect-[2/1] overflow-hidden border-b">
-              <ExamplePreview accent={e.accent} accent2={e.accent2} theme={e.theme} seed={i + 1} slug={e.slug} alt={`${e.title}: overview`} />
+              <ExamplePreview accent={e.accent} accent2={e.accent2} theme={e.theme} seed={i + 1} slug={e.slug} alt={`${e.title}: overview`} sizes="(min-width: 768px) 600px, 100vw" />
               <span class="badge absolute top-3 right-3" data-variant="secondary">{e.theme === "light" ? "Light theme" : "Dark theme"}</span>
             </div>
             <div class="flex flex-1 flex-col gap-4 p-6">

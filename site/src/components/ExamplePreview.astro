@@ -1,11 +1,14 @@
 ---
 // A decorative mini map in the example's colours (cheaper than embedding every deck in the gallery).
-// When public/shots/<slug>.png exists (made with scripts/shots.mjs), the real screenshot is shown instead.
+// When public/shots/<slug>.png exists (made with scripts/shots.mjs), the real screenshot is shown instead, as WebP in
+// two sizes when <slug>-800.webp and <slug>-1600.webp exist (cwebp -q 75 [-resize 800 0] <slug>.png -o …).
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-interface Props { accent: string; accent2: string; theme: "dark" | "light"; seed?: number; slug?: string; alt?: string }
-const { accent, accent2, theme, seed = 1, slug, alt = "Diagram preview" } = Astro.props;
-const shot = slug && existsSync(join(process.cwd(), "public", "shots", `${slug}.png`)) ? `/shots/${slug}.png` : null;
+interface Props { accent: string; accent2: string; theme: "dark" | "light"; seed?: number; slug?: string; alt?: string; sizes?: string }
+const { accent, accent2, theme, seed = 1, slug, alt = "Diagram preview", sizes = "(min-width: 1024px) 300px, (min-width: 640px) 50vw, 100vw" } = Astro.props;
+const has = (f: string) => existsSync(join(process.cwd(), "public", "shots", f));
+const shot = slug && has(`${slug}.png`) ? `/shots/${slug}.png` : null;
+const webp = slug && has(`${slug}-800.webp`) && has(`${slug}-1600.webp`) ? `/shots/${slug}-800.webp 800w, /shots/${slug}-1600.webp 1600w` : null;
 const dark = theme === "dark";
 const bg = dark ? "#0b1020" : "#f7f8fb";
 const zone = dark ? "rgba(255,255,255,.035)" : "rgba(15,23,42,.035)";
@@ -24,7 +27,9 @@ const L = layouts[(seed - 1) % layouts.length];
 const pts = L.nodes.map(([x, y]) => [x + 23, y + 9]);
 const edges = pts.slice(1).map((p, i) => [pts[i], p]);
 ---
-{shot ? <img src={shot} alt={alt} class="block h-full w-full object-cover object-top" loading="lazy" width="1600" height="800" /> : <svg viewBox="0 0 320 160" class="block h-full w-full" role="img" aria-label="Diagram preview" preserveAspectRatio="xMidYMid slice">
+{shot ? (webp
+  ? <img src={`/shots/${slug}-800.webp`} srcset={webp} sizes={sizes} alt={alt} class="block h-full w-full object-cover object-top" loading="lazy" decoding="async" width="1600" height="800" />
+  : <img src={shot} alt={alt} class="block h-full w-full object-cover object-top" loading="lazy" width="1600" height="800" />) : <svg viewBox="0 0 320 160" class="block h-full w-full" role="img" aria-label="Diagram preview" preserveAspectRatio="xMidYMid slice">
   <defs>
     <pattern id={`grid-${seed}`} width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0H0V16" fill="none" stroke={grid} /></pattern>
     <radialGradient id={`glow-${seed}`} cx="20%" cy="0%" r="80%"><stop offset="0" stop-color={accent} stop-opacity={dark ? ".35" : ".14"} /><stop offset="1" stop-color={accent} stop-opacity="0" /></radialGradient>
