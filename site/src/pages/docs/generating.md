@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/Docs.astro
 title: Generating
-description: Start a run, see what the agent does and where the files go, and keep working with it afterwards (changes, updates when the docs change, a newer engine, a newer skill).
+description: "Start a run, see what the agent does and where the files go, then keep working with it: changes, updates when the docs change, a newer engine."
 ---
 
 You work with Blueprint Deck in your agent session, in plain words. The agent picks what to do from what you ask; you

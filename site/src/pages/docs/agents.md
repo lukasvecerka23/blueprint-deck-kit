@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/Docs.astro
 title: Agents
-description: How to install, start and update the skill in Claude Code, Codex, Gemini CLI, GitHub Copilot, Cursor, Grok Build, the Claude, ChatGPT and Gemini apps and other agents.
+description: Install, start and update the skill in Claude Code, Codex, Gemini CLI, GitHub Copilot, Cursor, Grok Build, the Claude, ChatGPT and Gemini apps.
 ---
 
 How to install the skill in each agent, start it, and keep it up to date. Install it one way per agent: two copies

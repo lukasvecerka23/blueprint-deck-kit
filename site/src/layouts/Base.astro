@@ -3,11 +3,16 @@ import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { SITE } from "../data/site";
+import VERSION from "../../../plugins/blueprint-deck/skills/blueprint-deck/VERSION.txt?raw";
 
-interface Props { title?: string; description?: string; image?: string; wide?: boolean }
+interface Props {
+  title?: string; description?: string; image?: string; wide?: boolean;
+  /** extra schema.org objects for this page (FAQ, video, article …) */
+  schema?: Record<string, unknown>[];
+}
 // a JPEG under ~300 KB: WhatsApp skips larger preview images
-const { title, description = SITE.description, image = "/og.jpg" } = Astro.props;
-const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name}: interactive presentation diagrams from your docs or code`;
+const { title, description = SITE.description, image = "/og.jpg", schema = [] } = Astro.props;
+const fullTitle = title ? `${title} · ${SITE.name}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
 ---
@@ -43,19 +48,44 @@ const ogImage = new URL(image, Astro.site);
       <script type="application/ld+json" set:html={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
+        "@id": `${SITE.url}/#software`,
         name: SITE.name,
-        description: SITE.description,
-        url: SITE.url,
+        alternateName: "Blueprint Deck",
+        description: SITE.summary,
+        url: `${SITE.url}/`,
         applicationCategory: "DeveloperApplication",
+        applicationSubCategory: "Agent skill",
         operatingSystem: "macOS, Linux, Windows",
+        softwareVersion: VERSION.trim(),
         license: "https://opensource.org/licenses/MIT",
+        isAccessibleForFree: true,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        installUrl: `${SITE.url}/#install`,
+        downloadUrl: `${SITE.repo}/releases/latest`,
+        releaseNotes: `${SITE.url}/changelog/`,
+        codeRepository: SITE.repo,
+        sameAs: [SITE.repo],
+        screenshot: `${SITE.url}/video/poster.jpg`,
+        image: `${SITE.url}/og.jpg`,
+        featureList: [
+          "Reads your docs (Markdown, text, PDF, web pages) or your codebase",
+          "One self-contained, offline HTML file",
+          "Pan-and-zoom map with clickable boxes, side panels and their sources",
+          "Guided tour you present like slides",
+          "Tabs and personas with numbered paths",
+          "Built-in editor, no agent needed for small changes",
+          "PDF export in colour or black and white",
+          "Read-only copies to share",
+          "Works with Claude Code, Codex, GitHub Copilot, Gemini CLI, Cursor, Grok Build and the Claude, ChatGPT and Gemini apps",
+        ],
         author: [
           { "@type": "Person", name: SITE.author, url: SITE.authorUrl },
           { "@type": "Person", name: SITE.coAuthor, url: SITE.coAuthorUrl },
         ],
       })} />
     )}
+    {schema.map(s => <script type="application/ld+json" set:html={JSON.stringify({ "@context": "https://schema.org", ...s })} />)}
+    <slot name="head" />
     <script is:inline>
       // scroll reveal on the landing page: only with JS and when the user hasn't asked for reduced motion
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("reveal");

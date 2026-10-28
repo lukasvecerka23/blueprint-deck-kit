@@ -21,8 +21,13 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
     home: true,
   },
   {
+    q: "How is it different from Mermaid, draw.io or slides?",
+    a: "Those are tools you draw or write a diagram with yourself: Mermaid turns diagram code into a picture, draw.io and Excalidraw are canvases, slides are pages you lay out by hand. With Blueprint Deck your agent reads your docs or code and writes the content, and every box keeps the source it came from. The result is one file that is a map, a presentation (a guided tour, tabs, personas) and a document (a panel with the details behind every box) at the same time. You can still fix anything by hand in the built-in editor.",
+    home: true,
+  },
+  {
     q: "Which agents does it work with?",
-    a: "Claude Code, Codex and the GitHub Copilot CLI (as a plugin), Copilot in VS Code, Gemini CLI, the Claude, ChatGPT and Gemini apps (upload the skill as a zip; the ChatGPT desktop app takes the plugin), and any other agent that supports Agent Skills (a folder with a <code>SKILL.md</code>; the install script puts it into its skills folder). Agents without skill support can still follow <code>SKILL.md</code> as plain instructions: point them at the file.",
+    a: "Claude Code, Codex and the GitHub Copilot CLI (as a plugin), Copilot in VS Code, Gemini CLI, Cursor, Grok Build, the Claude, ChatGPT and Gemini apps (upload the skill as a zip; the ChatGPT desktop app takes the plugin), and any other agent that supports Agent Skills (a folder with a <code>SKILL.md</code>; the install script puts it into its skills folder). Agents without skill support can still follow <code>SKILL.md</code> as plain instructions: point them at the file.",
     home: true,
   },
   {
@@ -86,3 +91,13 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
     a: "Nothing. Blueprint Deck Kit is open source under the MIT License. Generating a diagram uses your agent, so it counts against your own agent subscription or API usage like any other task. If it saves you time, you can <a href=\"https://github.com/sponsors/lukasvecerka23\">sponsor the project on GitHub</a>, once or monthly.",
   },
 ];
+
+// schema.org FAQPage for a list of questions (answers as plain text)
+export const faqSchema = (items: { q: string; a: string }[]) => ({
+  "@type": "FAQPage",
+  mainEntity: items.map(f => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a.replace(/<[^>]+>/g, "").replace(/&quot;/g, '"').replace(/&amp;/g, "&") },
+  })),
+});

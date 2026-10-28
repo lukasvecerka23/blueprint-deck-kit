@@ -14,6 +14,8 @@ interface Props {
   ownTitle?: boolean;
   /** path in the repository, for "Edit on GitHub" */
   source?: string;
+  /** more schema.org objects for this page */
+  schema?: Record<string, unknown>[];
 }
 const p = Astro.props;
 const title = p.title ?? p.frontmatter?.title ?? "Docs";
@@ -27,8 +29,22 @@ const flat = DOCS_NAV;
 const idx = flat.findIndex(n => n.href === path);
 const prev = idx > 0 ? flat[idx - 1] : null;
 const next = idx >= 0 && idx < flat.length - 1 ? flat[idx + 1] : null;
+// structured data: the page as a technical article, and its place under Docs
+const url = new URL(path, SITE.url).href;
+const schema = [
+  { "@type": "TechArticle", headline: title, description, url, inLanguage: "en",
+    isPartOf: { "@type": "WebSite", name: SITE.name, url: `${SITE.url}/` },
+    about: { "@id": `${SITE.url}/#software` },
+    author: { "@type": "Person", name: SITE.author, url: SITE.authorUrl } },
+  { "@type": "BreadcrumbList", itemListElement: [
+    { "@type": "ListItem", position: 1, name: SITE.name, item: `${SITE.url}/` },
+    ...(path === "/docs/" ? [] : [{ "@type": "ListItem", position: 2, name: "Docs", item: `${SITE.url}/docs/` }]),
+    { "@type": "ListItem", position: path === "/docs/" ? 2 : 3, name: title, item: url },
+  ] },
+  ...(p.schema ?? []),
+];
 ---
-<Base title={title} description={description}>
+<Base title={title} description={description} schema={schema}>
   <div class="mx-auto flex max-w-7xl gap-10 px-4 sm:px-6">
     <!-- sidebar -->
     <aside class="hidden w-56 shrink-0 md:block">

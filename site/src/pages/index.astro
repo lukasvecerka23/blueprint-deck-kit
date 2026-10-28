@@ -5,7 +5,7 @@ import InstallTabs from "../components/InstallTabs.astro";
 import FaqList from "../components/FaqList.astro";
 import ExamplePreview from "../components/ExamplePreview.astro";
 import { EXAMPLES, exampleExists, exampleHref } from "../data/examples";
-import { FAQ } from "../data/faq";
+import { FAQ, faqSchema } from "../data/faq";
 import { INSTALL, SITE } from "../data/site";
 
 const steps = [
@@ -42,9 +42,24 @@ const features = [
 
 const kinds = ["Architecture blueprints", "Product blueprints", "Service maps", "Data flows", "Processes", "Customer journeys", "Ecosystems", "Org maps"];
 const homeFaq = FAQ.filter(f => f.home);
+// structured data for this page: the questions shown here and the one-minute video
+const schema = [
+  faqSchema(homeFaq),
+  {
+    "@type": "VideoObject",
+    name: "Blueprint Deck Kit in one minute",
+    description: "From docs to an interactive deck: the configurator, the agent writing the deck, and presenting, editing and sharing it.",
+    thumbnailUrl: [`${SITE.url}/video/poster.jpg`],
+    contentUrl: `${SITE.url}/video/blueprint-deck.mp4`,
+    embedUrl: `${SITE.url}/#video`,
+    uploadDate: "2026-10-25",
+    duration: "PT59S",
+  },
+];
 const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the cards show the others
 ---
-<Base>
+<Base schema={schema}>
+  <link slot="head" rel="preload" as="image" href="/video/poster.webp" type="image/webp" fetchpriority="high" />
   <!-- ============================================================ hero -->
   <section class="relative overflow-hidden">
     <div class="hero-glow" aria-hidden="true"><span></span><span></span></div>
@@ -62,8 +77,9 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
           Turn your docs into a <span class="text-gradient">deck people will love</span>
         </h1>
         <p class="mx-auto mt-6 max-w-2xl text-lg text-pretty text-muted-foreground">
-          Your coding agent reads your docs or code and writes one interactive HTML file: a map with a guided tour, tabs and
-          personas. Present it, edit it, send it to anyone.
+          <strong class="font-medium text-foreground">Blueprint Deck Kit</strong> is a free, open-source agent skill. Your coding
+          agent reads your docs or code and writes one interactive HTML file: a map with a guided tour, tabs and personas.
+          Present it, edit it, send it to anyone.
         </p>
         <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
           <a href="#install" class="btn" data-size="lg"><Icon name="terminal" /> Install the skill</a>
@@ -79,7 +95,7 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
       <!-- the one-minute video -->
       <figure id="video" class="demo-stage mx-auto mt-14 max-w-6xl">
         <div class="browser-frame overflow-hidden rounded-xl border bg-card">
-          <video class="block aspect-video w-full bg-[#050914]" preload="metadata" playsinline muted loop controls poster="/video/poster.jpg"
+          <video class="block aspect-video w-full bg-[#050914]" preload="metadata" playsinline muted loop controls poster="/video/poster.webp"
             aria-label="Blueprint Deck Kit in one minute: from docs to an interactive deck" data-video>
             <source src="/video/blueprint-deck.mp4" type="video/mp4" />
           </video>
@@ -157,18 +173,18 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
               <div class="mx-auto flex min-w-0 items-center gap-2 rounded-md border bg-background px-3 py-1 text-xs text-muted-foreground">
                 <Icon name="file-code" class="size-3.5 shrink-0" /><span class="truncate">blueprint-deck-kit/diagrams/index.html</span>
               </div>
-              <a href="/examples/blueprint-deck/index.html" class="btn shrink-0" data-variant="ghost" data-size="sm">
+              <a href="/examples/blueprint-deck/" class="btn shrink-0" data-variant="ghost" data-size="sm" aria-label="Open the live example full screen">
                 <Icon name="maximize-2" class="size-3.5" /><span class="hidden sm:inline">Open full screen</span>
               </a>
             </div>
             <div class="relative aspect-[4/3] w-full bg-[#050914] sm:aspect-[16/9]">
-              <iframe src="/examples/blueprint-deck/index.html" title="Live demo: the Blueprint Deck Kit's own Blueprint Deck" class="absolute inset-0 h-full w-full" loading="lazy"></iframe>
+              <iframe src="/examples/blueprint-deck/" title="Live demo: the Blueprint Deck Kit's own Blueprint Deck" class="absolute inset-0 h-full w-full" loading="lazy"></iframe>
             </div>
           </div>
           <p class="mt-4 text-center text-sm text-muted-foreground">
             Live demo: the kit's own architecture, made by the skill from this repository. Click a box, try the tabs, start the tour and use{" "}
             <kbd class="kbd">←</kbd> <kbd class="kbd">→</kbd>, or press <kbd class="kbd">E</kbd> to edit.{" "}
-            <a href="/examples/blueprint-deck/index.html" class="font-medium text-foreground underline underline-offset-4">Open full screen</a>
+            <a href="/examples/blueprint-deck/" class="font-medium text-foreground underline underline-offset-4">Open full screen</a>
           </p>
         </div>
       <h3 class="mt-14 text-lg font-semibold" data-reveal>More examples</h3>

@@ -1,11 +1,11 @@
 ---
 import Docs from "../../layouts/Docs.astro";
-import { FAQ } from "../../data/faq";
+import { FAQ, faqSchema } from "../../data/faq";
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const headings = FAQ.map(f => ({ depth: 2, slug: slug(f.q), text: f.q }));
 ---
-<Docs title="FAQ" description="Common questions about Blueprint Deck Kit." headings={headings}>
+<Docs title="FAQ" description="Questions about Blueprint Deck Kit: installing, agents, privacy, editing and sharing decks, safety, licence and cost." headings={headings} schema={[faqSchema(FAQ)]}>
   {FAQ.map(f => (
     <section>
       <h2 id={slug(f.q)} class="mt-10! text-lg!">{f.q}</h2>

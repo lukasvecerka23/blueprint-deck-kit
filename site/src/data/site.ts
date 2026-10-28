@@ -8,8 +8,13 @@ export const SITE = {
   authorUrl: "https://github.com/lukasvecerka23",
   coAuthor: "Pavel Sládek",
   coAuthorUrl: "https://www.linkedin.com/in/sladek/",
+  // the landing page's title and meta description (search results show about 60 and 155 characters)
+  title: "Blueprint Deck Kit: interactive diagram decks from your docs or code",
   description:
-    "An agent skill that turns your docs or code into an interactive presentation diagram: one offline HTML file with a pan-and-zoom map, guided tour, personas, tabs, a built-in editor and PDF export.",
+    "Free, open-source agent skill for Claude Code, Codex, Copilot and more: turns your docs or code into one offline HTML deck with a map, tour and editor.",
+  // the longer one for structured data and llms.txt
+  summary:
+    "Blueprint Deck Kit is a free, open-source agent skill (MIT) for Claude Code, Codex, GitHub Copilot, Gemini CLI, Cursor and other agents. Your agent reads your docs or code and writes one self-contained, offline HTML file: an interactive pan-and-zoom map with clickable boxes and their sources, tabs, personas with their paths, a guided tour you present like slides, a built-in editor and a PDF export.",
 };
 
 export const INSTALL = {
