@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 // Optional: validate a Blueprint Deck file from the command line (needs Node 18+; nothing to install).
-// It runs the same checks the file runs when it opens in a browser, using the engine inside that file.
+// It runs the same checks the file runs when it opens in a browser, using the engine in ../blueprint-deck.html.
 //
 //   node check.mjs diagrams/index.html            errors, warnings, stats
 //   node check.mjs diagrams/index.html --explain  + box positions, connections through boxes, what every view highlights
 //
 // Exit code 1 if there are errors.
 import fs from "node:fs";
+import vm from "node:vm";
 
 const [file, ...flags] = process.argv.slice(2);
 if (!file) { console.error("usage: node check.mjs <diagram.html> [--explain]"); process.exit(2); }
@@ -25,9 +26,13 @@ catch (e) {
 }
 const c1 = html.indexOf("/*BD-CORE-START*/"), c2 = html.indexOf("/*BD-CORE-END*/");
 if (c1 < 0 || c2 < 0) { console.error(`${file}: no engine found (is this a Blueprint Deck file?)`); process.exit(2); }
-const { BDCore, ICONS, ICON_ALIASES } = new Function(html.slice(c1, c2) + "\nreturn { BDCore, ICONS, ICON_ALIASES };")();
+// The checks run on the skill's own engine, never on code from the checked file (which may come from anyone).
+const own = fs.readFileSync(new URL("../blueprint-deck.html", import.meta.url), "utf8");
+const o1 = own.indexOf("/*BD-CORE-START*/"), o2 = own.indexOf("/*BD-CORE-END*/");
+const { BDCore, ICONS, ICON_ALIASES } = vm.runInNewContext(own.slice(o1, o2) + "\n({ BDCore, ICONS, ICON_ALIASES })", {});
 if (data.blueprintDeck === "empty") { console.log("empty engine file: no diagram yet"); process.exit(0); }
-console.log(`engine ${BDCore.VERSION}`);
+const fileVersion = (html.slice(c1, c2).match(/const VERSION = "([^"]+)"/) || [])[1] || "?";
+console.log(`engine ${fileVersion}` + (fileVersion === BDCore.VERSION ? "" : ` (checked with ${BDCore.VERSION}; upgrade the file to get the same result in the browser)`));
 
 const icons = [...Object.keys(ICONS), ...Object.keys(ICON_ALIASES)];
 const list = BDCore.diagramsOf(data) || [{ id: "main", raw: data }];
