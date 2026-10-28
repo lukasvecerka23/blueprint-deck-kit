@@ -15,7 +15,7 @@ jobs:
       - name: Engine is assembled from engine/src
         run: |
           node dev/assemble.mjs
-          git diff --exit-code plugins/blueprint-deck/skills/blueprint-deck/blueprint-deck.html
+          git diff --exit-code plugins/blueprint-deck/skills/blueprint-deck/blueprint-deck.html plugins/blueprint-deck/skills/blueprint-deck/tools/engine-core.mjs
       - name: Examples use the current engine
         run: |
           node dev/assemble.mjs --upgrade examples/*/index.html
