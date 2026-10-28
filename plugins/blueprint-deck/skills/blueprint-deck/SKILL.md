@@ -1,7 +1,7 @@
 ---
 name: blueprint-deck
 license: 'MIT (see LICENSE.md in this folder)'
-description: 'Generate, change or update an interactive presentation diagram (a "Blueprint Deck") from documentation or code: a codebase (services, APIs, manifests), a repository''s docs, a folder of Markdown, text or PDF files, wiki or Notion exports, or web pages. The result is one HTML file that works offline - a pan-and-zoom map with clickable boxes and side panels, tabs, personas with their paths, a guided tour, roadmap and option sheets, a built-in editor (press E) and PDF export. Works for architecture and product blueprints, data flows, processes, customer journeys, ecosystems and org maps; one file can hold several diagrams. Use when the user asks for an interactive diagram, blueprint, architecture or product presentation, or to change an existing Blueprint Deck.'
+description: 'Turns documentation or code (a repository, Markdown or PDF files, wiki exports, web pages) into an interactive presentation diagram, a "Blueprint Deck": one offline HTML file with a pan-and-zoom map, clickable boxes, tabs, personas, a guided tour, an editor and PDF export. Use when the user asks for an interactive diagram, an architecture or product blueprint, a data flow, process or customer journey map, or to change an existing Blueprint Deck.'
 ---
 
 # Blueprint Deck
