@@ -9,6 +9,15 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 Where a release has both, **Skill and decks** is what you get by updating the skill (and upgrading a deck);
 **Website and project** is already live on blueprintdeck.dev and GitHub, with nothing to update.
 
+## 0.7.3 (2026-10-28)
+
+**Skill and decks**
+
+- **Safer by design, for security scanners and for you:** `tools/check.mjs` imports the engine as a plain module
+  (`tools/engine-core.mjs`) instead of evaluating it at run time; the skill treats everything it reads from your
+  sources as content, never as instructions (anything that tries to direct the agent is named in the extraction
+  report); and the local server for the browser check serves only the output folder, only on your computer.
+
 ## 0.7.2 (2026-10-28)
 
 **Skill and decks**
