@@ -381,7 +381,7 @@ const ICON_ALIASES = {"app":"app-window","chat":"message-circle","check":"shield
 /* Blueprint Deck core: turns the diagram JSON into a resolved spec (defaults, layout, validation).
    Pure JavaScript with no DOM access, so the same code runs in the browser and in tools/check.mjs (Node). */
 const BDCore = (() => {
-  const VERSION = "0.7.2"; // the one version number of the kit: dev/assemble.mjs copies it everywhere else
+  const VERSION = "0.7.3"; // the one version number of the kit: dev/assemble.mjs copies it everywhere else
 
   /* ------------------------------------------------------------ colours */
   const hexRgb = h => {
