@@ -9,7 +9,7 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 Where a release has both, **Skill and decks** is what you get by updating the skill (and upgrading a deck);
 **Website and project** is already live on blueprintdeck.dev and GitHub, with nothing to update.
 
-## Unreleased
+## 0.7.2 (2026-10-28)
 
 **Skill and decks**
 
