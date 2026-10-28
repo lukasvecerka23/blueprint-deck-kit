@@ -11,6 +11,12 @@ Where a release has both, **Skill and decks** is what you get by updating the sk
 
 ## Unreleased
 
+**Skill and decks**
+
+- **`tools/check.mjs` no longer runs code from the file it checks:** it checks with the skill's own engine and says
+  when the file has an older one (upgrade it to see the same result in the browser).
+- **A shorter skill description**, so agents and skill directories show what it does at a glance.
+
 **Website and project**
 
 - **Search and AI answers:** `/llms.txt` (a map of the site for AI tools) and `/llms-full.txt` (the whole documentation
