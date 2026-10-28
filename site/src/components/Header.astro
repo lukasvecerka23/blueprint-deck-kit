@@ -12,14 +12,14 @@ const links = [
 ---
 <header id="site-header" class="sticky top-0 z-50 border-b border-transparent transition-colors duration-300 data-[scrolled]:border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/65">
   <div class="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4 sm:px-6">
-    <a href="/" class="flex items-center gap-2.5 font-semibold tracking-tight" aria-label={`${SITE.name}, home`}>
+    <a href="/" class="flex items-center gap-2.5 font-semibold tracking-tight" aria-label={`${SITE.name} home`}>
       <Logo class="size-7" />
-      <span>Blueprint Deck</span>
+      <span>Blueprint Deck</span>{" "}
       <span class="badge hidden sm:inline-flex" data-variant="outline">Kit</span>
     </a>
     <nav class="ml-4 hidden items-center gap-1 text-sm md:flex" aria-label="Main">
       {links.map(l => (
-        <a href={l.href} class:list={["rounded-md px-3 py-1.5 transition-colors hover:text-foreground", l.active ? "text-foreground font-medium" : "text-muted-foreground"]}
+        <a href={l.href} class:list={["rounded-md px-3 py-1.5 transition-colors hover:text-foreground", l.active ? "text-foreground font-medium" : "text-foreground/70"]}
           aria-current={l.active ? "page" : undefined}>{l.label}</a>
       ))}
     </nav>
@@ -50,8 +50,9 @@ const links = [
   addEventListener("scroll", onScroll, { passive: true }); onScroll();
   // the star count comes from our own /api/stars (a Cloudflare Pages Function that caches GitHub's answer), so
   // visitors' browsers never call GitHub; shown from 25 stars up
+  // (not on localhost: the function only runs on Cloudflare, and the failed request would show as a console error)
   const starCount = document.querySelector<HTMLElement>("[data-stars]");
-  if (starCount) fetch("/api/stars").then(r => (r.ok ? r.json() : null)).then(d => {
+  if (starCount && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) fetch("/api/stars").then(r => (r.ok ? r.json() : null)).then(d => {
     if (d && typeof d.stars === "number" && d.stars >= 25) { starCount.textContent = `★ ${d.stars}`; starCount.hidden = false; }
   }).catch(() => {});
 </script>
