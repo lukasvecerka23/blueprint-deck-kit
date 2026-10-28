@@ -6,7 +6,7 @@
 
 ![Blueprint Deck in 8 seconds: the map builds, then the guided tour zooms from step to step](docs/images/demo.gif)
 
-▶ **[Watch the 1-minute video](https://blueprintdeck.dev/#video)** · **[Try a live deck](https://blueprintdeck.dev/examples/acme/index.html)**
+▶ **[Watch the 1-minute video](https://blueprintdeck.dev/#video)** · **[Try a live deck](https://blueprintdeck.dev/examples/acme/)**
 
 Your coding agent (Claude Code, Codex, GitHub Copilot, Cursor or any agent that supports skills) reads your docs or your code and writes a
 *Blueprint Deck*: a pan-and-zoom map of your product, process or system that is also a slide deck.
