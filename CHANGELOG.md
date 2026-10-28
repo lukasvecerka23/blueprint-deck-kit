@@ -9,6 +9,13 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 Where a release has both, **Skill and decks** is what you get by updating the skill (and upgrading a deck);
 **Website and project** is already live on blueprintdeck.dev and GitHub, with nothing to update.
 
+## Unreleased
+
+**Website and project**
+
+- **Install with the skills CLI:** `npx skills add lukasvecerka23/blueprint-deck-kit` (needs Node) is listed next to the
+  install script on the website, in the docs and in the README.
+
 ## 0.7.3 (2026-10-28)
 
 **Skill and decks**
