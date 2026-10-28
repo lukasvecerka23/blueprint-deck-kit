@@ -46,7 +46,8 @@ Install it where you work:
   ([how, per app](/docs/agents/#chat-apps-claude-chatgpt-gemini)).
 - **Cursor and Grok Build** read the Claude Code skills folder, so a Claude Code install covers them; otherwise the install script below
   with `--agent cursor` or `--agent grok` ([Agents](/docs/agents/#cursor)).
-- **Any other agent, or several at once**: the install script below.
+- **Any other agent, or several at once**: the install script below, or with Node the open skills CLI:
+  `npx skills add lukasvecerka23/blueprint-deck-kit` ([Agents](/docs/agents/#other-agents-the-install-script)).
 
 ### The install script
 

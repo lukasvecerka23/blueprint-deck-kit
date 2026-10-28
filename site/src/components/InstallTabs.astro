@@ -126,6 +126,7 @@ const link = "underline underline-offset-4 hover:text-foreground";
   <div role="tabpanel" id={`${id}-panel-other`} aria-labelledby={`${id}-tab-other`} tabindex="-1" class="space-y-3" hidden>
     <Command code={INSTALL.sh} />
     <Command code={INSTALL.ps} prompt="PS>" />
+    {!hero && <Command code={INSTALL.skillsCli} />}
     {hero ? (
       <p class={hint}>The install script (macOS/Linux, then Windows): installs for Claude Code, Codex, Gemini CLI, GitHub Copilot, Cursor, Grok Build and other Agent Skills agents it finds, and asks which.{" "}
         <a class={link} href="#install">All options</a>.</p>
@@ -136,6 +137,8 @@ const link = "underline underline-offset-4 hover:text-foreground";
         <code class={code}>--project</code> (into the current project), <code class={code}>--version 0.5.1</code>, <code class={code}>--yes</code>, <code class={code}>--uninstall</code>;
         pass them with <code class={code}>sh -s --</code> (PowerShell: <code class={code}>-Agent</code>, <code class={code}>-Version</code> …). Run it again to update.
         It only copies files. Read the <a class={link} href="/install.sh">shell</a> or <a class={link} href="/install.ps1">PowerShell</a> script.
+        Or use the open <a class={link} href="https://skills.sh/lukasvecerka23/blueprint-deck-kit/blueprint-deck">skills CLI</a> (the third command, needs Node):
+        it installs from <code class={code}>main</code> for the agents you pick and updates with <code class={code}>npx skills update</code>.
         Agents without skill support can follow <code class={code}>blueprint-deck/SKILL.md</code> as instructions: tell them to read it first.</p>
     )}
   </div>

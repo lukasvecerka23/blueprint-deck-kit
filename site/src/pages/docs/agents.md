@@ -171,6 +171,13 @@ press **E** in the file. To update the skill, delete it and upload the newer zip
 
 ## Other agents (the install script)
 
+Besides the install script, there is the open [skills CLI](https://skills.sh/lukasvecerka23/blueprint-deck-kit/blueprint-deck)
+(needs Node; it installs from `main` and asks which agents to install for):
+
+```bash
+npx skills add lukasvecerka23/blueprint-deck-kit
+```
+
 Agents that support Agent Skills find the skill in their skills folder: `--agent agents` installs into the shared
 `~/.agents/skills`, and `--dir <path>` into any folder. For an agent without skill support, put the folder somewhere
 it can read and start with:
@@ -193,6 +200,7 @@ or run it yourself. It depends on how you installed it:
 | a zip upload (Claude, ChatGPT on the web, Gemini) | delete the skill and upload the newer zip |
 | the GitHub Copilot CLI plugin | `copilot plugin update blueprint-deck` |
 | `gh skill install` | `gh skill update blueprint-deck` |
+| `npx skills add` | `npx skills update` |
 | the install script (also for Cursor and Grok Build), Codex's skill installer or Gemini CLI | run the install script again: it replaces the skill and says which version it replaced |
 
 What changed is in the [changelog](/changelog/). To install a specific release with the script:

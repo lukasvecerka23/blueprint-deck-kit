@@ -94,6 +94,8 @@ then ask it to publish the deck as an artifact, which gives you a link anyone ca
 [release](https://github.com/lukasvecerka23/blueprint-deck-kit/releases) for the agents it finds (`~/.claude/skills`,
 `~/.codex/skills`, `~/.gemini/skills`, `~/.copilot/skills`, `~/.cursor/skills`, `~/.grok/skills`, `~/.agents/skills`) and asks which when
 there are several. Cursor and Grok Build get no second copy when they already read one of the others.
+With Node, the open [skills CLI](https://skills.sh/lukasvecerka23/blueprint-deck-kit/blueprint-deck) does the same
+for the agents you pick (from `main`; update with `npx skills update`): `npx skills add lukasvecerka23/blueprint-deck-kit`.
 
 macOS / Linux:
 ```bash
