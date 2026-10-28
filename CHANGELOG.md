@@ -9,6 +9,18 @@ https://github.com/lukasvecerka23/blueprint-deck-kit/releases
 Where a release has both, **Skill and decks** is what you get by updating the skill (and upgrading a deck);
 **Website and project** is already live on blueprintdeck.dev and GitHub, with nothing to update.
 
+## Unreleased
+
+**Website and project**
+
+- **Search and AI answers:** `/llms.txt` (a map of the site for AI tools) and `/llms-full.txt` (the whole documentation
+  as one text file), built from the docs sources. Structured data for the software, the FAQ, the video and every
+  docs page; shorter titles and descriptions; one sentence at the top that says what the kit is; a new FAQ on how it
+  differs from Mermaid, draw.io or slides.
+- **Example decks** on the website have their own title, description and preview image, so links to them show a
+  proper preview; they and the configurator are in the sitemap.
+- **Faster first screen:** the video poster is a WebP that loads first.
+
 ## 0.7.1 (2026-10-27)
 
 **Skill and decks**
