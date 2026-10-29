@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/Docs.astro
-title: Editing & sharing
-description: Fix things in the browser with the built-in editor, export a PDF deck, and share the file or host it anywhere.
+title: Editing, PDF export and sharing
+description: Edit the interactive diagram in the browser with the built-in editor, export it to PDF, and share the HTML file or host it anywhere.
 ---
 
 A Blueprint Deck is one HTML file: the engine plus a JSON data block at the top. Everything you change, in the

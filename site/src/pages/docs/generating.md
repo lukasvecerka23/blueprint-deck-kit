@@ -1,6 +1,6 @@
 ---
 layout: ../../layouts/Docs.astro
-title: Generating
+title: Generating a diagram from docs or code
 description: "Start a run, see what the agent does and where the files go, then keep working with it: changes, updates when the docs change, a newer engine."
 ---
 

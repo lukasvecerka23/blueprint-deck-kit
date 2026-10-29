@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/Docs.astro
-title: Agents
-description: Install, start and update the skill in Claude Code, Codex, Gemini CLI, GitHub Copilot, Cursor, Grok Build, the Claude, ChatGPT and Gemini apps.
+title: Install the skill in Claude Code, Codex, Copilot, Gemini CLI and ChatGPT
+description: How to install, start and update the Blueprint Deck skill in Claude Code, Codex, GitHub Copilot, Gemini CLI, Cursor, Grok Build and the Claude, ChatGPT and Gemini apps.
 ---
 
 How to install the skill in each agent, start it, and keep it up to date. Install it one way per agent: two copies

@@ -37,10 +37,18 @@ const features = [
   { icon: "pencil", title: "Edit it, send it read-only", text: "Press E to change texts, colours, boxes, tabs and the tour, with no agent and no rebuild. Send a read-only copy when people shouldn't change it." },
   { icon: "file-check", title: "One file, opens anywhere", text: "A single offline HTML file: email it, host it, open it on a phone. It makes no network requests, so it's safe to open. Several diagrams in one file, and P for a PDF deck." },
   { icon: "palette", title: "Your brand, your audience", text: "Light and dark themes, your colours and logo. A product view for executives or a technical view for engineers." },
-  { icon: "file-search", title: "From docs or code, by any agent", text: "Works with Claude Code, Codex, GitHub Copilot, Cursor, Grok Build and other agents. It reads your docs or your codebase; every box links to its source, and a report lists conflicts and gaps." },
+  { icon: "file-search", title: "Generated from your code or docs", text: "Your AI coding agent does the work: Claude Code, Codex, GitHub Copilot, Cursor, Grok Build and other agents. It reads your docs or your codebase; every box links to its source, and a report lists conflicts and gaps." },
 ];
 
-const kinds = ["Architecture blueprints", "Product blueprints", "Service maps", "Data flows", "Processes", "Customer journeys", "Ecosystems", "Org maps"];
+// what people use it for, in the words they search with
+const useCases = [
+  { icon: "code", title: "Architecture diagrams from code", text: "Point your agent at a repository and it maps services, APIs, databases, queues and external systems, with connections read from the code. Every box cites the files it came from." },
+  { icon: "presentation", title: "Onboarding and stakeholder overviews", text: "Give new team members or executives an overview they can click through: what each part does and why it exists. A product view and a technical view in one file, presented with a tour." },
+  { icon: "graduation-cap", title: "Study materials and explainers", text: "Turn lecture notes, a textbook chapter or a long article into a map of the topic: concepts as boxes, how they relate, and a guided tour that walks through it in order." },
+  { icon: "workflow", title: "Data flows and integrations", text: "Show how data moves between systems, partners and teams. Tabs highlight one question at a time: the request path, personal data, cost or the manual steps." },
+  { icon: "route", title: "Customer journeys and service blueprints", text: "Map what customers and staff do at each step and which systems support them. Personas show their numbered path through the map." },
+  { icon: "network", title: "Processes, ecosystems and org maps", text: "Turn process docs, partner lists or an org chart into one map that people can explore, with roadmap and option sheets for what comes next. Or anything else: the diagram type can be free-form." },
+];
 const homeFaq = FAQ.filter(f => f.home);
 // structured data for this page: the questions shown here and the one-minute video
 const schema = [
@@ -77,9 +85,9 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
           Turn your docs into a <span class="text-gradient">deck people will love</span>
         </h1>
         <p class="mx-auto mt-6 max-w-2xl text-lg text-pretty text-muted-foreground">
-          <strong class="font-medium text-foreground">Blueprint Deck Kit</strong> is a free, open-source agent skill. Your coding
-          agent reads your docs or code and writes one interactive HTML file: a map with a guided tour, tabs and personas.
-          Present it, edit it, send it to anyone.
+          <strong class="font-medium text-foreground">Blueprint Deck Kit</strong> is a free, open-source AI agent skill. Your agent
+          turns docs or code into an interactive diagram, from system architecture to study notes, that you can present,
+          edit and share as one file.
         </p>
         <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
           <a href="#install" class="btn" data-size="lg"><Icon name="terminal" /> Install the skill</a>
@@ -109,7 +117,7 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
   <section id="how" class="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
     <div class="max-w-2xl" data-reveal>
       <p class="text-sm font-medium text-brand">How it works</p>
-      <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">From docs to deck in four steps</h2>
+      <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">From codebase or docs to diagram in four steps</h2>
       <p class="mt-4 text-muted-foreground">The agent writes only the content (a JSON block). The engine is fixed, so every deck looks and behaves the same, and anyone can fix a text later without the agent.</p>
     </div>
     <ol class="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -135,11 +143,8 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
     <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
       <div class="max-w-2xl" data-reveal>
         <p class="text-sm font-medium text-brand">Features</p>
-        <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">A presentation, a diagram and a document in one file</h2>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">An interactive diagram, a presentation and a document in one file</h2>
         <p class="mt-4 text-muted-foreground">Built from real presentation rounds: each feature exists because a presenter or a reviewer asked for it.</p>
-        <ul class="mt-6 flex flex-wrap gap-2">
-          {kinds.map(k => <li class="badge" data-variant="secondary">{k}</li>)}
-        </ul>
       </div>
       <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {features.map((f, i) => (
@@ -153,13 +158,33 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
     </div>
   </section>
 
+  <!-- ============================================================ use cases -->
+  <section id="use-cases">
+    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
+      <div class="max-w-2xl" data-reveal>
+        <p class="text-sm font-medium text-brand">Use cases</p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Diagrams for your code, your product, your processes or your studies</h2>
+        <p class="mt-4 text-muted-foreground">An AI diagram generator that works from what you already have: source code, Markdown or PDF documents, lecture notes, Confluence or Notion exports, web pages.</p>
+      </div>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {useCases.map((u, i) => (
+          <div class="card glow-card gap-0 p-6" data-reveal style={`--i:${i % 3}`}>
+            <span class="flex size-9 items-center justify-center rounded-lg border bg-brand-soft text-brand"><Icon name={u.icon} class="size-[18px]" /></span>
+            <h3 class="mt-4 font-semibold">{u.title}</h3>
+            <p class="mt-1.5 text-sm leading-relaxed text-muted-foreground">{u.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <!-- ============================================================ examples -->
   <section id="examples">
     <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
       <div class="flex flex-wrap items-end justify-between gap-4" data-reveal>
         <div class="max-w-3xl">
           <p class="text-sm font-medium text-brand">Examples</p>
-          <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">See what an agent makes of real docs and code</h2>
+          <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Example diagrams an AI agent made from real code and docs</h2>
         </div>
         <a href="/gallery/" class="btn" data-variant="outline">Open the gallery <Icon name="arrow-right" /></a>
       </div>
@@ -215,7 +240,7 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
     <div class="grid items-start gap-x-12 gap-y-8 lg:grid-cols-[1fr_1.4fr] lg:grid-rows-[auto_1fr]">
       <div data-reveal>
         <p class="text-sm font-medium text-brand">Install</p>
-        <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">One command, then ask your agent</h2>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Install the skill in Claude Code, Codex, Copilot or any agent</h2>
         <p class="mt-4 text-muted-foreground">The skill is a folder: <code class="font-mono text-sm">SKILL.md</code>, the engine, the format reference and the style guide. Install it from inside your agent, upload it to the Claude, ChatGPT or Gemini app, or use the install script for any other agent. It only copies files.</p>
         <ul class="mt-6 space-y-2.5 text-sm">
           <li class="flex gap-2.5"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-brand" /> Claude Code, Codex, Gemini CLI, GitHub Copilot, Cursor, Grok Build, the Claude, ChatGPT and Gemini apps, and other Agent Skills agents</li>
@@ -238,7 +263,7 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
   <section id="faq" class="mx-auto max-w-3xl px-4 py-14 sm:px-6 sm:py-20">
     <div data-reveal>
       <p class="text-sm font-medium text-brand">FAQ</p>
-      <h2 class="mt-2 mb-8 text-3xl font-semibold tracking-tight sm:text-4xl">Questions</h2>
+      <h2 class="mt-2 mb-8 text-3xl font-semibold tracking-tight sm:text-4xl">Frequently asked questions</h2>
       <FaqList items={homeFaq} />
     </div>
     <p class="mt-8 text-sm text-muted-foreground">More in the <a href="/docs/faq/" class="font-medium text-foreground underline underline-offset-4">docs FAQ</a>.</p>
@@ -248,7 +273,7 @@ const FEATURED = "blueprint-deck"; // the live deck in the Examples section; the
   <section class="px-4 pt-6 pb-20 sm:px-6 sm:pb-28">
     <div class="cta-card relative mx-auto max-w-5xl overflow-hidden rounded-2xl border bg-card px-6 py-14 text-center sm:px-12" data-reveal>
       <div class="relative">
-        <h2 class="text-3xl font-semibold tracking-tight text-balance">Your first deck in a few minutes</h2>
+        <h2 class="text-3xl font-semibold tracking-tight text-balance">Your first interactive diagram in a few minutes</h2>
         <p class="mx-auto mt-3 max-w-xl text-muted-foreground">Install the skill with one command, describe your diagram in the configurator, and paste the prompt into your agent. Everything runs on your computer; nothing is sent anywhere.</p>
         <div class="mt-8 flex flex-wrap justify-center gap-3">
           <a href="#install" class="btn" data-size="lg"><Icon name="terminal" /> Install the skill</a>

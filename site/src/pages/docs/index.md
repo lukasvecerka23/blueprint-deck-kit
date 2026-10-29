@@ -1,11 +1,11 @@
 ---
 layout: ../../layouts/Docs.astro
-title: Getting started
-description: Install the skill, describe your diagram, let your agent write it, then present, edit and share the file.
+title: "Getting started: generate your first interactive diagram"
+description: Install the AI agent skill, describe your diagram, let your agent generate it from your docs or code, then present, edit and share the file.
 ---
 
-Blueprint Deck Kit is an **agent skill**. You install it once; afterwards your coding agent (Claude Code, Codex, GitHub Copilot, Cursor or any
-agent that supports Agent Skills) can turn your docs or code (a codebase, a folder of Markdown, text or PDF files, wiki exports or web pages) into a **Blueprint Deck**: one self-contained HTML file
+Blueprint Deck Kit is an **AI agent skill**. You install it once; afterwards your coding agent (Claude Code, Codex, GitHub Copilot, Cursor or any
+agent that supports Agent Skills) can turn your docs or code (a codebase, a folder of Markdown, text or PDF files, notes, wiki exports or web pages) into a **Blueprint Deck**: an interactive diagram of a system, a process, a customer journey or a topic you are studying, as one self-contained HTML file
 with a pan-and-zoom map, clickable boxes with side panels, tabs, personas with their paths, a guided tour, roadmap and
 option sheets, a built-in editor and a PDF export.
 

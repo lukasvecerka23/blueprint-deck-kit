@@ -35,8 +35,8 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
     a: "The skill tells it not to: every box and area carries <code>sources</code> (file and section), <code>invent: never</code> is the default, and the agent writes an <code>extraction-report.md</code> next to the diagram listing the sources it read, conflicts between them and gaps (things you asked for that the sources don't say). Planned things are marked as planned.",
   },
   {
-    q: "What kinds of diagrams can it make?",
-    a: "Architecture and product blueprints, data flows, processes, customer journeys, ecosystems and org maps (plus a free-form <code>custom</code> type). Each can be written from a product viewpoint (what it does for whom) or a technical one (components, protocols, technology choices), and one file can hold several diagrams with a switcher.",
+    q: "What kinds of diagrams can it generate?",
+    a: "Architecture and product blueprints, data flows, processes, customer journeys, ecosystems and org maps (plus a free-form <code>custom</code> type for anything else, such as a topic you are studying). Each can be written from a product viewpoint (what it does for whom) or a technical one (components, protocols, technology choices), and one file can hold several diagrams with a switcher.",
   },
   {
     q: "How do I update the diagram when the docs change?",
@@ -55,12 +55,20 @@ export const FAQ: { q: string; a: string; home?: boolean }[] = [
     a: "No. Point it at any folder with documentation: a repository, a folder of Markdown, text or PDF files, an export from Confluence or Notion, even web pages by URL. Run your agent in that folder and list the files (or URLs) as sources in the config.",
   },
   {
+    q: "Can I make a diagram from a PDF?",
+    a: "Yes. List the PDF as a source in the config (or attach it in the Claude, ChatGPT or Gemini app) and the agent reads it like any other document. Specs, reports, manuals and slide exports all work, and every box links back to the document it came from.",
+  },
+  {
+    q: "Can I turn study notes into a concept map?",
+    a: "Yes. Give the agent your lecture notes, a textbook chapter or an article and ask for a map of the topic. It uses the free-form <code>custom</code> diagram type: concepts become boxes, their relations become connections, and the guided tour walks through the topic in order, so you can revise it like slides.",
+  },
+  {
     q: "Can I use it without a terminal or a repository?",
     a: "Yes. Upload the skill once to Claude (Desktop or claude.ai), ChatGPT on the web or Gemini (a zip, see <a href=\"/docs/agents/#chat-apps-claude-chatgpt-gemini\">Chat apps</a>), then start a chat, attach your docs (PDF, Markdown, text) and ask for a Blueprint Deck. You get the HTML file to download; in Claude you can also ask it to publish the deck as an artifact and share the link.",
     home: true,
   },
   {
-    q: "Can it build a diagram from code?",
+    q: "Can it generate an architecture diagram from my codebase?",
     a: "Yes. Point it at a codebase and it draws the system: services, APIs, data stores, queues and external services, with connections taken from the code itself (RPC and HTTP clients, message topics, connection strings, deployment manifests), each box citing its files. The technical viewpoint suits it best; add the README or docs too for the purpose and the story. See the Online Boutique example in the gallery.",
     home: true,
   },
